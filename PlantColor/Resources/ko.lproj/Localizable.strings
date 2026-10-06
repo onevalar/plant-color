@@ -1,0 +1,157 @@
+/* Korean */
+
+// MARK: - Common
+"common_edit" = "편집";
+"common_done" = "완료";
+"common_cancel" = "취소";
+"common_confirm" = "확인";
+"common_clear" = "지우기";
+"common_save" = "저장";
+"common_delete" = "삭제";
+"common_search" = "검색";
+"common_share" = "공유";
+
+// MARK: - Home
+"home_mode_plant" = "식물 색채";
+"home_mode_traditional" = "전통 색채";
+"home_latin_prefix" = "학명: ";
+
+// MARK: - Loading
+"loading_updating_data" = "데이터 업데이트 중...";
+
+// MARK: - Color Series
+"color_series_red" = "빨강";
+"color_series_orange" = "주황";
+"color_series_yellow" = "노랑";
+"color_series_green" = "초록";
+"color_series_blue" = "파랑";
+"color_series_indigo" = "남색";
+"color_series_purple" = "보라";
+"color_series_brown" = "갈색";
+"color_series_gray" = "회색";
+
+// MARK: - Plant Color Detail Sections
+"plant_detail_intro" = "식물학";
+"plant_detail_derivation" = "색의 유래";
+"plant_detail_food" = "음식";
+"plant_detail_custom" = "풍습";
+"plant_detail_application" = "응용";
+"plant_detail_medicinal_effect" = "약용 효능";
+"plant_detail_story" = "이야기";
+"plant_detail_cultivation" = "재배";
+"plant_detail_meanings" = "꽃말";
+"plant_detail_literature" = "문학";
+"plant_detail_image0" = "이미지 0";
+"plant_detail_image1" = "이미지 1";
+"plant_detail_image2" = "이미지 2";
+
+// MARK: - Traditional Color Detail Sections
+"traditional_detail_intro" = "색채 개요";
+"traditional_detail_color_origin" = "색의 유래";
+"traditional_detail_color_story" = "색채 이야기";
+"traditional_detail_cultural_customs" = "문화 풍습";
+"traditional_detail_art_application" = "예술 응용";
+"traditional_detail_symbolism" = "상징적 의미";
+"traditional_detail_literature" = "시문학";
+"traditional_detail_dyeing_craft" = "염색 기법";
+"traditional_detail_color_distinction" = "색채 변별";
+
+// MARK: - Color Detail Manage
+"manage_title" = "섹션 관리";
+"manage_section_science" = "식물 과학";
+"manage_section_other" = "기타 섹션";
+"manage_traditional_section_main" = "전통색 지식";
+"manage_traditional_section_other" = "기타 섹션";
+
+// MARK: - Settings
+"setting_title" = "설정";
+"setting_section_my_colors" = "내 색채";
+"setting_section_features" = "기능 설정";
+"setting_section_widget" = "위젯";
+"setting_section_about" = "정보";
+
+"setting_all_colors" = "모든 색상";
+"setting_my_collection" = "내 컬렉션";
+"setting_scientific_management" = "섹션 관리";
+"setting_auto_switch" = "자동 전환";
+"setting_random_switch" = "랜덤 전환";
+"setting_show_figure" = "패턴 표시";
+"setting_show_color_value" = "색값 표시";
+"setting_custom_content" = "사용자 정의 텍스트";
+"setting_color_refresh" = "새로고침 빈도";
+"setting_acknowledgement" = "감사의 말";
+"setting_share_app" = "앱 공유";
+"setting_rate_app" = "앱 평가";
+"setting_contact_feedback" = "문의 및 피드백";
+"setting_language" = "언어";
+"setting_language_follow_system" = "시스템 설정";
+"setting_language_restart_title" = "재시작 필요";
+"setting_language_restart_message" = "언어 변경을 적용하려면 앱을 재시작해 주세요.";
+
+"setting_custom_alert_title" = "위젯 사용자 정의 텍스트 입력";
+"setting_custom_placeholder" = "20자 이내";
+"setting_custom_length_error" = "텍스트는 20자까지 가능합니다";
+"setting_default_rate" = "10초";
+"setting_default_refresh_rate" = "1시간";
+
+// MARK: - Share
+"share_app_text" = "PlantColor - 모든 식물 색채에는 이야기가 있습니다.";
+"share_save_success" = "저장되었습니다";
+"share_save_failed" = "저장 실패";
+
+// MARK: - All Color / Search
+"all_color_title_all" = "모든 색상";
+"all_color_title_collect" = "내 컬렉션";
+"all_color_empty_hint" = "마음에 드는 색상을 수집해 보세요!";
+
+// MARK: - Refresh Rate
+"refresh_rate_title" = "새로고침 빈도";
+"refresh_rate_1hour" = "1시간";
+"refresh_rate_6hours" = "6시간";
+"refresh_rate_1day" = "1일";
+
+// MARK: - HUD Messages
+"hud_loading" = "로딩 중...";
+"hud_success" = "성공";
+"hud_error" = "실패";
+
+// MARK: - Plant Detail Intro Labels
+"plant_detail_alias" = "별명: ";
+"plant_detail_growth_habit" = "생장 습성: ";
+"plant_detail_distribution" = "분포: ";
+"plant_detail_landscape_app" = "조경 이용: ";
+"plant_detail_florescence" = "개화기: ";
+"plant_detail_fruiting_period" = "결실기: ";
+
+// MARK: - Share Page
+"share_title" = "공유";
+"share_ratio" = "비율";
+"share_orientation" = "방향";
+"share_style" = "스타일";
+"share_save_success_detail" = "저장되었습니다. 앨범을 확인해 보세요!";
+"share_save_error" = "저장 실패: %@";
+
+// MARK: - Share Edit Options
+"share_edit_device_size" = "기기 크기";
+"share_edit_square" = "정사각형";
+"share_edit_portrait" = "세로";
+"share_edit_landscape" = "가로";
+"share_edit_solid_color" = "단색";
+"share_edit_text_only" = "텍스트만";
+"share_edit_image_only" = "이미지만";
+"share_edit_style_one" = "스타일 1";
+"share_edit_style_two" = "스타일 2";
+
+// MARK: - Alert
+"alert_title" = "알림";
+"alert_input_empty" = "입력 내용이 비어있습니다";
+
+// MARK: - Setting Custom History
+"setting_custom_history" = "기록: %@";
+
+// MARK: - Permissions
+"permission_photo_title" = "사진 접근 권한 필요";
+"permission_photo_message" = "설정에서 사진 접근을 허용해 주세요";
+"permission_photo_denied" = "사진 저장을 위해 앨범 접근 권한이 필요합니다";
+"permission_undetermined" = "권한이 결정되지 않았습니다";
+"permission_unknown" = "알 수 없는 권한 상태";

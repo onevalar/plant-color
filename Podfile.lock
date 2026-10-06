@@ -1,0 +1,124 @@
+PODS:
+  - BonMot (6.1.3)
+  - CleanJSON (1.0.9)
+  - DefaultsKit (0.3.2)
+  - DZNEmptyDataSet (1.8.1)
+  - EachNavigationBar (1.17.0)
+  - EmptyDataSet-Swift (5.0.0)
+  - EmptyDataSetExtension (1.1.0):
+    - EmptyDataSetExtension/Core (= 1.1.0)
+  - EmptyDataSetExtension/Core (1.1.0):
+    - DZNEmptyDataSet (~> 1.8.1)
+  - FDFullscreenPopGesture (1.1)
+  - Hero (1.6.4)
+  - JXCategoryView (1.6.8)
+  - Kingfisher (7.12.0)
+  - MBProgressHUD (1.2.0)
+  - MJRefresh (3.7.9)
+  - QYUINavigationBarExtension (1.0.0)
+  - R.swift (7.8.0)
+  - Realm (20.0.3):
+    - Realm/Headers (= 20.0.3)
+  - Realm/Headers (20.0.3)
+  - RealmSwift (20.0.3):
+    - Realm (= 20.0.3)
+  - RTRootNavigationController (0.8.1):
+    - RTRootNavigationController/Core (= 0.8.1)
+  - RTRootNavigationController/Core (0.8.1)
+  - SFSafeSymbols (6.2.0)
+  - SnapKit (5.7.1)
+  - UIColor_Hex_Swift (5.1.9)
+  - UIFontComplete (5.0.0)
+  - UMAPM (2.0.4):
+    - UMCommon
+  - UMCommon (7.5.3):
+    - UMDevice
+  - UMDevice (3.4.0)
+  - WoodPeckeriOS (1.4.3)
+
+DEPENDENCIES:
+  - BonMot
+  - CleanJSON
+  - DefaultsKit
+  - EachNavigationBar
+  - EmptyDataSet-Swift
+  - EmptyDataSetExtension
+  - FDFullscreenPopGesture
+  - Hero
+  - JXCategoryView
+  - Kingfisher
+  - MBProgressHUD
+  - MJRefresh
+  - QYUINavigationBarExtension
+  - R.swift
+  - RealmSwift
+  - RTRootNavigationController
+  - SFSafeSymbols
+  - SnapKit
+  - UIColor_Hex_Swift
+  - UIFontComplete
+  - UMAPM
+  - UMCommon
+  - UMDevice
+  - WoodPeckeriOS
+
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - BonMot
+    - CleanJSON
+    - DefaultsKit
+    - DZNEmptyDataSet
+    - EachNavigationBar
+    - EmptyDataSet-Swift
+    - EmptyDataSetExtension
+    - FDFullscreenPopGesture
+    - Hero
+    - JXCategoryView
+    - Kingfisher
+    - MBProgressHUD
+    - MJRefresh
+    - QYUINavigationBarExtension
+    - R.swift
+    - Realm
+    - RealmSwift
+    - RTRootNavigationController
+    - SFSafeSymbols
+    - SnapKit
+    - UIColor_Hex_Swift
+    - UIFontComplete
+    - UMAPM
+    - UMCommon
+    - UMDevice
+    - WoodPeckeriOS
+
+SPEC CHECKSUMS:
+  BonMot: 1534503509ef48d3c4d0fbec2d0ea35f2887b4ea
+  CleanJSON: 910a36465ce4829e264a902ccf6d1455fdd9f980
+  DefaultsKit: ff9b29089d6fc08651b81be2d2387bee6eb98b75
+  DZNEmptyDataSet: 9525833b9e68ac21c30253e1d3d7076cc828eaa7
+  EachNavigationBar: 87430187ca1f898e6d9d8bb95c35e49749e5a0a2
+  EmptyDataSet-Swift: eb382c0c87a2d9c678077385a595cec52da38171
+  EmptyDataSetExtension: fa623643143a4e6deea78d745dc3f9aad93a3e74
+  FDFullscreenPopGesture: a8a620179e3d9c40e8e00256dcee1c1a27c6d0f0
+  Hero: 473a0143017e1371d050fcbedb67d317925097f2
+  JXCategoryView: 262d503acea0b1278c79a1c25b7332ffaef4d518
+  Kingfisher: 53a10ea35051a436b5fb626ca2dd8f3144d755e9
+  MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
+  MJRefresh: ff9e531227924c84ce459338414550a05d2aea78
+  QYUINavigationBarExtension: 503bfd7415e46f64da94dfa9f342f1e18d7edd95
+  R.swift: f573269ca45b2ab066c082e363dd4c2b297b0d71
+  Realm: 853e5089d6042dff807bda000277eadfe2da93d2
+  RealmSwift: f33c19577cefcbf681345d721fcbc7b42be4c949
+  RTRootNavigationController: ca443783baf6ff65a70c4d21ce0eedbbc1fec1fe
+  SFSafeSymbols: 7b53f8cb36f20b06b820a805d064a4ee4db658ad
+  SnapKit: d612e99e678a2d3b95bf60b0705ed0a35c03484a
+  UIColor_Hex_Swift: 20cb4e8d51b63e168a9da6933bc5d39cd8fb4ab5
+  UIFontComplete: 843cb7b58fd6503b3918447918ea6daaeaceccff
+  UMAPM: f038b65a3df4fe8e2df3245642d84cff7f5f63c8
+  UMCommon: 3b850836e8bc162b4e7f6b527d30071ed8ea75a1
+  UMDevice: dcdf7ec167387837559d149fbc7d793d984faf82
+  WoodPeckeriOS: d76940519d27513155959a659f0d1142b5ccc081
+
+PODFILE CHECKSUM: 6275b8c3b966cec12bd5e22c0236a0880b1d1e65
+
+COCOAPODS: 1.16.2

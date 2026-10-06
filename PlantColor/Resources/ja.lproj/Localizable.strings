@@ -1,0 +1,157 @@
+/* Japanese */
+
+// MARK: - Common
+"common_edit" = "編集";
+"common_done" = "完了";
+"common_cancel" = "キャンセル";
+"common_confirm" = "確認";
+"common_clear" = "クリア";
+"common_save" = "保存";
+"common_delete" = "削除";
+"common_search" = "検索";
+"common_share" = "共有";
+
+// MARK: - Home
+"home_mode_plant" = "植物色";
+"home_mode_traditional" = "伝統色";
+"home_latin_prefix" = "ラテン名: ";
+
+// MARK: - Loading
+"loading_updating_data" = "データを更新中...";
+
+// MARK: - Color Series
+"color_series_red" = "赤";
+"color_series_orange" = "橙";
+"color_series_yellow" = "黄";
+"color_series_green" = "緑";
+"color_series_blue" = "青";
+"color_series_indigo" = "藍";
+"color_series_purple" = "紫";
+"color_series_brown" = "褐";
+"color_series_gray" = "灰";
+
+// MARK: - Plant Color Detail Sections
+"plant_detail_intro" = "植物学";
+"plant_detail_derivation" = "色の由来";
+"plant_detail_food" = "食べ物";
+"plant_detail_custom" = "風習";
+"plant_detail_application" = "応用";
+"plant_detail_medicinal_effect" = "薬効";
+"plant_detail_story" = "物語";
+"plant_detail_cultivation" = "栽培";
+"plant_detail_meanings" = "花言葉";
+"plant_detail_literature" = "文学";
+"plant_detail_image0" = "画像0";
+"plant_detail_image1" = "画像1";
+"plant_detail_image2" = "画像2";
+
+// MARK: - Traditional Color Detail Sections
+"traditional_detail_intro" = "色彩概要";
+"traditional_detail_color_origin" = "色の由来";
+"traditional_detail_color_story" = "色の物語";
+"traditional_detail_cultural_customs" = "文化風習";
+"traditional_detail_art_application" = "芸術応用";
+"traditional_detail_symbolism" = "象徴的意味";
+"traditional_detail_literature" = "詩歌文学";
+"traditional_detail_dyeing_craft" = "染色技法";
+"traditional_detail_color_distinction" = "色彩弁別";
+
+// MARK: - Color Detail Manage
+"manage_title" = "セクション管理";
+"manage_section_science" = "植物科学";
+"manage_section_other" = "その他";
+"manage_traditional_section_main" = "伝統色知識";
+"manage_traditional_section_other" = "その他";
+
+// MARK: - Settings
+"setting_title" = "設定";
+"setting_section_my_colors" = "マイカラー";
+"setting_section_features" = "機能設定";
+"setting_section_widget" = "ウィジェット";
+"setting_section_about" = "情報";
+
+"setting_all_colors" = "全ての色";
+"setting_my_collection" = "お気に入り";
+"setting_scientific_management" = "セクション管理";
+"setting_auto_switch" = "自動切替";
+"setting_random_switch" = "ランダム切替";
+"setting_show_figure" = "図柄を表示";
+"setting_show_color_value" = "色値を表示";
+"setting_custom_content" = "カスタムテキスト";
+"setting_color_refresh" = "更新頻度";
+"setting_acknowledgement" = "謝辞";
+"setting_share_app" = "アプリを共有";
+"setting_rate_app" = "アプリを評価";
+"setting_contact_feedback" = "お問い合わせ";
+"setting_language" = "言語";
+"setting_language_follow_system" = "システムに従う";
+"setting_language_restart_title" = "再起動が必要";
+"setting_language_restart_message" = "言語の変更を適用するにはアプリを再起動してください。";
+
+"setting_custom_alert_title" = "ウィジェットのカスタムテキストを入力";
+"setting_custom_placeholder" = "20文字以内";
+"setting_custom_length_error" = "テキストは20文字までです";
+"setting_default_rate" = "10秒";
+"setting_default_refresh_rate" = "1時間";
+
+// MARK: - Share
+"share_app_text" = "植物彩雅 - すべての植物の色には物語があります。";
+"share_save_success" = "保存しました";
+"share_save_failed" = "保存に失敗しました";
+
+// MARK: - All Color / Search
+"all_color_title_all" = "全ての色";
+"all_color_title_collect" = "お気に入り";
+"all_color_empty_hint" = "お気に入りの色を集めましょう！";
+
+// MARK: - Refresh Rate
+"refresh_rate_title" = "更新頻度";
+"refresh_rate_1hour" = "1時間";
+"refresh_rate_6hours" = "6時間";
+"refresh_rate_1day" = "1日";
+
+// MARK: - HUD Messages
+"hud_loading" = "読み込み中...";
+"hud_success" = "成功";
+"hud_error" = "失敗";
+
+// MARK: - Plant Detail Intro Labels
+"plant_detail_alias" = "別名: ";
+"plant_detail_growth_habit" = "生育習性: ";
+"plant_detail_distribution" = "分布: ";
+"plant_detail_landscape_app" = "造園利用: ";
+"plant_detail_florescence" = "開花期: ";
+"plant_detail_fruiting_period" = "結実期: ";
+
+// MARK: - Share Page
+"share_title" = "共有";
+"share_ratio" = "比率";
+"share_orientation" = "向き";
+"share_style" = "スタイル";
+"share_save_success_detail" = "保存しました。アルバムを確認してください。";
+"share_save_error" = "保存に失敗: %@";
+
+// MARK: - Share Edit Options
+"share_edit_device_size" = "デバイスサイズ";
+"share_edit_square" = "正方形";
+"share_edit_portrait" = "縦向き";
+"share_edit_landscape" = "横向き";
+"share_edit_solid_color" = "単色";
+"share_edit_text_only" = "テキストのみ";
+"share_edit_image_only" = "画像のみ";
+"share_edit_style_one" = "スタイル1";
+"share_edit_style_two" = "スタイル2";
+
+// MARK: - Alert
+"alert_title" = "お知らせ";
+"alert_input_empty" = "入力内容が空です";
+
+// MARK: - Setting Custom History
+"setting_custom_history" = "履歴：%@";
+
+// MARK: - Permissions
+"permission_photo_title" = "写真へのアクセスが必要です";
+"permission_photo_message" = "設定で写真へのアクセスを許可してください";
+"permission_photo_denied" = "写真の保存にはアルバムへのアクセスが必要です";
+"permission_undetermined" = "権限が未確定です";
+"permission_unknown" = "不明な権限状態";

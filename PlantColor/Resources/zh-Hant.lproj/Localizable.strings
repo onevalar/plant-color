@@ -1,0 +1,157 @@
+/* Traditional Chinese */
+
+// MARK: - Common
+"common_edit" = "編輯";
+"common_done" = "完成";
+"common_cancel" = "取消";
+"common_confirm" = "確定";
+"common_clear" = "清除";
+"common_save" = "儲存";
+"common_delete" = "刪除";
+"common_search" = "搜尋";
+"common_share" = "分享";
+
+// MARK: - Home
+"home_mode_plant" = "植物色彩";
+"home_mode_traditional" = "傳統色彩";
+"home_latin_prefix" = "拉丁名: ";
+
+// MARK: - Loading
+"loading_updating_data" = "資料有更新，正在更新中...";
+
+// MARK: - Color Series
+"color_series_red" = "紅";
+"color_series_orange" = "橙";
+"color_series_yellow" = "黃";
+"color_series_green" = "綠";
+"color_series_blue" = "藍";
+"color_series_indigo" = "靛";
+"color_series_purple" = "紫";
+"color_series_brown" = "褐";
+"color_series_gray" = "灰";
+
+// MARK: - Plant Color Detail Sections
+"plant_detail_intro" = "植物學";
+"plant_detail_derivation" = "色彩由來";
+"plant_detail_food" = "食物";
+"plant_detail_custom" = "風俗";
+"plant_detail_application" = "應用";
+"plant_detail_medicinal_effect" = "藥用功效";
+"plant_detail_story" = "故事";
+"plant_detail_cultivation" = "栽培";
+"plant_detail_meanings" = "花語";
+"plant_detail_literature" = "文學";
+"plant_detail_image0" = "圖片0";
+"plant_detail_image1" = "圖片1";
+"plant_detail_image2" = "圖片2";
+
+// MARK: - Traditional Color Detail Sections
+"traditional_detail_intro" = "色彩概覽";
+"traditional_detail_color_origin" = "色彩由來";
+"traditional_detail_color_story" = "色彩故事";
+"traditional_detail_cultural_customs" = "文化習俗";
+"traditional_detail_art_application" = "藝術應用";
+"traditional_detail_symbolism" = "象徵意義";
+"traditional_detail_literature" = "詩詞文學";
+"traditional_detail_dyeing_craft" = "染色工藝";
+"traditional_detail_color_distinction" = "色彩辨析";
+
+// MARK: - Color Detail Manage
+"manage_title" = "科普頁管理";
+"manage_section_science" = "植物科普";
+"manage_section_other" = "其他版塊";
+"manage_traditional_section_main" = "傳統色知識";
+"manage_traditional_section_other" = "其他版塊";
+
+// MARK: - Settings
+"setting_title" = "設定";
+"setting_section_my_colors" = "我的彩雅";
+"setting_section_features" = "功能設定";
+"setting_section_widget" = "小組件";
+"setting_section_about" = "關於";
+
+"setting_all_colors" = "全部色彩";
+"setting_my_collection" = "我的收藏";
+"setting_scientific_management" = "科普頁管理";
+"setting_auto_switch" = "自動切換顏色";
+"setting_random_switch" = "隨機切換顏色";
+"setting_show_figure" = "顯示圖案";
+"setting_show_color_value" = "顯示色值";
+"setting_custom_content" = "自訂文字內容";
+"setting_color_refresh" = "色彩刷新頻率";
+"setting_acknowledgement" = "致謝";
+"setting_share_app" = "分享應用";
+"setting_rate_app" = "評價應用";
+"setting_contact_feedback" = "聯繫與回饋";
+"setting_language" = "語言";
+"setting_language_follow_system" = "跟隨系統";
+"setting_language_restart_title" = "需要重啟";
+"setting_language_restart_message" = "請重啟應用以套用語言更改。";
+
+"setting_custom_alert_title" = "請輸入組件自訂展示文字";
+"setting_custom_placeholder" = "文字限定20個字元";
+"setting_custom_length_error" = "因排版要求文字限定20個字元";
+"setting_default_rate" = "10s";
+"setting_default_refresh_rate" = "一小時";
+
+// MARK: - Share
+"share_app_text" = "植物彩雅 - 每一種植物色彩，都有自己的故事。";
+"share_save_success" = "儲存成功";
+"share_save_failed" = "儲存失敗";
+
+// MARK: - All Color / Search
+"all_color_title_all" = "全部色彩";
+"all_color_title_collect" = "我的收藏";
+"all_color_empty_hint" = "去收藏心儀的色彩吧！";
+
+// MARK: - Refresh Rate
+"refresh_rate_title" = "色彩刷新頻率";
+"refresh_rate_1hour" = "一小時";
+"refresh_rate_6hours" = "六小時";
+"refresh_rate_1day" = "一天";
+
+// MARK: - HUD Messages
+"hud_loading" = "載入中...";
+"hud_success" = "成功";
+"hud_error" = "失敗";
+
+// MARK: - Plant Detail Intro Labels
+"plant_detail_alias" = "別名: ";
+"plant_detail_growth_habit" = "生長習性: ";
+"plant_detail_distribution" = "地理分布: ";
+"plant_detail_landscape_app" = "園林應用: ";
+"plant_detail_florescence" = "花期: ";
+"plant_detail_fruiting_period" = "果期: ";
+
+// MARK: - Share Page
+"share_title" = "分享";
+"share_ratio" = "比例";
+"share_orientation" = "方向";
+"share_style" = "樣式";
+"share_save_success_detail" = "儲存成功，快去相簿看看吧";
+"share_save_error" = "儲存失敗: %@";
+
+// MARK: - Share Edit Options
+"share_edit_device_size" = "裝置尺寸";
+"share_edit_square" = "正方形";
+"share_edit_portrait" = "直式";
+"share_edit_landscape" = "橫式";
+"share_edit_solid_color" = "純色";
+"share_edit_text_only" = "純文字";
+"share_edit_image_only" = "純圖片";
+"share_edit_style_one" = "風格一";
+"share_edit_style_two" = "風格二";
+
+// MARK: - Alert
+"alert_title" = "溫馨提示";
+"alert_input_empty" = "輸入內容不能為空";
+
+// MARK: - Setting Custom History
+"setting_custom_history" = "歷史：%@";
+
+// MARK: - Permissions
+"permission_photo_title" = "需要存取相簿權限";
+"permission_photo_message" = "請在設定中允許存取相簿";
+"permission_photo_denied" = "需要相簿權限才能儲存圖片";
+"permission_undetermined" = "權限未確定";
+"permission_unknown" = "未知權限狀態";

@@ -1,0 +1,157 @@
+/* English */
+
+// MARK: - Common
+"common_edit" = "Edit";
+"common_done" = "Done";
+"common_cancel" = "Cancel";
+"common_confirm" = "OK";
+"common_clear" = "Clear";
+"common_save" = "Save";
+"common_delete" = "Delete";
+"common_search" = "Search";
+"common_share" = "Share";
+
+// MARK: - Home
+"home_mode_plant" = "Botanical";
+"home_mode_traditional" = "Traditional";
+"home_latin_prefix" = "Latin: ";
+
+// MARK: - Loading
+"loading_updating_data" = "Updating data...";
+
+// MARK: - Color Series
+"color_series_red" = "Red";
+"color_series_orange" = "Orange";
+"color_series_yellow" = "Yellow";
+"color_series_green" = "Green";
+"color_series_blue" = "Blue";
+"color_series_indigo" = "Indigo";
+"color_series_purple" = "Purple";
+"color_series_brown" = "Brown";
+"color_series_gray" = "Gray";
+
+// MARK: - Plant Color Detail Sections
+"plant_detail_intro" = "Botany";
+"plant_detail_derivation" = "Color Origin";
+"plant_detail_food" = "Food";
+"plant_detail_custom" = "Customs";
+"plant_detail_application" = "Applications";
+"plant_detail_medicinal_effect" = "Medicinal";
+"plant_detail_story" = "Stories";
+"plant_detail_cultivation" = "Cultivation";
+"plant_detail_meanings" = "Flower Language";
+"plant_detail_literature" = "Literature";
+"plant_detail_image0" = "Image 0";
+"plant_detail_image1" = "Image 1";
+"plant_detail_image2" = "Image 2";
+
+// MARK: - Traditional Color Detail Sections
+"traditional_detail_intro" = "Overview";
+"traditional_detail_color_origin" = "Color Origin";
+"traditional_detail_color_story" = "Color Stories";
+"traditional_detail_cultural_customs" = "Cultural Customs";
+"traditional_detail_art_application" = "Art Applications";
+"traditional_detail_symbolism" = "Symbolism";
+"traditional_detail_literature" = "Poetry & Literature";
+"traditional_detail_dyeing_craft" = "Dyeing Craft";
+"traditional_detail_color_distinction" = "Color Distinction";
+
+// MARK: - Color Detail Manage
+"manage_title" = "Section Management";
+"manage_section_science" = "Botanical Science";
+"manage_section_other" = "Other Sections";
+"manage_traditional_section_main" = "Traditional Color Knowledge";
+"manage_traditional_section_other" = "Other Sections";
+
+// MARK: - Settings
+"setting_title" = "Settings";
+"setting_section_my_colors" = "My Colors";
+"setting_section_features" = "Features";
+"setting_section_widget" = "Widget";
+"setting_section_about" = "About";
+
+"setting_all_colors" = "All Colors";
+"setting_my_collection" = "My Collection";
+"setting_scientific_management" = "Section Management";
+"setting_auto_switch" = "Auto Switch";
+"setting_random_switch" = "Random Switch";
+"setting_show_figure" = "Show Pattern";
+"setting_show_color_value" = "Show Color Values";
+"setting_custom_content" = "Custom Text";
+"setting_color_refresh" = "Refresh Rate";
+"setting_acknowledgement" = "Acknowledgements";
+"setting_share_app" = "Share App";
+"setting_rate_app" = "Rate App";
+"setting_contact_feedback" = "Contact & Feedback";
+"setting_language" = "Language";
+"setting_language_follow_system" = "Follow System";
+"setting_language_restart_title" = "Restart Required";
+"setting_language_restart_message" = "Please restart the app to apply the language change.";
+
+"setting_custom_alert_title" = "Enter custom widget text";
+"setting_custom_placeholder" = "Max 20 characters";
+"setting_custom_length_error" = "Text is limited to 20 characters";
+"setting_default_rate" = "10s";
+"setting_default_refresh_rate" = "1 Hour";
+
+// MARK: - Share
+"share_app_text" = "PlantColor - Every botanical color has its own story.";
+"share_save_success" = "Saved successfully";
+"share_save_failed" = "Save failed";
+
+// MARK: - All Color / Search
+"all_color_title_all" = "All Colors";
+"all_color_title_collect" = "My Collection";
+"all_color_empty_hint" = "Start collecting your favorite colors!";
+
+// MARK: - Refresh Rate
+"refresh_rate_title" = "Refresh Rate";
+"refresh_rate_1hour" = "1 Hour";
+"refresh_rate_6hours" = "6 Hours";
+"refresh_rate_1day" = "1 Day";
+
+// MARK: - HUD Messages
+"hud_loading" = "Loading...";
+"hud_success" = "Success";
+"hud_error" = "Failed";
+
+// MARK: - Plant Detail Intro Labels
+"plant_detail_alias" = "Alias: ";
+"plant_detail_growth_habit" = "Growth Habit: ";
+"plant_detail_distribution" = "Distribution: ";
+"plant_detail_landscape_app" = "Landscape Use: ";
+"plant_detail_florescence" = "Flowering: ";
+"plant_detail_fruiting_period" = "Fruiting: ";
+
+// MARK: - Share Page
+"share_title" = "Share";
+"share_ratio" = "Ratio";
+"share_orientation" = "Orientation";
+"share_style" = "Style";
+"share_save_success_detail" = "Saved! Check your photo album.";
+"share_save_error" = "Save failed: %@";
+
+// MARK: - Share Edit Options
+"share_edit_device_size" = "Device Size";
+"share_edit_square" = "Square";
+"share_edit_portrait" = "Portrait";
+"share_edit_landscape" = "Landscape";
+"share_edit_solid_color" = "Solid Color";
+"share_edit_text_only" = "Text Only";
+"share_edit_image_only" = "Image Only";
+"share_edit_style_one" = "Style 1";
+"share_edit_style_two" = "Style 2";
+
+// MARK: - Alert
+"alert_title" = "Notice";
+"alert_input_empty" = "Input cannot be empty";
+
+// MARK: - Setting Custom History
+"setting_custom_history" = "History: %@";
+
+// MARK: - Permissions
+"permission_photo_title" = "Photo Library Access Required";
+"permission_photo_message" = "Please allow photo access in Settings";
+"permission_photo_denied" = "Photo library access required to save";
+"permission_undetermined" = "Permission not determined";
+"permission_unknown" = "Unknown permission status";
