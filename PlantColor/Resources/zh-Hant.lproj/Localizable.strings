@@ -29,6 +29,7 @@
 "color_series_purple" = "紫";
 "color_series_brown" = "褐";
 "color_series_gray" = "灰";
+"color_series_all" = "全部";
 
 // MARK: - Plant Color Detail Sections
 "plant_detail_intro" = "植物學";
@@ -86,7 +87,7 @@
 "setting_language" = "語言";
 "setting_language_follow_system" = "跟隨系統";
 "setting_language_restart_title" = "需要重啟";
-"setting_language_restart_message" = "請重啟應用以套用語言更改。";
+"setting_language_restart_message" = "語言已更改，請手動重新啟動應用程式後生效。";
 
 "setting_custom_alert_title" = "請輸入組件自訂展示文字";
 "setting_custom_placeholder" = "文字限定20個字元";
@@ -155,3 +156,45 @@
 "permission_photo_denied" = "需要相簿權限才能儲存圖片";
 "permission_undetermined" = "權限未確定";
 "permission_unknown" = "未知權限狀態";
+"common_copied" = "已複製 %@";
+"color_kind_plant" = "植物色";
+"color_kind_traditional" = "傳統色";
+"detail_tap_to_copy" = "點擊色值即可複製";
+"harmony_title" = "配色推薦";
+"harmony_similar" = "相近的顏色";
+"harmony_similar_in_kind" = "相近的%@";
+"harmony_complementary" = "互補色";
+"harmony_analogous" = "鄰近色";
+"color_desc_summary" = "「%1$@」是一種%2$@、%3$@的%4$@色，HEX 值為 %5$@。";
+"color_desc_lightness_very_light" = "極淺";
+"color_desc_lightness_light" = "偏淺";
+"color_desc_lightness_medium" = "中等深淺";
+"color_desc_lightness_deep" = "偏深";
+"color_desc_lightness_very_deep" = "極深";
+"color_desc_saturation_neutral" = "近乎無彩";
+"color_desc_saturation_soft" = "柔和";
+"color_desc_saturation_moderate" = "飽和度適中";
+"color_desc_saturation_vivid" = "鮮明";
+"color_desc_distinction_line" = "「%1$@」（%2$@ %3$@）：和它相比%4$@";
+"color_diff_lighter" = "更淺";
+"color_diff_darker" = "更深";
+"color_diff_more_vivid" = "更鮮明";
+"color_diff_softer" = "更柔和";
+"color_diff_nearly_same" = "幾乎沒有差別";
+"color_diff_separator" = "、";
+"share_edit_text_values" = "名稱與色值";
+"setting_traditional_management" = "傳統色知識頁管理";
+"manage_traditional_title" = "傳統色知識頁管理";
+"setting_switch_interval" = "自動切換間隔";
+"switch_interval_5s" = "5 秒";
+"switch_interval_10s" = "10 秒";
+"switch_interval_30s" = "30 秒";
+"setting_widget_source" = "小工具顏色來源";
+"widget_source_all" = "全部顏色";
+"widget_source_plant" = "僅植物色";
+"widget_source_traditional" = "僅傳統色";
+"widget_source_collect" = "僅我的收藏";
+"color_diff_redder" = "更偏紅";
+"color_diff_greener" = "更偏綠";
+"color_diff_yellower" = "更偏黃";
+"color_diff_bluer" = "更偏藍";

@@ -22,7 +22,12 @@ class GlassEffectView: UIView {
     }
 
     private lazy var effectView: UIVisualEffectView = {
-        let effect = UIBlurEffect(style: .systemUltraThinMaterial)
+        let effect: UIVisualEffect
+        if #available(iOS 26.0, *) {
+            effect = UIGlassEffect(style: .regular)
+        } else {
+            effect = UIBlurEffect(style: .systemUltraThinMaterial)
+        }
         let view = UIVisualEffectView(effect: effect)
         view.layer.cornerRadius = cornerRadius
         view.layer.masksToBounds = true

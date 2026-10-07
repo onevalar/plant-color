@@ -29,6 +29,7 @@
 "color_series_purple" = "紫";
 "color_series_brown" = "褐";
 "color_series_gray" = "灰";
+"color_series_all" = "すべて";
 
 // MARK: - Plant Color Detail Sections
 "plant_detail_intro" = "植物学";
@@ -86,7 +87,7 @@
 "setting_language" = "言語";
 "setting_language_follow_system" = "システムに従う";
 "setting_language_restart_title" = "再起動が必要";
-"setting_language_restart_message" = "言語の変更を適用するにはアプリを再起動してください。";
+"setting_language_restart_message" = "言語を変更しました。アプリを手動で再起動すると反映されます。";
 
 "setting_custom_alert_title" = "ウィジェットのカスタムテキストを入力";
 "setting_custom_placeholder" = "20文字以内";
@@ -155,3 +156,45 @@
 "permission_photo_denied" = "写真の保存にはアルバムへのアクセスが必要です";
 "permission_undetermined" = "権限が未確定です";
 "permission_unknown" = "不明な権限状態";
+"common_copied" = "コピーしました %@";
+"color_kind_plant" = "植物色";
+"color_kind_traditional" = "伝統色";
+"detail_tap_to_copy" = "色の値をタップするとコピーできます";
+"harmony_title" = "配色のおすすめ";
+"harmony_similar" = "近い色";
+"harmony_similar_in_kind" = "近い%@";
+"harmony_complementary" = "補色";
+"harmony_analogous" = "類似色";
+"color_desc_summary" = "「%1$@」は、%2$@・%3$@の%4$@系の色です（HEX %5$@）。";
+"color_desc_lightness_very_light" = "非常に明るい";
+"color_desc_lightness_light" = "明るい";
+"color_desc_lightness_medium" = "中間の明るさの";
+"color_desc_lightness_deep" = "深い";
+"color_desc_lightness_very_deep" = "とても深い";
+"color_desc_saturation_neutral" = "無彩色に近い";
+"color_desc_saturation_soft" = "穏やかな";
+"color_desc_saturation_moderate" = "ほどよい彩度の";
+"color_desc_saturation_vivid" = "鮮やかな";
+"color_desc_distinction_line" = "「%1$@」（%2$@ %3$@）：この色と比べると%4$@";
+"color_diff_lighter" = "より明るく";
+"color_diff_darker" = "より暗く";
+"color_diff_more_vivid" = "より鮮やかで";
+"color_diff_softer" = "より穏やかで";
+"color_diff_nearly_same" = "ほとんど違いがありません";
+"color_diff_separator" = "、";
+"share_edit_text_values" = "名前と色値";
+"setting_traditional_management" = "伝統色ページの管理";
+"manage_traditional_title" = "伝統色ページの管理";
+"setting_switch_interval" = "自動切り替えの間隔";
+"switch_interval_5s" = "5秒";
+"switch_interval_10s" = "10秒";
+"switch_interval_30s" = "30秒";
+"setting_widget_source" = "ウィジェットの色の種類";
+"widget_source_all" = "すべての色";
+"widget_source_plant" = "植物色のみ";
+"widget_source_traditional" = "伝統色のみ";
+"widget_source_collect" = "お気に入りのみ";
+"color_diff_redder" = "より赤みが強く";
+"color_diff_greener" = "より緑みが強く";
+"color_diff_yellower" = "より黄みが強く";
+"color_diff_bluer" = "より青みが強く";

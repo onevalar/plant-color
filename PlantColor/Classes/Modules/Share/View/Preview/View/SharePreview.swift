@@ -25,15 +25,17 @@ class SharePreview: View {
     
     var isScreenshot: Bool = false
     
-    let colorModel: ColorModel
+    let colorModel: any ColorDisplayable
     
     public var containerView: View?
     
     private var titleLabel: Label?
+
+    private var valuesLabel: Label?
     
     private var iconImage: UIImageView?
     
-    init(colorModel: ColorModel,
+    init(colorModel: any ColorDisplayable,
          items: [ShareEditModel],
          isScreenshot: Bool) {
         self.colorModel = colorModel
@@ -58,6 +60,7 @@ class SharePreview: View {
         updateProperty()
         createContainerView()
         createTitleLabel()
+        createValuesLabel()
         createImageView()
     }
     
@@ -141,6 +144,15 @@ class SharePreview: View {
                     $0.height.equalTo(self.iconImage!.snp.width).multipliedBy(0.8)
                     $0.centerX.equalToSuperview()
                 }
+            case .style_text_values:
+                titleLabel?.snp.makeConstraints {
+                    $0.left.equalToSuperview().offset(sideLength * 0.1)
+                    $0.top.equalToSuperview().offset(ratioLength * 0.15)
+                }
+                valuesLabel?.snp.makeConstraints {
+                    $0.left.equalTo(self.titleLabel!.snp.left)
+                    $0.top.equalTo(self.titleLabel!.snp.bottom).offset(sideLength * 0.04)
+                }
             default:
                 break
             }
@@ -212,6 +224,15 @@ class SharePreview: View {
                     $0.height.equalTo(self.iconImage!.snp.width).multipliedBy(0.8)
                     $0.centerX.equalToSuperview()
                 }
+            case .style_text_values:
+                titleLabel?.snp.makeConstraints {
+                    $0.left.equalToSuperview().offset(ratioLength * 0.08)
+                    $0.top.equalToSuperview().offset(sideLength * 0.12)
+                }
+                valuesLabel?.snp.makeConstraints {
+                    $0.left.equalTo(self.titleLabel!.snp.left)
+                    $0.top.equalTo(self.titleLabel!.snp.bottom).offset(sideLength * 0.04)
+                }
             default:
                 break
             }
@@ -242,7 +263,7 @@ class SharePreview: View {
         }
         titleLabel = Label()
         titleLabel?.textColor = colorModel.textUIColor
-        titleLabel?.text = colorModel.plantName
+        titleLabel?.text = colorModel.displayName
         titleLabel?.font = UIFont.fzktjwgb10(size: (isScreenshot ? 1 : ratio.screenScale) * 46)
         
         if let titleLabel = titleLabel {
@@ -250,11 +271,28 @@ class SharePreview: View {
         }
     }
     
+    private func createValuesLabel() {
+
+        valuesLabel?.removeFromSuperview()
+        valuesLabel = nil
+
+        guard style == .style_text_values else { return }
+        let label = Label()
+        label.numberOfLines = 0
+        label.textColor = colorModel.textUIColor
+        let scale = isScreenshot ? 1 : ratio.screenScale
+        label.font = .monospacedDigitSystemFont(ofSize: scale * 28, weight: .regular)
+        label.text = "HEX  \(colorModel.colorHEX)\nRGB  \(colorModel.colorRGB.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: ",", with: " "))\nCMYK  \(colorModel.colorCMYK.replacingOccurrences(of: ",", with: " "))"
+        valuesLabel = label
+        containerView?.addSubview(label)
+    }
+
     private func createImageView() {
         
         iconImage?.removeFromSuperview()
         
-        if style == .style_empty || style == .style_onlyText {
+        iconImage = nil
+        if style == .style_empty || style == .style_onlyText || style == .style_text_values {
             return
         }
         

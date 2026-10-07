@@ -14,6 +14,6 @@ enum AppKey {
     static let buildNumberKey = Key<String>("buildNumber")
     static let isConfigDefaultColorDetail = Key<Bool>("isConfigDefaultColorDetail")
     static let isConfigDefaultSetting = Key<Bool>("isConfigDefaultSetting")
-    static let isConfigDefaultTraditionalColorDetail = Key<Bool>("isConfigDefaultTraditionalColorDetail")
-    static let traditionalColorBuildNumberKey = Key<String>("traditionalColorBuildNumber")
+    static let traditionalDetailConfigRevision = Key<Int>("traditionalDetailConfigRevision")
+    static let dataFingerprintKey = Key<String>("dataFingerprint")
 }

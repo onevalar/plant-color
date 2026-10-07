@@ -42,7 +42,7 @@ extension MenuType {
         case .search:
             return .sf(systemSymbol: .magnifyingglass)
         case .share:
-            return .sf(systemSymbol: .square)
+            return .sf(systemSymbol: .squareAndArrowUp)
         case .setting:
             return .sf(systemSymbol: .sliderHorizontal3)
         }

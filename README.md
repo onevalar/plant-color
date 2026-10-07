@@ -1,122 +1,49 @@
 # PlantColor 植物彩雅
 
-一个展示中国传统植物色彩文化的iOS应用。
+一个展示中国传统色彩文化的 iOS App：32 种植物色 + 526 种传统色，带桌面小组件。
 
-## 修复内容
+## 功能
 
-### ✅ 已修复的问题
+- **两套色彩**：植物色（有植物介绍、配图、诗词）与传统色（有由来、工艺、象征、诗词等，部分颜色有补充内容）。
+- **首页浏览**：上下滑动换颜色，左右滑动看简介；可自动 / 随机切换，间隔可选 5 / 10 / 30 秒。
+- **详情页**：收藏、分享海报、点击 HEX / RGB / CMYK 即可复制，底部有"配色推荐"（相近色、跨类对照、互补色、邻近色）。
+- **搜索与筛选**：边输入边搜索（名称、拼音、科属、HEX，不区分大小写），可按来源（植物 / 传统）和色系筛选，列表与网格互相切换时保留条件。
+- **分享海报**：植物色、传统色都能生成海报，可选比例、方向和样式。
+- **小组件**：小、中、大三种尺寸；可选轮播"全部 / 仅植物色 / 仅传统色 / 仅收藏"，可设刷新频率、显示色值、自定义文字；点击小组件直达对应颜色的详情页。
+- **多语言**：简体中文、繁体中文、英文、日文、韩文（传统色的补充文字目前只有中文）。
 
-1. **数据文件问题**
-   - 将 `PlantColor.json` 从 `植物彩雅文档/` 复制到 `PlantColor/Resources/`
-   - 确保应用启动时能正确加载颜色数据
+## 开发环境
 
-2. **Info.plist 配置完善**
-   - 添加了完整的应用配置信息
-   - 包含权限描述、设备支持、界面方向等
-   - 添加了隐私权限说明
-
-3. **错误处理机制改进**
-   - 创建了 `Logger.swift` 统一日志管理
-   - 替换所有 `print` 语句为proper的日志记录
-   - 添加了 `ErrorExtension.swift` 提供用户友好的错误描述
-
-4. **配置管理优化**
-   - 创建了 `AppConfig.plist` 配置文件
-   - 将敏感信息从硬编码移到配置文件
-   - 改进了 `AppConfigs.swift` 的配置读取逻辑
-
-5. **代码质量提升**
-   - 添加了单元测试框架 `UnitTests.swift`
-   - 改进了错误处理机制
-   - 优化了第三方库初始化
-
-6. **构建警告修复**
-   - 解决了 "Create Symlinks to Header Folders" 警告
-   - 解决了 "Ignoring duplicate libraries: '-lc++'" 警告
-   - 优化了CocoaPods配置和post_install脚本
-
-### 🔧 技术改进
-
-- **日志系统**: 使用 `os.log` 框架，支持不同级别的日志记录
-- **错误处理**: 自定义错误类型和用户友好的错误描述  
-- **配置管理**: 从配置文件读取敏感信息，提高安全性
-- **测试框架**: 简单的单元测试框架，确保核心功能正常
-- **构建优化**: 解决CocoaPods构建警告，优化编译设置
-
-### 📱 功能特性
-
-- 展示中国传统植物色彩
-- 支持Widget小组件
-- 自动切换颜色展示
-- 自定义内容设置
-- 友盟统计集成
-
-### 🛠 开发环境
-
-- iOS 12.0+
-- Swift 5.0+
-- Xcode 12.0+
+- Xcode 15 及以上（建议 Xcode 26），Swift 5，最低支持 iOS 15
 - CocoaPods
 
-### 📦 依赖库
+```bash
+pod install
+open PlantColor.xcworkspace
+```
 
-- RealmSwift (数据库)
-- Kingfisher (图片加载)
-- SnapKit (布局)
-- MJRefresh (下拉刷新)
-- MBProgressHUD (加载提示)
-- 友盟SDK (统计)
+## 数据文件
 
-### 🚀 运行项目
+| 文件 | 内容 |
+| --- | --- |
+| `PlantColor/Resources/PlantColor.json` | 32 种植物色 |
+| `PlantColor/Resources/chinese_traditional_colors.json` | 526 种传统色 |
 
-1. **安装依赖**：
-   ```bash
-   pod install
-   ```
+- 数据文件改动后，App 下次启动会自动重新导入（根据文件内容判断，不用手动升版本号），用户的收藏会保留。
+- 传统色数据用脚本整理，**不要手工改 JSON 里的 RGB**：
 
-2. **运行构建优化脚本**（可选）：
-   ```bash
-   ./scripts/build_optimizer.sh
-   ```
+```bash
+python3 scripts/build_traditional_colors.py
+```
 
-3. **打开项目**：
-   ```bash
-   open PlantColor.xcworkspace
-   ```
+  脚本会以 HEX 为准重新计算 RGB、修正已确认的错别字，并把脚本里 `NOTES` 的补充内容（由来、工艺、象征、诗词）写进 JSON。想给某个颜色补文字，改 `NOTES` 后重新运行即可。没有补充内容的颜色，App 会根据色值自动生成"色彩概述"和"色彩辨析"。
 
-4. **选择目标设备并运行**
+## 小组件与 App 的数据通道
 
-### 📋 注意事项
+- 两者通过 App Group `group.com.anyujia.PlantColor` 共享数据，名字必须与两个 target 的 entitlements 一致（代码里在 `WidgetCenter.swift`）。
+- App 把"小组件要轮播的颜色列表"写进共享空间，小组件只负责按顺序读取并展示；收藏变化、切换来源时 App 会重新生成列表。
+- 点击小组件会打开 `plantcolor://color/<plant|traditional>/<id>`。
 
-- 确保 `PlantColor.json` 文件在正确位置
-- 检查 `AppConfig.plist` 中的配置信息
-- 在真机上测试Widget功能
-- 确保网络权限正常
-- 使用 `PlantColor.xcworkspace` 而不是 `.xcodeproj`
+## 调试
 
-### 🔍 调试信息
-
-应用会在控制台输出详细的日志信息，包括：
-- 应用初始化状态
-- 数据加载结果
-- 错误信息详情
-- 测试结果
-- 构建环境检查
-
-在DEBUG模式下会自动运行单元测试，检查核心功能是否正常。
-
-### 🛠 构建警告解决方案
-
-#### "Create Symlinks to Header Folders" 警告
-- **原因**: CocoaPods脚本构建阶段没有指定输出文件
-- **解决**: 重新安装Pods并优化post_install配置
-
-#### "Ignoring duplicate libraries: '-lc++'" 警告
-- **原因**: 链接器发现重复的C++标准库
-- **解决**: 在Podfile中过滤重复的链接标志
-
-#### 构建优化
-- 清理DerivedData缓存
-- 重新安装Pods依赖
-- 优化编译设置
-- 设置正确的模块化头文件配置 
+调试版启动时会运行一组自检（数据格式、HEX 与 RGB 是否一致、色值换算、小组件数据等），结果写在 Xcode 控制台，搜索"自检"即可。

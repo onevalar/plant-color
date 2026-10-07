@@ -29,6 +29,7 @@
 "color_series_purple" = "보라";
 "color_series_brown" = "갈색";
 "color_series_gray" = "회색";
+"color_series_all" = "전체";
 
 // MARK: - Plant Color Detail Sections
 "plant_detail_intro" = "식물학";
@@ -86,7 +87,7 @@
 "setting_language" = "언어";
 "setting_language_follow_system" = "시스템 설정";
 "setting_language_restart_title" = "재시작 필요";
-"setting_language_restart_message" = "언어 변경을 적용하려면 앱을 재시작해 주세요.";
+"setting_language_restart_message" = "언어가 변경되었습니다. 앱을 직접 다시 시작하면 적용됩니다.";
 
 "setting_custom_alert_title" = "위젯 사용자 정의 텍스트 입력";
 "setting_custom_placeholder" = "20자 이내";
@@ -155,3 +156,45 @@
 "permission_photo_denied" = "사진 저장을 위해 앨범 접근 권한이 필요합니다";
 "permission_undetermined" = "권한이 결정되지 않았습니다";
 "permission_unknown" = "알 수 없는 권한 상태";
+"common_copied" = "복사됨 %@";
+"color_kind_plant" = "식물색";
+"color_kind_traditional" = "전통색";
+"detail_tap_to_copy" = "색상 값을 탭하면 복사됩니다";
+"harmony_title" = "배색 추천";
+"harmony_similar" = "비슷한 색";
+"harmony_similar_in_kind" = "비슷한 %@";
+"harmony_complementary" = "보색";
+"harmony_analogous" = "유사색";
+"color_desc_summary" = "「%1$@」은(는) %2$@, %3$@ %4$@ 계열의 색입니다 (HEX %5$@).";
+"color_desc_lightness_very_light" = "매우 밝은";
+"color_desc_lightness_light" = "밝은";
+"color_desc_lightness_medium" = "중간 밝기의";
+"color_desc_lightness_deep" = "짙은";
+"color_desc_lightness_very_deep" = "매우 짙은";
+"color_desc_saturation_neutral" = "무채색에 가까운";
+"color_desc_saturation_soft" = "부드러운";
+"color_desc_saturation_moderate" = "채도가 적당한";
+"color_desc_saturation_vivid" = "선명한";
+"color_desc_distinction_line" = "「%1$@」(%2$@ %3$@): 이 색과 비교하면 %4$@";
+"color_diff_lighter" = "더 밝고";
+"color_diff_darker" = "더 어둡고";
+"color_diff_more_vivid" = "더 선명하고";
+"color_diff_softer" = "더 부드럽고";
+"color_diff_nearly_same" = "거의 차이가 없습니다";
+"color_diff_separator" = ", ";
+"share_edit_text_values" = "이름과 색상 값";
+"setting_traditional_management" = "전통색 페이지 관리";
+"manage_traditional_title" = "전통색 페이지 관리";
+"setting_switch_interval" = "자동 전환 간격";
+"switch_interval_5s" = "5초";
+"switch_interval_10s" = "10초";
+"switch_interval_30s" = "30초";
+"setting_widget_source" = "위젯 색상 종류";
+"widget_source_all" = "모든 색";
+"widget_source_plant" = "식물색만";
+"widget_source_traditional" = "전통색만";
+"widget_source_collect" = "즐겨찾기만";
+"color_diff_redder" = "더 붉고";
+"color_diff_greener" = "더 푸르고";
+"color_diff_yellower" = "더 노랗고";
+"color_diff_bluer" = "더 푸르스름하고";

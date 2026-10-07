@@ -12,13 +12,13 @@ class ShareEditListContainerView: View {
 
     let item: ShareEditModel
 
-    let colorModel: ColorModel
+    let colorModel: any ColorDisplayable
 
     var didSelectItemAt: ((Int) -> Void)?
 
     init(frame: CGRect,
          item: ShareEditModel,
-         colorModel: ColorModel) {
+         colorModel: any ColorDisplayable) {
         self.item = item
         self.colorModel = colorModel
         super.init(frame: frame)

@@ -105,12 +105,12 @@ public extension RealmWrapper where Base: RealmExtensionable {
                 completion?($0)
             }
         } catch {
-            print("Realm not write to database: \(error)")
+            AppLogger.shared.error("Realm not write to database: \(error)")
             completion?(.failure(error))
         }
     }
 
-    private static func createConfiguration() -> Realm.Configuration {
+    static func createConfiguration() -> Realm.Configuration {
         var config = Realm.Configuration()
 
         config.schemaVersion = Base.schemaVersion

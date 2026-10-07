@@ -43,7 +43,7 @@ public extension MBHUDWrapper where Base: UIView {
 
         let hud = MBProgressHUD.forView(self.base)
         if hud == nil {
-            print("\(String(describing: self))中不存在 MBProgressHUD 对象")
+            AppLogger.shared.warning("\(String(describing: self))中不存在 MBProgressHUD 对象")
         }
         return hud
     }

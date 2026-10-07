@@ -7,9 +7,31 @@
 
 import UIKit
 
+// MARK: - Kind
+
+/// 颜色的来源：植物色 / 传统色
+enum ColorKind: String {
+    case plant
+    case traditional
+
+    var title: String {
+        switch self {
+        case .plant: return NSLocalizedString("color_kind_plant", comment: "")
+        case .traditional: return NSLocalizedString("color_kind_traditional", comment: "")
+        }
+    }
+}
+
 // MARK: - Protocol
 
 protocol ColorDisplayable: AnyObject {
+    /// 数据库主键。植物色与传统色各自独立编号，需配合 colorKind 才能唯一确定一个颜色
+    var id: Int { get }
+    var colorKind: ColorKind { get }
+    var colorHEX: String { get }
+    var colorRGB: String { get }
+    var colorCMYK: String { get }
+    var colorSeries: ColorSeries? { get }
     var displayName: String { get }
     var displayAbstract: NSAttributedString { get }
     var color: UIColor { get }
@@ -27,6 +49,10 @@ protocol ColorDisplayable: AnyObject {
 
 extension ColorModel: ColorDisplayable {
 
+    var colorKind: ColorKind {
+        .plant
+    }
+
     var displayName: String {
         plantName
     }
@@ -39,6 +65,7 @@ extension ColorModel: ColorDisplayable {
         ColorModel.re.transaction(writeHandler: { _ in
             self.isCollect = !self.isCollect
         })
+        WidgetPlaylist.collectDidChange()
     }
 
     func makeDetailViewController() -> UIViewController {
@@ -49,6 +76,10 @@ extension ColorModel: ColorDisplayable {
 // MARK: - TraditionalColorModel Conformance
 
 extension TraditionalColorModel: ColorDisplayable {
+
+    var colorKind: ColorKind {
+        .traditional
+    }
 
     var displayName: String {
         name
@@ -65,7 +96,7 @@ extension TraditionalColorModel: ColorDisplayable {
             dyeingCraftDetail,
             colorDistinctionDetail
         ]
-        let text = candidates.first(where: { !$0.isEmpty }) ?? ""
+        let text = candidates.first(where: { !$0.isEmpty }) ?? ColorDescriber.summary(for: self)
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 6
         return NSAttributedString(string: text, attributes: [
@@ -78,6 +109,7 @@ extension TraditionalColorModel: ColorDisplayable {
         TraditionalColorModel.re.transaction(writeHandler: { _ in
             self.isCollect = !self.isCollect
         })
+        WidgetPlaylist.collectDidChange()
     }
 
     func makeDetailViewController() -> UIViewController {

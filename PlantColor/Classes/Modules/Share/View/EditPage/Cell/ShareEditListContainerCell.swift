@@ -30,7 +30,7 @@ class ShareEditListContainerCell: UICollectionViewCell {
         }
     }
 
-    var colorModel: ColorModel?
+    var colorModel: (any ColorDisplayable)?
 
     var item: ShareEditType? {
         didSet {

@@ -67,10 +67,17 @@ extension AppDelegate {
         Defaults().set(true, for: AppKey.isConfigDefaultSetting)
     }
 
+    /// 传统色详情页的默认版块。
+    /// 版块内容补全后，默认全部显示；旧版本的设置当时并不影响页面，所以升级时直接重置一次。
     func setTraditionalColorDetailDefaultConfig() {
 
-        if Defaults().get(for: AppKey.isConfigDefaultTraditionalColorDetail) ?? false {
+        let revision = 2
+        if (Defaults().get(for: AppKey.traditionalDetailConfigRevision) ?? 0) >= revision {
             return
+        }
+
+        TraditionalColorDetailConfig.re.transaction { realm in
+            realm.delete(realm.objects(TraditionalColorDetailConfig.self))
         }
 
         let config = TraditionalColorDetailConfig()
@@ -80,12 +87,11 @@ extension AppDelegate {
                                               .colorStory,
                                               .culturalCustoms,
                                               .artApplication,
-                                              .dyeingCraft])
-
-        config.defaultOther.append(objectsIn: [.literature,
-                                                .symbolism,
-                                                .colorDistinction])
+                                              .symbolism,
+                                              .literature,
+                                              .dyeingCraft,
+                                              .colorDistinction])
         config.re.add()
-        Defaults().set(true, for: AppKey.isConfigDefaultTraditionalColorDetail)
+        Defaults().set(revision, for: AppKey.traditionalDetailConfigRevision)
     }
 }

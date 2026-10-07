@@ -29,6 +29,7 @@
 "color_series_purple" = "Purple";
 "color_series_brown" = "Brown";
 "color_series_gray" = "Gray";
+"color_series_all" = "All";
 
 // MARK: - Plant Color Detail Sections
 "plant_detail_intro" = "Botany";
@@ -86,7 +87,7 @@
 "setting_language" = "Language";
 "setting_language_follow_system" = "Follow System";
 "setting_language_restart_title" = "Restart Required";
-"setting_language_restart_message" = "Please restart the app to apply the language change.";
+"setting_language_restart_message" = "The language has been changed. Please restart the app manually for it to take effect.";
 
 "setting_custom_alert_title" = "Enter custom widget text";
 "setting_custom_placeholder" = "Max 20 characters";
@@ -155,3 +156,45 @@
 "permission_photo_denied" = "Photo library access required to save";
 "permission_undetermined" = "Permission not determined";
 "permission_unknown" = "Unknown permission status";
+"common_copied" = "Copied %@";
+"color_kind_plant" = "Plant";
+"color_kind_traditional" = "Traditional";
+"detail_tap_to_copy" = "Tap a value to copy it";
+"harmony_title" = "Color Matches";
+"harmony_similar" = "Similar colors";
+"harmony_similar_in_kind" = "Similar %@ colors";
+"harmony_complementary" = "Complementary";
+"harmony_analogous" = "Analogous";
+"color_desc_summary" = "%1$@ is a %2$@, %3$@ color in the %4$@ family (HEX %5$@).";
+"color_desc_lightness_very_light" = "very light";
+"color_desc_lightness_light" = "light";
+"color_desc_lightness_medium" = "mid-tone";
+"color_desc_lightness_deep" = "deep";
+"color_desc_lightness_very_deep" = "very deep";
+"color_desc_saturation_neutral" = "nearly neutral";
+"color_desc_saturation_soft" = "soft";
+"color_desc_saturation_moderate" = "moderately saturated";
+"color_desc_saturation_vivid" = "vivid";
+"color_desc_distinction_line" = "%1$@ (%2$@ %3$@): compared with this color, it is %4$@.";
+"color_diff_lighter" = "lighter";
+"color_diff_darker" = "darker";
+"color_diff_more_vivid" = "more vivid";
+"color_diff_softer" = "softer";
+"color_diff_nearly_same" = "almost identical";
+"color_diff_separator" = ", ";
+"share_edit_text_values" = "Name & values";
+"setting_traditional_management" = "Traditional Color Page";
+"manage_traditional_title" = "Traditional Color Page";
+"setting_switch_interval" = "Auto-switch interval";
+"switch_interval_5s" = "5 seconds";
+"switch_interval_10s" = "10 seconds";
+"switch_interval_30s" = "30 seconds";
+"setting_widget_source" = "Widget colors";
+"widget_source_all" = "All colors";
+"widget_source_plant" = "Plant colors only";
+"widget_source_traditional" = "Traditional colors only";
+"widget_source_collect" = "My favorites only";
+"color_diff_redder" = "redder";
+"color_diff_greener" = "greener";
+"color_diff_yellower" = "yellower";
+"color_diff_bluer" = "bluer";

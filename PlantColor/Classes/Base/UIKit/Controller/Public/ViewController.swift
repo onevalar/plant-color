@@ -41,14 +41,14 @@ class ViewController: UIViewController {
     // MARK: - deinit
     deinit {
 
-        print("\(type(of: self)): Deinited")
+        AppLogger.shared.debug("\(type(of: self)): Deinited")
     }
 
     // MARK: - didReceiveMemoryWarning
     override func didReceiveMemoryWarning() {
 
         super.didReceiveMemoryWarning()
-        print("\(type(of: self)): Received Memory Warning")
+        AppLogger.shared.warning("\(type(of: self)): Received Memory Warning")
     }
 
     // MARK: - init

@@ -15,7 +15,7 @@ class ShareEditPageView: View {
     
     var items: [ShareEditModel] = []
 
-    let colorModel: ColorModel
+    let colorModel: any ColorDisplayable
 
     var didSelectEditType: (([ShareEditModel]) -> Void)?
 
@@ -38,7 +38,7 @@ class ShareEditPageView: View {
     private lazy var listContainerView = JXCategoryListContainerView(type: .scrollView,
                                                                      delegate: self)!
 
-    init(colorModel: ColorModel, items: [ShareEditModel]) {
+    init(colorModel: any ColorDisplayable, items: [ShareEditModel]) {
         self.colorModel = colorModel
         self.items = items
         super.init(frame: .zero)

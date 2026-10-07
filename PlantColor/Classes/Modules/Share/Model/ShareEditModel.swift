@@ -62,6 +62,9 @@ enum ShareEditType: String {
     case style_image_text_bottom
 
     case style_text_image_bottom_right
+
+    /// 名称 + 色值（没有配图时的替代样式）
+    case style_text_values
 }
 
 extension ShareEditType {
@@ -89,6 +92,8 @@ extension ShareEditType {
             return NSLocalizedString("share_edit_style_one", comment: "")
         case .style_text_image_bottom_right:
             return NSLocalizedString("share_edit_style_two", comment: "")
+        case .style_text_values:
+            return NSLocalizedString("share_edit_text_values", comment: "")
         }
     }
 
@@ -116,6 +121,8 @@ extension ShareEditType {
             return R.image.nameStyle_01.name
         case .style_text_image_bottom_right:
             return R.image.nameStyle_02.name
+        case .style_text_values:
+            return R.image.designationStyle.name
         }
     }
     

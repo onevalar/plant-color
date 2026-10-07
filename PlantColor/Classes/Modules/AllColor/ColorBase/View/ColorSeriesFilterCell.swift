@@ -19,9 +19,17 @@ class ColorSeriesFilterCell: UICollectionViewCell {
     public var item: ColorSeries? {
         didSet {
 
-            guard let item = item else { return }
-            nameLabel.text = item.title
-            colorView.backgroundColor = item.color
+            if let item = item {
+                nameLabel.text = item.title
+                colorView.backgroundColor = item.color
+                colorView.layer.borderWidth = 0
+            } else {
+                // 没有色系 = "全部"，用描边的空心色块表示
+                nameLabel.text = NSLocalizedString("color_series_all", comment: "")
+                colorView.backgroundColor = .white
+                colorView.layer.borderWidth = 1
+                colorView.layer.borderColor = UIColor.lightGray.cgColor
+            }
         }
     }
 }

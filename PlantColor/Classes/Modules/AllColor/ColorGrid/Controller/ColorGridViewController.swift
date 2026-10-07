@@ -43,7 +43,7 @@ class ColorGridViewController: ColorListBaseViewController {
     override func listDidClick() {
         super.listDidClick()
 
-        let vc = ColorListViewController(type: type, searchKey: searchKey)
+        let vc = ColorListViewController(type: type, searchKey: searchKey, colorSeries: colorSeries, sourceFilter: sourceFilter)
         vc.isGrid = isGrid
 //        vc.tableView.contentOffset.y = collectionView.contentOffset.y + collectionView.contentInset.top
         hero.replaceViewController(with: vc)

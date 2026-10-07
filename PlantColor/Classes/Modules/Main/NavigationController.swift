@@ -48,7 +48,7 @@ class NavigationController: UINavigationController {
     }
 
     deinit {
-        print("\(type(of: self)): deinit")
+        AppLogger.shared.debug("\(type(of: self)): deinit")
     }
 }
 

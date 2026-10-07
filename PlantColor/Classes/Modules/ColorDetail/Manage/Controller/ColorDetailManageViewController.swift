@@ -7,11 +7,27 @@
 
 import UIKit
 
+/// "科普页管理"：决定详情页显示哪些版块、按什么顺序。植物色和传统色各有一份设置。
 class ColorDetailManageViewController: TableViewController {
 
-    private let disableEdit: [ColorDetailInfoType] = [.intro]
+    enum Kind {
+        case plant
+        case traditional
+    }
 
-    init() {
+    /// 列表里的一行（植物色和传统色的版块类型不同，这里统一成一种）
+    private struct Entry {
+        let title: String
+        /// 不允许隐藏和移动（如"概览"）
+        let isLocked: Bool
+        let plant: ColorDetailInfoType?
+        let traditional: TraditionalColorDetailInfoType?
+    }
+
+    private let kind: Kind
+
+    init(kind: Kind = .plant) {
+        self.kind = kind
         super.init(style: .insetGrouped)
     }
 
@@ -19,9 +35,11 @@ class ColorDetailManageViewController: TableViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private var items: [[ColorDetailInfoType]] = []
+    private var items: [[Entry]] = []
 
-    private var localConfig: ColorDetailConfig?
+    private var plantConfig: ColorDetailConfig?
+
+    private var traditionalConfig: TraditionalColorDetailConfig?
 
     override func makeUI() {
         super.makeUI()
@@ -39,16 +57,26 @@ class ColorDetailManageViewController: TableViewController {
     }
 
     func loadData() {
-
-        localConfig = try? ColorDetailConfig.re.objects().first
-        guard let localConfig = localConfig else { return }
-        items.append(localConfig.defaultNow.toArray)
-        items.append(localConfig.defaultOther.toArray)
+        switch kind {
+        case .plant:
+            plantConfig = try? ColorDetailConfig.re.objects().first
+            guard let config = plantConfig else { return }
+            items = [config.defaultNow.toArray, config.defaultOther.toArray].map { list in
+                list.map { Entry(title: $0.title, isLocked: $0 == .intro, plant: $0, traditional: nil) }
+            }
+        case .traditional:
+            traditionalConfig = try? TraditionalColorDetailConfig.re.objects().first
+            guard let config = traditionalConfig else { return }
+            items = [config.defaultNow.toArray, config.defaultOther.toArray].map { list in
+                list.map { Entry(title: $0.title, isLocked: $0 == .intro, plant: nil, traditional: $0) }
+            }
+        }
         tableView.reloadData()
     }
 
     private func setUpNav() {
-        navigation.item.title = NSLocalizedString("manage_title", comment: "")
+        navigation.item.title = NSLocalizedString(kind == .plant ? "manage_title" : "manage_traditional_title",
+                                                  comment: "")
         navigation.item.rightBarButtonItem = UIBarButtonItem(title: NSLocalizedString("common_edit", comment: ""),
                                                              style: .done,
                                                              target: self,
@@ -68,13 +96,27 @@ class ColorDetailManageViewController: TableViewController {
     }
 
     private func completeEdit() {
-
-        ColorDetailConfig.re.transaction { [weak self] _ in
-            guard let self = self else { return }
-            self.localConfig?.defaultNow.removeAll()
-            self.localConfig?.defaultOther.removeAll()
-            self.localConfig?.defaultNow.append(objectsIn: self.items[0])
-            self.localConfig?.defaultOther.append(objectsIn: self.items[1])
+        switch kind {
+        case .plant:
+            ColorDetailConfig.re.transaction { [weak self] _ in
+                guard let self = self else { return }
+                let now = self.items[0].compactMap(\.plant)
+                let other = self.items[1].compactMap(\.plant)
+                self.plantConfig?.defaultNow.removeAll()
+                self.plantConfig?.defaultOther.removeAll()
+                self.plantConfig?.defaultNow.append(objectsIn: now)
+                self.plantConfig?.defaultOther.append(objectsIn: other)
+            }
+        case .traditional:
+            TraditionalColorDetailConfig.re.transaction { [weak self] _ in
+                guard let self = self else { return }
+                let now = self.items[0].compactMap(\.traditional)
+                let other = self.items[1].compactMap(\.traditional)
+                self.traditionalConfig?.defaultNow.removeAll()
+                self.traditionalConfig?.defaultOther.removeAll()
+                self.traditionalConfig?.defaultNow.append(objectsIn: now)
+                self.traditionalConfig?.defaultOther.append(objectsIn: other)
+            }
         }
     }
 }
@@ -103,7 +145,12 @@ extension ColorDetailManageViewController: UITableViewDataSource {
 extension ColorDetailManageViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        section == 0 ? NSLocalizedString("manage_section_science", comment: "") : NSLocalizedString("manage_section_other", comment: "")
+        switch (kind, section) {
+        case (.plant, 0): return NSLocalizedString("manage_section_science", comment: "")
+        case (.traditional, 0): return NSLocalizedString("manage_traditional_section_main", comment: "")
+        case (.plant, _): return NSLocalizedString("manage_section_other", comment: "")
+        case (.traditional, _): return NSLocalizedString("manage_traditional_section_other", comment: "")
+        }
     }
 
 //    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -163,8 +210,6 @@ extension ColorDetailManageViewController: UITableViewDelegate {
     }
 
     func isAllowEdit(indexPath: IndexPath) -> Bool {
-        disableEdit.filter { [unowned self] in
-            self.items[indexPath.section][indexPath.row] == $0
-        }.isEmpty
+        !items[indexPath.section][indexPath.row].isLocked
     }
 }

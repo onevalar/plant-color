@@ -8,11 +8,13 @@
 import UIKit
 
 class ColorSeriesFilterView: View {
-    static var height: CGFloat = 110
+    static var height: CGFloat = 140
 
-    var didClickColorSeries: ((ColorSeries) -> Void)?
+    /// 传 nil 表示选了"全部"，即取消色系筛选
+    var didClickColorSeries: ((ColorSeries?) -> Void)?
 
-    private var items: [ColorSeries] = [.red,
+    private var items: [ColorSeries?] = [nil,
+                                        .red,
                                         .orange,
                                         .yellow,
                                         .green,

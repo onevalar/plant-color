@@ -37,6 +37,31 @@ class ColorDetailViewController: TableViewController {
         tableView.sectionHeaderHeight = 15
         tableView.showsVerticalScrollIndicator = false
         loadData()
+        setUpInsightFooter()
+    }
+
+    private var footerView: ColorInsightFooterView?
+
+    /// 底部加上"色值（点击复制）"和"配色推荐"
+    private func setUpInsightFooter() {
+        let footer = ColorInsightFooterView(item: colorModel)
+        footer.didSelectItem = { [weak self] item in
+            self?.navigationController?.pushViewController(item.makeDetailViewController(),
+                                                           animated: true)
+        }
+        footerView = footer
+        tableView.tableFooterView = footer
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        // 底部的高度取决于宽度，宽度确定后再算
+        guard let footer = footerView, tableView.bounds.width > 0 else { return }
+        let height = footer.height(fitting: tableView.bounds.width)
+        if abs(footer.frame.height - height) > 0.5 || footer.frame.width != tableView.bounds.width {
+            footer.frame = CGRect(x: 0, y: 0, width: tableView.bounds.width, height: height)
+            tableView.tableFooterView = footer
+        }
     }
 
     func loadData() {
@@ -132,6 +157,7 @@ class ColorDetailViewController: TableViewController {
     private func setUpNav() {
         navigation.item.title = colorModel.plantName
         navigation.bar.backgroundColor = .white
+        navigation.item.rightBarButtonItems = ColorDetailActions.barItems(for: colorModel, from: self)
     }
 }
 

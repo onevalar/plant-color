@@ -95,15 +95,8 @@ extension ColorMenu: UICollectionViewDelegate {
     private func shareClick() {
 
         guard let item = displayItem else { return }
-        if let colorModel = item as? ColorModel {
-            let vc = NavigationController(rootViewController: ShareViewController(colorModel: colorModel))
-            parentVC?.present(vc, animated: true, completion: nil)
-        } else {
-            // Simple share for traditional colors
-            let text = "\(item.displayName) \(item.colorHexAttributedString(type: .home).string)"
-            let activityVC = UIActivityViewController(activityItems: [text], applicationActivities: nil)
-            parentVC?.present(activityVC, animated: true, completion: nil)
-        }
+        let vc = NavigationController(rootViewController: ShareViewController(item: item))
+        parentVC?.present(vc, animated: true, completion: nil)
     }
     
     private func searchClick() {

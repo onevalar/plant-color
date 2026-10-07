@@ -63,12 +63,47 @@ class ColorListBaseViewController: ViewController {
         }
     }
 
+    /// 只看植物色 / 只看传统色；nil 表示都看
+    var sourceFilter: ColorKind? {
+        didSet {
+            loadingNewData { [weak self] in
+                self?.loadingDataFinished()
+            }
+        }
+    }
+
     var items: [any ColorDisplayable] = []
+
+    lazy var sourceSegment: UISegmentedControl = {
+        let segment = UISegmentedControl(items: [NSLocalizedString("color_series_all", comment: ""),
+                                                 NSLocalizedString("home_mode_plant", comment: ""),
+                                                 NSLocalizedString("home_mode_traditional", comment: "")])
+        segment.selectedSegmentIndex = sourceIndex(for: sourceFilter)
+        segment.addTarget(self, action: #selector(sourceSegmentChanged), for: .valueChanged)
+        return segment
+    }()
+
+    private func sourceIndex(for kind: ColorKind?) -> Int {
+        switch kind {
+        case nil: return 0
+        case .plant?: return 1
+        case .traditional?: return 2
+        }
+    }
+
+    @objc private func sourceSegmentChanged() {
+        switch sourceSegment.selectedSegmentIndex {
+        case 1: sourceFilter = .plant
+        case 2: sourceFilter = .traditional
+        default: sourceFilter = nil
+        }
+    }
 
     lazy var searchView: SearchView = {
         let searchView = SearchView(frame: .zero)
         searchView.searchButtonClicked = { [weak self] in
-            self?.searchKey = $0
+            guard let self = self, self.searchKey != $0 else { return }
+            self.searchKey = $0
         }
         return searchView
     }()
@@ -109,17 +144,29 @@ class ColorListBaseViewController: ViewController {
             $0.height.equalTo(SearchView.height)
         }
 
+        sourceSegment.snp.remakeConstraints {
+            $0.top.equalTo(searchView.snp.bottom).offset(2)
+            $0.left.equalToSuperview().offset(14)
+            $0.right.equalToSuperview().offset(-14)
+            $0.height.equalTo(30)
+        }
+
         filterMenu.snp.remakeConstraints {
-            $0.top.equalTo(searchView.snp.bottom)
+            $0.top.equalTo(sourceSegment.snp.bottom).offset(6)
             $0.height.equalTo(ColorFilterMenu.height)
             $0.left.equalTo(18)
             $0.right.equalTo(-14)
         }
     }
 
-    init(type: ColorListType, searchKey: String? = nil) {
+    init(type: ColorListType,
+         searchKey: String? = nil,
+         colorSeries: ColorSeries? = nil,
+         sourceFilter: ColorKind? = nil) {
         self.type = type
         self.searchKey = searchKey
+        self.colorSeries = colorSeries
+        self.sourceFilter = sourceFilter
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -133,7 +180,9 @@ class ColorListBaseViewController: ViewController {
 
         setUpNav()
         view.addSubview(searchView)
+        view.addSubview(sourceSegment)
         view.addSubview(filterMenu)
+        searchView.text = searchKey
         filterMenu.isGrid = isGrid
     }
 
@@ -144,61 +193,70 @@ class ColorListBaseViewController: ViewController {
 
     func loadingNewData(result: (() -> Void)? = nil) {
         var combined: [any ColorDisplayable] = []
-
-        // 加载植物色
-        do {
-            let plantItems = try ColorModel.re.objects().where { [weak self] element in
-                guard let self else { return element.id > 0 }
-                var query: Query<Bool> = element.id > 0
-                if let key = self.searchKey, !key.isEmpty {
-                    query = query && (
-                        element.plantName.starts(with: key)
-                        || element.plantFamily.starts(with: key)
-                        || element.plantGenus.starts(with: key)
-                        || element.plantAlias.starts(with: key)
-                        || element.plantAbstract.contains(key)
-                    )
-                }
-                if let series = self.colorSeries {
-                    query = query && element.colorSeries == series
-                }
-                if self.type == .collect {
-                    query = query && element.isCollect == true
-                }
-                return query
-            }.toArray
-            combined += plantItems
-        } catch {
-            AppLogger.shared.error("加载植物颜色失败: \(error.localizedDescription)")
+        if sourceFilter != .traditional {
+            combined += loadPlantItems()
         }
-
-        // 加载传统色
-        do {
-            let traditionalItems = try TraditionalColorModel.re.objects().where { [weak self] element in
-                guard let self else { return element.id > 0 }
-                var query: Query<Bool> = element.id > 0
-                if let key = self.searchKey, !key.isEmpty {
-                    query = query && (
-                        element.name.starts(with: key)
-                        || element.pinyin.starts(with: key)
-                    )
-                }
-                if let series = self.colorSeries {
-                    query = query && element.colorSeries == series
-                }
-                if self.type == .collect {
-                    query = query && element.isCollect == true
-                }
-                return query
-            }.toArray
-            combined += traditionalItems
-        } catch {
-            AppLogger.shared.error("加载传统颜色失败: \(error.localizedDescription)")
+        if sourceFilter != .plant {
+            combined += loadTraditionalItems()
         }
-
         items = combined
         AppLogger.shared.info("成功加载\(items.count)个颜色项目")
         result?()
+    }
+
+    private func loadPlantItems() -> [ColorModel] {
+        do {
+            return try ColorModel.re.objects().where { [weak self] element in
+                guard let self else { return element.id > 0 }
+                var query: Query<Bool> = element.id > 0
+                if let key = self.searchKey, !key.isEmpty {
+                    query = query && (
+                        element.plantName.contains(key, options: .caseInsensitive)
+                        || element.plantFamily.contains(key, options: .caseInsensitive)
+                        || element.plantGenus.contains(key, options: .caseInsensitive)
+                        || element.plantAlias.contains(key, options: .caseInsensitive)
+                        || element.colorHEX.contains(key, options: .caseInsensitive)
+                        || element.plantAbstract.contains(key, options: .caseInsensitive)
+                    )
+                }
+                if let series = self.colorSeries {
+                    query = query && element.colorSeries == series
+                }
+                if self.type == .collect {
+                    query = query && element.isCollect == true
+                }
+                return query
+            }.toArray
+        } catch {
+            AppLogger.shared.error("加载植物颜色失败: \(error.localizedDescription)")
+            return []
+        }
+    }
+
+    private func loadTraditionalItems() -> [TraditionalColorModel] {
+        do {
+            return try TraditionalColorModel.re.objects().where { [weak self] element in
+                guard let self else { return element.id > 0 }
+                var query: Query<Bool> = element.id > 0
+                if let key = self.searchKey, !key.isEmpty {
+                    query = query && (
+                        element.name.contains(key, options: .caseInsensitive)
+                        || element.pinyin.contains(key, options: .caseInsensitive)
+                        || element.colorHEX.contains(key, options: .caseInsensitive)
+                    )
+                }
+                if let series = self.colorSeries {
+                    query = query && element.colorSeries == series
+                }
+                if self.type == .collect {
+                    query = query && element.isCollect == true
+                }
+                return query
+            }.toArray
+        } catch {
+            AppLogger.shared.error("加载传统颜色失败: \(error.localizedDescription)")
+            return []
+        }
     }
 
     func loadingDataFinished() {}

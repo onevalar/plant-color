@@ -20,15 +20,10 @@ extension AppDelegate {
         setUpThirdPartyConfig()
         
         window = UIWindow(frame: UIScreen.main.bounds)
-        if let lastBuildNumber = Defaults().get(for: AppKey.buildNumberKey),
-            let buildNumber = UIApplication.buildNumber { // 本地读取过数据文件
-            if buildNumber == lastBuildNumber { // 数据未更新
-                window?.rootViewController = NavigationController(rootViewController: HomeViewController())
-            } else { // 数据已更新
-                window?.rootViewController = NavigationController(rootViewController: LoadingViewController())
-            }
-        } else { // 未读取过数据文件
+        if ColorImporter.needsImport { // 第一次启动，或颜色数据有更新
             window?.rootViewController = NavigationController(rootViewController: LoadingViewController())
+        } else {
+            window?.rootViewController = NavigationController(rootViewController: HomeViewController())
         }
         
         window?.makeKeyAndVisible()
@@ -69,13 +64,8 @@ extension AppDelegate {
         AppLogger.shared.info("应用初始化完成")
         
         #if DEBUG
-        // 在DEBUG模式下运行测试和环境检查
+        // 调试版下运行数据与算法自检
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            // 检查构建环境
-            BuildScripts.shared.checkBuildEnvironment()
-            BuildScripts.shared.validateProjectConfiguration()
-            
-            // 运行单元测试
             PlantColorTests.shared.runAllTests()
         }
         #endif

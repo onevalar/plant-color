@@ -73,6 +73,29 @@ class ColorHueCell: UICollectionViewCell {
         }
     }
 
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // 点一下色值就复制
+        for label in [hexLabel, rgbLabel, cmykLabel] {
+            label?.isUserInteractionEnabled = true
+            label?.addGestureRecognizer(UITapGestureRecognizer(target: self,
+                                                               action: #selector(valueLabelDidClick(_:))))
+        }
+    }
+
+    @objc private func valueLabelDidClick(_ gesture: UITapGestureRecognizer) {
+        // 色值只有在"色彩详情"展开时才可见，隐藏时不响应点击
+        guard isShowHUE, let item = item, let label = gesture.view else { return }
+        let text: String
+        switch label {
+        case hexLabel: text = item.colorHEX
+        case rgbLabel: text = item.colorRGB.replacingOccurrences(of: " ", with: "")
+            .replacingOccurrences(of: ",", with: ", ")
+        default: text = item.colorCMYK.replacingOccurrences(of: ",", with: ", ")
+        }
+        ColorClipboard.copy(text, from: self)
+    }
+
     @objc private func hideHUEDidClick() {
         isShowHUE = false
         Feedback.lightPrepare()

@@ -8,8 +8,19 @@
 import Foundation
 
 class ShareViewModel {
-    static func editItems() -> [ShareEditModel] {
-        [ShareEditModel(title: NSLocalizedString("share_ratio", comment: ""),
+    /// hasImage：这个颜色有没有配图。没有配图（传统色）时，只提供不依赖图片的样式
+    static func editItems(hasImage: Bool = true) -> [ShareEditModel] {
+        let styles: [ShareEditType] = hasImage
+            ? [.style_empty,
+               .style_onlyText,
+               .style_onlyImage,
+               .style_image_text_bottom,
+               .style_text_image_bottom_right]
+            : [.style_empty,
+               .style_onlyText,
+               .style_text_values]
+
+        return [ShareEditModel(title: NSLocalizedString("share_ratio", comment: ""),
                         icon: R.image.rate.name,
                         category: .ratio,
                         items: [.ratio_device,
@@ -26,10 +37,6 @@ class ShareViewModel {
          ShareEditModel(title: NSLocalizedString("share_style", comment: ""),
                         icon: R.image.modality.name,
                         category: .style,
-                        items: [.style_empty,
-                                .style_onlyText,
-                                .style_onlyImage,
-                                .style_image_text_bottom,
-                                .style_text_image_bottom_right])]
+                        items: styles)]
     }
 }

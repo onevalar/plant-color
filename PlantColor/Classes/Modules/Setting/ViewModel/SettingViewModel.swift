@@ -24,16 +24,25 @@ struct SettingViewModel {
     
     static private func openURL(_ url: String) {
 
-        guard let url = URL(string: url), let currentVc = UIApplication.keyWindow?.rootViewController else { return }
+        guard let url = URL(string: url), let currentVc = topViewController() else { return }
         let vc = SFSafariViewController(url: url)
-        currentVc.dismiss(animated: true)
         currentVc.present(vc,animated: true,completion: nil)
+    }
+
+    /// 当前最上层的页面。设置页本身就是弹出来的，
+    /// 直接在它上面继续弹出，不能再去关掉它
+    static private func topViewController() -> UIViewController? {
+        var top = UIApplication.keyWindow?.rootViewController
+        while let presented = top?.presentedViewController {
+            top = presented
+        }
+        return top
     }
     
     static func commentMyApp() {
         let urlStr = "https://itunes.apple.com/us/app/itunes-u/id\(String.appID)?action=write-review&mt=8"
         guard let url = URL(string: urlStr) else {
-            print("Invalid URL: \(urlStr)")
+            AppLogger.shared.error("Invalid URL: \(urlStr)")
             return
         }
         UIApplication.shared.open(url)
@@ -42,12 +51,11 @@ struct SettingViewModel {
     static func shareMyApp(name: String) {
             let title = name
             guard let urlToShare = URL(string: "http://itunes.apple.com/us/app/id\(String.appID)") else {
-                print("Invalid share URL")
+                AppLogger.shared.error("Invalid share URL")
                 return
             }
             let activityVc = UIActivityViewController(activityItems: [title, urlToShare], applicationActivities: nil)
-            guard let currentVc = UIApplication.keyWindow?.rootViewController else { return }
-            currentVc.dismiss(animated: true)
+            guard let currentVc = topViewController() else { return }
             currentVc.present(activityVc, animated: true, completion: nil)
         }
     

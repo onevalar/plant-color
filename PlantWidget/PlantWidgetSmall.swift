@@ -9,7 +9,7 @@ import WidgetKit
 import SwiftUI
 
 struct PlantProvider: TimelineProvider {
-    
+
     func placeholder(in context: Context) -> PlantEntry {
         PlantEntry(date: Date(), plant: PlantViewModel.placeholderModel())
     }
@@ -18,15 +18,16 @@ struct PlantProvider: TimelineProvider {
         let entry = PlantEntry(date: Date(), plant: PlantViewModel.placeholderModel())
         completion(entry)
     }
-    
+
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
         let currentDate = Date()
-        let refreshDate = Calendar.current.date(byAdding: .hour, value: 1, to: currentDate)!
-        let entry = PlantEntry(date: currentDate, plant: PlantViewModel.placeholderModel())
+        let model = PlantViewModel.nextModel()
+        let hours = PlantViewModel.refreshHours(for: model)
+        let refreshDate = Calendar.current.date(byAdding: .hour, value: hours, to: currentDate)!
+        let entry = PlantEntry(date: currentDate, plant: model)
         let timeline = Timeline(entries: [entry], policy: .after(refreshDate))
         completion(timeline)
-        
-    }    
+    }
 }
 
 struct PlantEntry: TimelineEntry {
@@ -35,23 +36,23 @@ struct PlantEntry: TimelineEntry {
 }
 
 struct PlantEntryView : View {
-    
+
     var entry: PlantProvider.Entry
-    @ViewBuilder
+
     var body: some View {
-        PlantSmallView(plant: entry.plant)
+        PlantWidgetView(plant: entry.plant)
     }
 }
 
+/// kind 沿用旧名字，已经添加到桌面的小组件不会失效
 struct PlantWidgetSmallWidget: Widget {
     private let kind: String = "PlantWidgetSmall"
     public var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: PlantProvider()) { entry in
             PlantEntryView(entry: entry)
         }
-        .configurationDisplayName("植物彩雅")
-        .description("每日精彩颜色分享")
-        .supportedFamilies([.systemSmall])
+        .configurationDisplayName("widget_name")
+        .description("widget_description")
+        .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
     }
-    
 }

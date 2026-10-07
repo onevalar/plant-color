@@ -43,10 +43,15 @@ class ColorListCell: UITableViewCell {
             colorCMYKLabel.attributedText = item.colorCMYKAttributedString(type: .list)
             backgroundColor = item.color
 
+            // 复用的 cell 会残留上一个颜色的转场 id，所以非植物色要清掉
             if let plant = item as? ColorModel {
                 hero.id = "color_\(plant.id)"
                 nameLabel.hero.id = "color_name_\(plant.id)"
                 colorImageView.hero.id = "color_image_\(plant.id)"
+            } else {
+                hero.id = nil
+                nameLabel.hero.id = nil
+                colorImageView.hero.id = nil
             }
             hero.modifiers = [.arc]
         }

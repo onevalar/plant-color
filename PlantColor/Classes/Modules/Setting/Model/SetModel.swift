@@ -36,6 +36,15 @@ enum SetType: Int, Codable {
     case ContactFeedback
 
     case Language
+
+    /// 自动切换的间隔（5 / 10 / 30 秒）
+    case SwitchingInterval
+
+    /// 小组件轮播哪些颜色
+    case WidgetSource
+
+    /// 传统色详情页的版块管理
+    case TraditionalManagement
 }
 
 struct SetModel: Codable {

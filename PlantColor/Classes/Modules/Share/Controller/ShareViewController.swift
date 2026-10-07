@@ -12,9 +12,14 @@ import Photos
 
 class ShareViewController: ViewController {
 
-    let colorModel: ColorModel
+    let colorModel: any ColorDisplayable
 
-    init(colorModel: ColorModel) {
+    /// 植物色和传统色都可以做成海报；传统色没有配图，可选样式会少一些
+    convenience init(item: any ColorDisplayable) {
+        self.init(colorModel: item)
+    }
+
+    init(colorModel: any ColorDisplayable) {
         self.colorModel = colorModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -23,7 +28,7 @@ class ShareViewController: ViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private lazy var editItems: [ShareEditModel] = ShareViewModel.editItems()
+    private lazy var editItems: [ShareEditModel] = ShareViewModel.editItems(hasImage: !colorModel.imageName.isEmpty)
     
     private lazy var editView: ShareEditPageView = {
         let editView = ShareEditPageView(colorModel: colorModel,
@@ -104,6 +109,10 @@ class ShareViewController: ViewController {
 
         navigation.bar.backgroundColor = .main
         navigation.item.title = NSLocalizedString("share_title", comment: "")
+        // 从详情页推进来时已经有返回按钮，不需要再放一个"关闭"
+        if navigationController?.viewControllers.first !== self {
+            navigation.item.rightBarButtonItem = nil
+        }
     }
     
     private func shareDidClick() {

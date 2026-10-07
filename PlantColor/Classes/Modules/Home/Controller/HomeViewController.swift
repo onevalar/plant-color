@@ -18,7 +18,13 @@ class HomeViewController: CollectionViewController {
 
     private var index: Int = 0
 
+    /// 两个模式各自停留的位置，切换回来时回到原处
+    private var savedPositions: [HomeColorMode: Int] = [:]
+
     private var settingConfig: SettingConfig?
+    private var settingToken: NotificationToken?
+    /// 当前列表是否已按"随机切换"打乱
+    private var isShuffled = false
 
     private lazy var modeSegmentView: HomeModeSegmentView = {
         let view = HomeModeSegmentView()
@@ -31,7 +37,7 @@ class HomeViewController: CollectionViewController {
 
     private lazy var timer: SwiftTimer = {
 
-        let timer = SwiftTimer.repeaticTimer(interval: .seconds(Int(TimeInterval.autoScroll))) { [weak self] _ in
+        let timer = SwiftTimer.repeaticTimer(interval: .seconds(Int(switchInterval))) { [weak self] _ in
             self?.autoScroll()
         }
         return timer
@@ -60,7 +66,17 @@ class HomeViewController: CollectionViewController {
     }
 
     deinit {
+        settingToken?.invalidate()
         timer.suspend()
+    }
+
+    /// 自动切换的间隔，取自设置里的"切换间隔"（如 "5s"），没设置时用默认值
+    private var switchInterval: TimeInterval {
+        guard let rate = settingConfig?.switchingRate,
+              rate.hasSuffix("s"),
+              let seconds = TimeInterval(rate.dropLast()),
+              seconds > 0 else { return .autoScroll }
+        return seconds
     }
 
     private func startTimerIfNeeded() {
@@ -82,34 +98,10 @@ class HomeViewController: CollectionViewController {
 
          settingConfig = try? SettingConfig.re.objects().first
 
-         // Load botanical colors
-         do {
-             botanicalItems = try ColorModel.re.objects().toArray
-             if settingConfig?.randomSwitching ?? false {
-                 botanicalItems = botanicalItems.shuffled()
-             }
-             AppLogger.shared.info("成功加载\(botanicalItems.count)个植物颜色模型")
-         } catch {
-             AppLogger.shared.error("加载植物颜色模型失败: \(error.localizedDescription)")
-         }
-
-         // Load traditional colors
-         do {
-             traditionalItems = try TraditionalColorModel.re.objects().toArray
-             if traditionalItems.isEmpty {
-                 traditionalItems = TraditionalColorProvider.fetchColors()
-             }
-             if settingConfig?.randomSwitching ?? false {
-                 traditionalItems = traditionalItems.shuffled()
-             }
-             AppLogger.shared.info("成功加载\(traditionalItems.count)个传统颜色模型")
-         } catch {
-             traditionalItems = TraditionalColorProvider.fetchColors()
-             AppLogger.shared.error("加载传统颜色模型失败: \(error.localizedDescription)")
-         }
-
-         displayItems = botanicalItems
+         isShuffled = settingConfig?.randomSwitching ?? false
+         loadItems()
          collectionView.reloadData()
+         observeSettingChanges()
 
          // Add floating pill segment view
          view.addSubview(modeSegmentView)
@@ -121,11 +113,80 @@ class HomeViewController: CollectionViewController {
          ])
     }
 
+    /// 设置页是半屏弹出的，关闭时首页不会重新出现，
+    /// 所以直接监听设置的变化，开关一拨就立即生效
+    private func observeSettingChanges() {
+        settingToken = settingConfig?.observe { [weak self] change in
+            guard case .change = change else { return }
+            self?.applySettingChanges()
+        }
+    }
+
+    private func applySettingChanges() {
+        guard let settingConfig = settingConfig else { return }
+
+        timer.rescheduleRepeating(interval: .seconds(Int(switchInterval)))
+        if settingConfig.automaticSwitching {
+            if view.window != nil { timer.start() }
+        } else {
+            timer.suspend()
+        }
+
+        if settingConfig.randomSwitching != isShuffled {
+            isShuffled = settingConfig.randomSwitching
+            reloadItemsForCurrentOrder()
+        }
+    }
+
+    /// 读取两类颜色，并按"随机切换"的开关决定是否打乱顺序
+    private func loadItems() {
+        do {
+            botanicalItems = try ColorModel.re.objects().toArray
+            AppLogger.shared.info("成功加载\(botanicalItems.count)个植物颜色模型")
+        } catch {
+            AppLogger.shared.error("加载植物颜色模型失败: \(error.localizedDescription)")
+        }
+
+        do {
+            traditionalItems = try TraditionalColorModel.re.objects().toArray
+            if traditionalItems.isEmpty {
+                traditionalItems = TraditionalColorProvider.fetchColors()
+            }
+            AppLogger.shared.info("成功加载\(traditionalItems.count)个传统颜色模型")
+        } catch {
+            traditionalItems = TraditionalColorProvider.fetchColors()
+            AppLogger.shared.error("加载传统颜色模型失败: \(error.localizedDescription)")
+        }
+
+        if isShuffled {
+            botanicalItems = botanicalItems.shuffled()
+            traditionalItems = traditionalItems.shuffled()
+        }
+        displayItems = currentMode == .botanical ? botanicalItems : traditionalItems
+    }
+
+    /// 随机切换开关变化后，重新排列首页的颜色顺序
+    private func reloadItemsForCurrentOrder() {
+        loadItems()
+        index = 0
+        collectionView.reloadData()
+        if !displayItems.isEmpty {
+            collectionView.scrollToItem(at: IndexPath(item: 0, section: 0),
+                                        at: .top,
+                                        animated: false)
+        }
+    }
+
     private func switchToMode(_ mode: HomeColorMode) {
         guard mode != currentMode else { return }
+
+        // 记下离开前停在第几个，回来时接着看
+        if collectionView.bounds.height > 0 {
+            savedPositions[currentMode] = Int(round(collectionView.contentOffset.y / collectionView.bounds.height))
+        }
         currentMode = mode
 
-        // Scroll to top before switching to prevent out-of-bounds
+        // 先回到顶部再换数据，避免两边数量不同导致偏移越界
         if !displayItems.isEmpty {
             collectionView.scrollToItem(at: IndexPath(item: 0, section: 0),
                                         at: .top,
@@ -141,6 +202,13 @@ class HomeViewController: CollectionViewController {
 
         index = 0
         collectionView.reloadData()
+
+        if let position = savedPositions[mode], position > 0, position < displayItems.count {
+            collectionView.layoutIfNeeded()
+            collectionView.scrollToItem(at: IndexPath(item: position, section: 0),
+                                        at: .top,
+                                        animated: false)
+        }
     }
 
     private func autoScroll() {

@@ -76,11 +76,23 @@ class SettingViewController: TableViewController {
                                switchState: false,
                                setType: .ScientificManagement),
                       SetModel(sectionName: NSLocalizedString("setting_section_features", comment: ""),
+                               imageName: "sf.books.vertical",
+                               title: NSLocalizedString("setting_traditional_management", comment: ""),
+                               showSwitch: false,
+                               switchState: false,
+                               setType: .TraditionalManagement),
+                      SetModel(sectionName: NSLocalizedString("setting_section_features", comment: ""),
                                imageName: "automaticSwitch",
                                title: NSLocalizedString("setting_auto_switch", comment: ""),
                                showSwitch: true,
                                switchState: settingConfig.automaticSwitching,
                                setType: .AutomaticSwitch),
+                      SetModel(sectionName: NSLocalizedString("setting_section_features", comment: ""),
+                               imageName: "sf.timer",
+                               title: NSLocalizedString("setting_switch_interval", comment: ""),
+                               showSwitch: false,
+                               switchState: false,
+                               setType: .SwitchingInterval),
                       SetModel(sectionName: NSLocalizedString("setting_section_features", comment: ""),
                                imageName: "randomSwitching",
                                title: NSLocalizedString("setting_random_switch", comment: ""),
@@ -112,6 +124,12 @@ class SettingViewController: TableViewController {
                                showSwitch: false,
                                switchState: false,
                                setType: .CustomContent),
+                      SetModel(sectionName: NSLocalizedString("setting_section_widget", comment: ""),
+                               imageName: "sf.square.stack",
+                               title: NSLocalizedString("setting_widget_source", comment: ""),
+                               showSwitch: false,
+                               switchState: false,
+                               setType: .WidgetSource),
                       SetModel(sectionName: NSLocalizedString("setting_section_widget", comment: ""),
                                imageName: "refreshRate",
                                title: NSLocalizedString("setting_color_refresh", comment: ""),
@@ -163,8 +181,18 @@ extension SettingViewController: UITableViewDelegate {
                                                      animated: true)
             
         case .ScientificManagement:
-            navigationController?.pushViewController(ColorDetailManageViewController(),
+            navigationController?.pushViewController(ColorDetailManageViewController(kind: .plant),
                                                          animated: true)
+
+        case .TraditionalManagement:
+            navigationController?.pushViewController(ColorDetailManageViewController(kind: .traditional),
+                                                     animated: true)
+
+        case .SwitchingInterval:
+            showSwitchIntervalPicker()
+
+        case .WidgetSource:
+            showWidgetSourcePicker()
             
         case .AutomaticSwitch: break
             
@@ -199,8 +227,7 @@ extension SettingViewController: UITableViewDelegate {
             }
 
         case .ColorRefresh:
-            navigationController?.pushViewController(RefreshRateViewController(),
-                                                     animated: true)
+            showRefreshRatePicker()
             
         case .Acknowledgement:
             SettingViewModel.acknowledgement()
@@ -218,6 +245,59 @@ extension SettingViewController: UITableViewDelegate {
             showLanguagePicker()
         }
         
+    }
+}
+
+// MARK: - Option Pickers
+extension SettingViewController {
+
+    private func showSwitchIntervalPicker() {
+        let options = ["5s", "10s", "30s"].map {
+            OptionListViewController.Option(key: $0,
+                                            title: NSLocalizedString("switch_interval_\($0)", comment: ""))
+        }
+        let selected = settingConfig?.switchingRate ?? "10s"
+        let vc = OptionListViewController(title: NSLocalizedString("setting_switch_interval", comment: ""),
+                                          options: options,
+                                          selectedKey: selected) { [weak self] key in
+            SettingConfig.re.transaction { _ in
+                self?.settingConfig?.switchingRate = key
+            }
+        }
+        navigationController?.pushViewController(vc, animated: true)
+    }
+
+    private func showRefreshRatePicker() {
+        let options = ["1hour", "6hours", "1day"].map {
+            OptionListViewController.Option(key: $0,
+                                            title: NSLocalizedString("refresh_rate_\($0)", comment: ""))
+        }
+        let selected = settingConfig?.refreshRate ?? "1hour"
+        let vc = OptionListViewController(title: NSLocalizedString("refresh_rate_title", comment: ""),
+                                          options: options,
+                                          selectedKey: selected) { [weak self] key in
+            WidgetKitHelper.sharedDefaults?.set(key, forKey: WidgetKitHelper.refreshRate)
+            WidgetKitHelper.reloadAllWidgets()
+            SettingConfig.re.transaction { _ in
+                self?.settingConfig?.refreshRate = key
+            }
+        }
+        navigationController?.pushViewController(vc, animated: true)
+    }
+
+    private func showWidgetSourcePicker() {
+        let sources: [WidgetSource] = [.all, .plant, .traditional, .collect]
+        let options = sources.map {
+            OptionListViewController.Option(key: $0.rawValue,
+                                            title: NSLocalizedString("widget_source_\($0.rawValue)", comment: ""))
+        }
+        let vc = OptionListViewController(title: NSLocalizedString("setting_widget_source", comment: ""),
+                                          options: options,
+                                          selectedKey: WidgetPlaylist.source.rawValue) { key in
+            WidgetPlaylist.source = WidgetSource(rawValue: key) ?? .all
+            WidgetPlaylist.rebuild()
+        }
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
 
@@ -267,12 +347,9 @@ extension SettingViewController {
             title: NSLocalizedString("setting_language_restart_title", comment: ""),
             message: NSLocalizedString("setting_language_restart_message", comment: ""),
             preferredStyle: .alert)
+        // 不能由 App 自己强制退出（App Store 审核不允许），只提示用户手动重启
         alert.addAction(UIAlertAction(title: NSLocalizedString("common_confirm", comment: ""),
-                                      style: .default) { _ in
-            exit(0)
-        })
-        alert.addAction(UIAlertAction(title: NSLocalizedString("common_cancel", comment: ""),
-                                      style: .cancel))
+                                      style: .default))
         present(alert, animated: true)
     }
 }
