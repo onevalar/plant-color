@@ -62,7 +62,7 @@ final class ColorInsightFooterView: UIView {
         let hint = UILabel()
         hint.text = NSLocalizedString("detail_tap_to_copy", comment: "")
         hint.font = .systemFont(ofSize: 11)
-        hint.textColor = .lightGray
+        hint.textColor = .tertiaryLabel
 
         let stack = UIStackView(arrangedSubviews: [values, hint, harmony])
         stack.axis = .vertical

@@ -50,31 +50,39 @@ struct PlantWidgetView: SwiftUI.View {
         }
     }
 
+    // 三种尺寸统一版式：图案居中完整显示 → 色名 → 色值，与 App 首页保持一致
+
     // MARK: - 小
 
     private var small: some SwiftUI.View {
-        VStack(alignment: .leading, spacing: 0) {
-            HStack(alignment: .top, spacing: 4) {
-                nameText(size: plant.name.count > 2 ? 24 : 32)
+        VStack(spacing: 6) {
+            if hasFigure {
+                figure.frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
                 Spacer(minLength: 0)
-                figure(size: 34)
             }
-            Spacer(minLength: 4)
-            detail(fontSize: 11, lineLimit: 3)
+            nameText(size: plant.name.count > 2 ? 26 : 34)
+            compactDetail(fontSize: 12)
+            if !hasFigure { Spacer(minLength: 0) }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .multilineTextAlignment(.center)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     // MARK: - 中
 
     private var medium: some SwiftUI.View {
         HStack(alignment: .center, spacing: 16) {
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(spacing: 6) {
+                if hasFigure {
+                    figure.frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    Spacer(minLength: 0)
+                }
                 nameText(size: plant.name.count > 3 ? 30 : 40)
-                figure(size: 44)
-                Spacer(minLength: 0)
+                if !hasFigure { Spacer(minLength: 0) }
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
 
             detail(fontSize: 13, lineLimit: 5)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -84,16 +92,18 @@ struct PlantWidgetView: SwiftUI.View {
     // MARK: - 大
 
     private var large: some SwiftUI.View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack(alignment: .top) {
-                nameText(size: plant.name.count > 3 ? 40 : 52)
+        VStack(spacing: 14) {
+            if hasFigure {
+                figure.frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
                 Spacer(minLength: 0)
-                figure(size: 72)
             }
-            Spacer(minLength: 0)
+            nameText(size: plant.name.count > 3 ? 44 : 56)
             detail(fontSize: 16, lineLimit: 8)
+            if !hasFigure { Spacer(minLength: 0) }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .multilineTextAlignment(.center)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     // MARK: - 零件
@@ -105,15 +115,27 @@ struct PlantWidgetView: SwiftUI.View {
             .minimumScaleFactor(0.5)
     }
 
-    /// 配图：设置里打开"显示图案"，且这个颜色有图时才显示
+    private var hasFigure: Bool { plant.showFigure && !plant.imageName.isEmpty }
+
+    /// 配图：设置里打开"显示图案"，且这个颜色有图时才显示；等比缩放、居中、完整显示
+    private var figure: some SwiftUI.View {
+        Image(plant.imageName, bundle: imageBundle)
+            .renderingMode(previewMode == .tinted ? .template : .original)
+            .resizable()
+            .scaledToFit()
+    }
+
+    /// 小尺寸只放一行：自定义文字，或 HEX
     @ViewBuilder
-    private func figure(size: CGFloat) -> some SwiftUI.View {
-        if plant.showFigure, !plant.imageName.isEmpty {
-            Image(plant.imageName, bundle: imageBundle)
-                .renderingMode(previewMode == .tinted ? .template : .original)
-                .resizable()
-                .scaledToFit()
-                .frame(width: size, height: size)
+    private func compactDetail(fontSize: CGFloat) -> some SwiftUI.View {
+        if !plant.customContent.isEmpty {
+            Text(plant.customContent)
+                .font(.system(size: fontSize + 1))
+                .lineLimit(2)
+        } else if plant.showTone {
+            Text(plant.colorHEX)
+                .font(.system(size: fontSize, weight: .medium))
+                .opacity(0.8)
         }
     }
 

@@ -256,3 +256,10 @@
 "favorites_title" = "즐겨찾기";
 "favorites_heading" = "마음에 드는 색을 간직하세요";
 "favorites_count" = "일상에서 발견한 %ld가지 색상.";
+"home_show_info" = "소개";
+"home_info_hint" = "이 색의 소개를 엽니다";
+"home_open_detail" = "전체 상세 보기";
+"setting_content_management" = "상세 페이지 내용";
+"setting_about_feedback" = "정보 및 피드백";
+"setting_section_appearance" = "외관";
+"share_ratio_standard" = "표준";

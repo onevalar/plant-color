@@ -12,9 +12,41 @@ enum PlantShareStyle: Int, CaseIterable {
     }
 }
 
-/// Preview and export share drawing coordinates, independent of the screen or an offscreen window.
+/// 海报比例（长边 ÷ 短边）
+enum PlantShareRatio: Int, CaseIterable {
+    case standard, square, wide, device
+
+    var aspect: CGFloat {
+        switch self {
+        case .standard: return 426.0 / 322.0
+        case .square: return 1
+        case .wide: return 16.0 / 9.0
+        case .device:
+            let size = UIScreen.main.bounds.size
+            return max(size.width, size.height) / max(min(size.width, size.height), 1)
+        }
+    }
+
+    var title: String {
+        switch self {
+        case .standard: return NSLocalizedString("share_ratio_standard", comment: "")
+        case .square: return NSLocalizedString("share_edit_square", comment: "")
+        case .wide: return "16:9"
+        case .device: return NSLocalizedString("share_edit_device_size", comment: "")
+        }
+    }
+}
+
+enum PlantShareOrientation: Int {
+    case portrait, landscape
+}
+
+/// 预览和导出共用同一套绘制坐标，与屏幕大小、窗口大小无关。
+/// 内部以"短边 = 322"为基准，所有位置按比例计算，所以任何比例和方向都能完整排版。
 final class PlantShareCardView: UIView {
-    static let canvasSize = CGSize(width: 322, height: 426)
+    /// 短边的基准长度（pt）；导出时 3 倍，即短边 966 像素
+    static let baseShortSide: CGFloat = 322
+
     let name: String
     let hex: String
     let introduction: String
@@ -22,8 +54,19 @@ final class PlantShareCardView: UIView {
     let artwork: UIImage?
     private let color: UIColor
     private let ink: UIColor
+
     var style: PlantShareStyle = .original { didSet { refresh() } }
+    var ratio: PlantShareRatio = .standard { didSet { refresh() } }
+    var orientation: PlantShareOrientation = .portrait { didSet { refresh() } }
     var showsValues = true { didSet { refresh() } }
+
+    /// 当前比例和方向对应的画布尺寸
+    var canvasSize: CGSize {
+        let long = (Self.baseShortSide * ratio.aspect).rounded()
+        return orientation == .portrait
+            ? CGSize(width: Self.baseShortSide, height: long)
+            : CGSize(width: long, height: Self.baseShortSide)
+    }
 
     init(item: any ColorDisplayable) {
         name = item.displayName
@@ -40,6 +83,7 @@ final class PlantShareCardView: UIView {
         isOpaque = true
         clipsToBounds = true
         layer.cornerRadius = 4
+        layer.cornerCurve = .continuous
         contentMode = .redraw
         isAccessibilityElement = true
         accessibilityTraits = .image
@@ -57,54 +101,79 @@ final class PlantShareCardView: UIView {
 
     override func draw(_ rect: CGRect) {
         guard let context = UIGraphicsGetCurrentContext(), bounds.width > 0, bounds.height > 0 else { return }
+        let canvas = canvasSize
         context.saveGState()
-        context.scaleBy(x: bounds.width / Self.canvasSize.width, y: bounds.height / Self.canvasSize.height)
-        drawCard()
+        context.scaleBy(x: bounds.width / canvas.width, y: bounds.height / canvas.height)
+        drawCard(canvas: canvas)
         context.restoreGState()
     }
 
-    /// Fixed 966 × 1278 opaque image, identical across phone, iPad and window sizes.
+    /// 不透明的 PNG 图：短边固定 966 像素，在手机、iPad、不同窗口下完全一致
     func exportImage() -> UIImage {
+        let canvas = canvasSize
         let format = UIGraphicsImageRendererFormat()
         format.scale = 3
         format.opaque = true
         format.preferredRange = .standard
-        return UIGraphicsImageRenderer(size: Self.canvasSize, format: format).image { _ in drawCard() }
+        return UIGraphicsImageRenderer(size: canvas, format: format).image { _ in drawCard(canvas: canvas) }
     }
 
-    private func drawCard() {
+    // MARK: - 绘制
+
+    private func drawCard(canvas: CGSize) {
+        let w = canvas.width, h = canvas.height
+        let s = min(w, h) / Self.baseShortSide          // 字号随画布缩放
+        let landscape = w > h
+        let margin = 0.078 * min(w, h)
         color.setFill()
-        UIRectFill(CGRect(origin: .zero, size: Self.canvasSize))
+        UIRectFill(CGRect(origin: .zero, size: canvas))
+
         if style != .pureColor {
-            drawText(name, rect: CGRect(x: 25, y: 30, width: style == .introduction ? 194 : 272, height: 56),
-                     font: .fzktjwgb10(size: 40), color: ink)
-            drawText(pronunciation, rect: CGRect(x: 27, y: 99, width: style == .introduction ? 180 : 268, height: 20),
-                     font: .systemFont(ofSize: 10, weight: .medium), color: ink.withAlphaComponent(0.78), tracking: 1)
+            let textWidth = style == .introduction ? (landscape ? w * 0.5 : w * 0.6) : w - margin * 2
+            drawText(name, rect: CGRect(x: margin, y: margin * 1.2, width: textWidth, height: 58 * s),
+                     font: .fzktjwgb10(size: 40 * s), color: ink)
+            drawText(pronunciation, rect: CGRect(x: margin + 2 * s, y: margin * 1.2 + 68 * s, width: textWidth, height: 20 * s),
+                     font: .systemFont(ofSize: 10 * s, weight: .medium), color: ink.withAlphaComponent(0.78), tracking: 1)
+
+            let footer = h - margin - 20 * s              // 底部信息行的顶部
+            let titleBottom = margin * 1.2 + 96 * s       // 标题块的底部
             if style == .original {
-                drawArtwork(in: CGRect(x: 124, y: 94, width: 300, height: 300))
+                // 图案在标题与底部信息之间居中，等比缩放，保证完整显示
+                let area: CGRect = landscape
+                    ? CGRect(x: w * 0.36, y: margin, width: w * 0.6 - margin * 0.4, height: footer - margin - 8 * s)
+                    : CGRect(x: margin, y: titleBottom + 8 * s, width: w - margin * 2, height: footer - titleBottom - 24 * s)
+                drawArtwork(in: area)
             } else {
-                drawArtwork(in: CGRect(x: 204, y: 14, width: 150, height: 150))
+                let artSide = landscape ? min(h - margin * 2 - 36 * s, w * 0.36) : min(w * 0.46, 150 * s)
+                let artRect = landscape
+                    ? CGRect(x: w - margin - artSide, y: margin, width: artSide, height: artSide)
+                    : CGRect(x: w - margin - artSide, y: margin * 0.6, width: artSide, height: artSide)
+                drawArtwork(in: artRect)
                 let paragraph = NSMutableParagraphStyle()
-                paragraph.lineSpacing = 5
+                paragraph.lineSpacing = 5 * s
                 paragraph.lineBreakMode = .byWordWrapping
+                let textTop = landscape ? titleBottom + 8 * s : max(titleBottom + 8 * s, artRect.maxY + 12 * s)
+                let textWidth = landscape ? w - margin * 2 - artSide - 20 * s : w - margin * 2
                 NSAttributedString(string: introduction, attributes: [
-                    .font: UIFont.systemFont(ofSize: 14), .foregroundColor: ink, .paragraphStyle: paragraph
-                ]).draw(with: CGRect(x: 27, y: 170, width: 268, height: 188),
+                    .font: UIFont.systemFont(ofSize: 14 * s), .foregroundColor: ink, .paragraphStyle: paragraph
+                ]).draw(with: CGRect(x: margin, y: textTop, width: textWidth, height: max(footer - textTop - 12 * s, 0)),
                         options: [.usesLineFragmentOrigin, .usesFontLeading, .truncatesLastVisibleLine], context: nil)
             }
         }
+        let footerY = h - margin - 20 * s
         if showsValues {
-            drawText(hex, rect: CGRect(x: 27, y: 382, width: 140, height: 20),
-                     font: .monospacedSystemFont(ofSize: 12, weight: .regular), color: ink)
+            drawText(hex, rect: CGRect(x: margin, y: footerY, width: w * 0.5, height: 20 * s),
+                     font: .monospacedSystemFont(ofSize: 12 * s, weight: .regular), color: ink)
         }
         if style != .pureColor {
-            drawText(NSLocalizedString("app_name", comment: ""), rect: CGRect(x: 177, y: 382, width: 118, height: 20),
-                     font: .systemFont(ofSize: 11), color: ink.withAlphaComponent(0.78), alignment: .right)
+            drawText(NSLocalizedString("app_name", comment: ""),
+                     rect: CGRect(x: w - margin - w * 0.4, y: footerY, width: w * 0.4, height: 20 * s),
+                     font: .systemFont(ofSize: 11 * s), color: ink.withAlphaComponent(0.78), alignment: .right)
         }
     }
 
     private func drawArtwork(in rect: CGRect) {
-        guard let artwork, artwork.size.width > 0, artwork.size.height > 0 else { return }
+        guard let artwork, artwork.size.width > 0, artwork.size.height > 0, rect.width > 0, rect.height > 0 else { return }
         let scale = min(rect.width / artwork.size.width, rect.height / artwork.size.height)
         let size = CGSize(width: artwork.size.width * scale, height: artwork.size.height * scale)
         artwork.draw(in: CGRect(x: rect.midX - size.width / 2, y: rect.midY - size.height / 2,

@@ -57,6 +57,17 @@ enum SetType: Int, Codable {
     case About
     case WidgetOptions
     case WidgetOpenCurrent
+    /// 二级页面入口：显示与辅助功能 / 详情页内容 / 关于与反馈
+    case AccessibilityOptions
+    case ContentOptions
+    case AboutOptions
+}
+
+/// 点开行时弹出的下拉菜单里的一项（"打开时显示""界面外观""语言"这类单选项直接在行内选，不再跳页）
+struct MenuChoice {
+    let title: String
+    let isSelected: Bool
+    let handler: () -> Void
 }
 
 struct SetModel: Codable {
@@ -69,5 +80,12 @@ struct SetModel: Codable {
     let setType     : SetType
 
     var detail: String? = nil
-    
+
+    /// 有值时，这一行点开是下拉菜单
+    var menu: [MenuChoice]? = nil
+
+    // 菜单里有闭包，不参与编码
+    private enum CodingKeys: String, CodingKey {
+        case sectionName, imageName, title, showSwitch, switchState, setType, detail
+    }
 }

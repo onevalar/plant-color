@@ -256,3 +256,10 @@
 "favorites_title" = "Favorites";
 "favorites_heading" = "Keep the colors you love";
 "favorites_count" = "From your everyday discoveries · %ld saved";
+"home_show_info" = "About";
+"home_info_hint" = "Opens details about this color";
+"home_open_detail" = "View Full Details";
+"setting_content_management" = "Detail Page Content";
+"setting_about_feedback" = "About & Feedback";
+"setting_section_appearance" = "Appearance";
+"share_ratio_standard" = "Standard";

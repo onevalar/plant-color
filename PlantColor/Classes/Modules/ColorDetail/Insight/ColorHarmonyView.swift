@@ -40,7 +40,7 @@ final class ColorHarmonyView: UIView {
         let header = UILabel()
         header.text = NSLocalizedString("harmony_title", comment: "")
         header.font = .systemFont(ofSize: 18, weight: .semibold)
-        header.textColor = .darkText
+        header.textColor = .label
         stack.addArrangedSubview(header)
 
         for (title, swatches) in sections {
@@ -57,7 +57,7 @@ final class ColorHarmonyView: UIView {
         let titleLabel = UILabel()
         titleLabel.text = title
         titleLabel.font = .systemFont(ofSize: 13, weight: .medium)
-        titleLabel.textColor = .gray
+        titleLabel.textColor = .secondaryLabel
 
         let chips = UIStackView()
         chips.axis = .horizontal
@@ -107,13 +107,13 @@ private final class ColorChip: UIControl {
                                         alpha: 1)
         color.layer.cornerRadius = 10
         color.layer.borderWidth = 0.5
-        color.layer.borderColor = UIColor.black.withAlphaComponent(0.1).cgColor
+        color.layer.borderColor = UIColor.separator.cgColor
         color.heightAnchor.constraint(equalToConstant: 56).isActive = true
 
         let name = UILabel()
         name.text = swatch.name
         name.font = .systemFont(ofSize: 12, weight: .medium)
-        name.textColor = .darkText
+        name.textColor = .label
         name.textAlignment = .center
         name.adjustsFontSizeToFitWidth = true
         name.minimumScaleFactor = 0.7
@@ -121,7 +121,7 @@ private final class ColorChip: UIControl {
         let hex = UILabel()
         hex.text = swatch.hex
         hex.font = .systemFont(ofSize: 10)
-        hex.textColor = .gray
+        hex.textColor = .secondaryLabel
         hex.textAlignment = .center
 
         let stack = UIStackView(arrangedSubviews: [color, name, hex])

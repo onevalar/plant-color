@@ -11,7 +11,7 @@ import Hero
 
 class SettingViewController: TableViewController {
     
-    enum Page { case root, automaticSwitch, widget }
+    enum Page { case root, automaticSwitch, widget, accessibility, content, about }
     private let page: Page
     private var widgetPreview: WidgetPreviewHeader?
 
@@ -92,7 +92,15 @@ class SettingViewController: TableViewController {
 
     private func setUpNav() {
 
-        let titleKey = page == .root ? "setting_title" : page == .widget ? "setting_section_widget" : "setting_auto_switch"
+        let titleKey: String
+        switch page {
+        case .root: titleKey = "setting_title"
+        case .widget: titleKey = "setting_section_widget"
+        case .automaticSwitch: titleKey = "setting_auto_switch"
+        case .accessibility: titleKey = "setting_section_display"
+        case .content: titleKey = "setting_content_management"
+        case .about: titleKey = "setting_about_feedback"
+        }
         navigation.item.title = NSLocalizedString(titleKey, comment: "")
         if page == .root {
             navigation.item.rightBarButtonItem = UIBarButtonItem(title: NSLocalizedString("common_done", comment: ""),
@@ -138,35 +146,90 @@ class SettingViewController: TableViewController {
             ]]
             return
         }
+        if page == .accessibility {
+            items = [[
+                row("setting_section_display", "setting_reduce_transparency", "sf.square.on.square", .ReduceTransparency,
+                    detail: text("setting_language_follow_system")),
+                row("setting_section_display", "setting_reduce_motion", "sf.figure.walk.motion", .ReduceMotion,
+                    detail: text("setting_language_follow_system")),
+                row("setting_section_display", "setting_text_size", "sf.textformat.size", .TextSize,
+                    detail: text("setting_language_follow_system"))
+            ]]
+            return
+        }
+        if page == .content {
+            items = [[
+                row("setting_content_management", "setting_scientific_management", "sf.leaf", .ScientificManagement),
+                row("setting_content_management", "setting_traditional_management", "sf.books.vertical", .TraditionalManagement)
+            ]]
+            return
+        }
+        if page == .about {
+            items = [[
+                row("setting_section_about", "setting_about_app", "sf.info.circle", .About, detail: appVersion),
+                row("setting_section_about", "setting_acknowledgement", "sf.heart.text.square", .Acknowledgement),
+                row("setting_section_about", "setting_share_app", "sf.square.and.arrow.up", .ShareApplication),
+                row("setting_section_about", "setting_rate_app", "sf.star", .EvaluationApplication),
+                row("setting_section_about", "setting_contact_feedback", "sf.bubble.left.and.bubble.right", .ContactFeedback)
+            ]]
+            return
+        }
+
+        // 首页设置：常用项放前面，单选项直接在行内弹出菜单，不再一项一页
         let language = (UserDefaults.standard.array(forKey: "AppleLanguages") as? [String])?.first
         let languageNames = ["zh-Hans": "简体中文", "zh-Hant": "繁體中文", "en": "English", "ja": "日本語", "ko": "한국어"]
-        let languageTitle = language.flatMap { code in languageNames.first { code.hasPrefix($0.key) }?.value } ?? text("setting_language_follow_system")
+        let currentLanguageCode = language.flatMap { code in languageNames.keys.first { code.hasPrefix($0) } }
+        let languageTitle = currentLanguageCode.flatMap { languageNames[$0] } ?? text("setting_language_follow_system")
+
+        var startupRow = row("setting_section_browsing", "setting_startup_display", "sf.clock.arrow.circlepath", .StartupDisplay,
+                             detail: text("setting_startup_\(preferences.startup.rawValue)"))
+        startupRow.menu = [HomePreferences.Startup.last, .first].map { option in
+            MenuChoice(title: text("setting_startup_\(option.rawValue)"), isSelected: preferences.startup == option) { [weak self] in
+                HomePreferences.shared.startup = option
+                self?.setUpBaseDate()
+            }
+        }
+
+        var appearanceRow = row("setting_section_appearance", "setting_appearance", "sf.circle.lefthalf.filled", .Appearance,
+                                detail: text("setting_appearance_\(preferences.appearance.rawValue)"))
+        appearanceRow.menu = HomePreferences.Appearance.allCases.map { option in
+            MenuChoice(title: text("setting_appearance_\(option.rawValue)"), isSelected: preferences.appearance == option) { [weak self] in
+                HomePreferences.shared.appearance = option
+                (UIApplication.shared.delegate as? AppDelegate)?.window?.overrideUserInterfaceStyle = option.style
+                self?.setUpBaseDate()
+            }
+        }
+
+        var languageRow = row("setting_section_about", "setting_language", "sf.globe", .Language, detail: languageTitle)
+        let languageOptions: [(String, String?)] = [(text("setting_language_follow_system"), nil)]
+            + ["zh-Hans", "zh-Hant", "en", "ja", "ko"].map { (languageNames[$0] ?? $0, $0) }
+        languageRow.menu = languageOptions.map { title, code in
+            MenuChoice(title: title, isSelected: code == currentLanguageCode) { [weak self] in
+                if let code = code {
+                    UserDefaults.standard.set([code], forKey: "AppleLanguages")
+                } else {
+                    UserDefaults.standard.removeObject(forKey: "AppleLanguages")
+                }
+                UserDefaults.standard.synchronize()
+                self?.showRestartAlert()
+                self?.setUpBaseDate()
+            }
+        }
+
         items = [
-            [row("setting_section_browsing", "setting_startup_display", "sf.clock.arrow.circlepath", .StartupDisplay,
-                 detail: text("setting_startup_\(preferences.startup.rawValue)")),
+            [startupRow,
              row("setting_section_browsing", "setting_auto_switch", "sf.arrow.triangle.2.circlepath", .AutomaticSwitchOptions,
                  detail: text(config.automaticSwitching ? "setting_value_on" : "setting_value_off")),
              row("setting_section_browsing", "setting_haptic_feedback", "sf.hand.tap", .HapticFeedback, toggle: preferences.hapticsEnabled)],
-            [row("setting_section_display", "setting_appearance", "sf.circle.lefthalf.filled", .Appearance,
-                 detail: text("setting_appearance_\(preferences.appearance.rawValue)")),
-             row("setting_section_display", "setting_reduce_transparency", "sf.square.on.square", .ReduceTransparency,
-                 detail: text("setting_language_follow_system")),
-             row("setting_section_display", "setting_reduce_motion", "sf.figure.walk.motion", .ReduceMotion,
-                 detail: text("setting_language_follow_system")),
-             row("setting_section_display", "setting_text_size", "sf.textformat.size", .TextSize,
-                 detail: text("setting_language_follow_system"))],
+            [appearanceRow,
+             row("setting_section_appearance", "setting_section_display", "sf.accessibility", .AccessibilityOptions)],
             [row("setting_section_my_colors", "setting_all_colors", "sf.square.grid.2x2", .AllColor),
              row("setting_section_my_colors", "setting_my_collection", "sf.heart", .MyCollection),
-             row("setting_section_my_colors", "setting_scientific_management", "sf.leaf", .ScientificManagement),
-             row("setting_section_my_colors", "setting_traditional_management", "sf.books.vertical", .TraditionalManagement)],
+             row("setting_section_my_colors", "setting_content_management", "sf.doc.text", .ContentOptions)],
             [row("setting_section_widget", "setting_section_widget", "sf.square.stack", .WidgetOptions,
                  detail: text("widget_preview_settings"))],
-            [row("setting_section_about", "setting_language", "sf.globe", .Language, detail: languageTitle),
-             row("setting_section_about", "setting_about_app", "sf.info.circle", .About, detail: appVersion),
-             row("setting_section_about", "setting_acknowledgement", "sf.heart.text.square", .Acknowledgement),
-             row("setting_section_about", "setting_share_app", "sf.square.and.arrow.up", .ShareApplication),
-             row("setting_section_about", "setting_rate_app", "sf.star", .EvaluationApplication),
-             row("setting_section_about", "setting_contact_feedback", "sf.bubble.left.and.bubble.right", .ContactFeedback)]
+            [languageRow,
+             row("setting_section_about", "setting_about_feedback", "sf.info.circle", .AboutOptions)]
         ]
     }
 
@@ -257,14 +320,16 @@ extension SettingViewController: UITableViewDelegate {
         case .ContactFeedback:
             SettingViewModel.contactFeedback()
 
-        case .Language:
-            showLanguagePicker()
-        case .StartupDisplay:
-            showStartupPicker()
+        case .Language, .StartupDisplay, .Appearance:
+            break // 这三行由行内下拉菜单处理
         case .AutomaticSwitchOptions:
             navigationController?.pushViewController(SettingViewController(page: .automaticSwitch), animated: !UIAccessibility.isReduceMotionEnabled)
-        case .Appearance:
-            showAppearancePicker()
+        case .AccessibilityOptions:
+            navigationController?.pushViewController(SettingViewController(page: .accessibility), animated: !UIAccessibility.isReduceMotionEnabled)
+        case .ContentOptions:
+            navigationController?.pushViewController(SettingViewController(page: .content), animated: !UIAccessibility.isReduceMotionEnabled)
+        case .AboutOptions:
+            navigationController?.pushViewController(SettingViewController(page: .about), animated: !UIAccessibility.isReduceMotionEnabled)
         case .ReduceTransparency:
             showSystemPreferenceInfo("setting_reduce_transparency", message: "setting_reduce_transparency_info")
         case .ReduceMotion:
@@ -289,32 +354,6 @@ extension SettingViewController: UITableViewDelegate {
 
 // MARK: - Option Pickers
 extension SettingViewController {
-
-    private func showStartupPicker() {
-        let options = [HomePreferences.Startup.last, .first].map {
-            OptionListViewController.Option(key: $0.rawValue, title: NSLocalizedString("setting_startup_\($0.rawValue)", comment: ""))
-        }
-        let vc = OptionListViewController(title: NSLocalizedString("setting_startup_display", comment: ""), options: options,
-                                          selectedKey: HomePreferences.shared.startup.rawValue) { [weak self] key in
-            HomePreferences.shared.startup = HomePreferences.Startup(rawValue: key) ?? .last
-            self?.setUpBaseDate()
-        }
-        navigationController?.pushViewController(vc, animated: !UIAccessibility.isReduceMotionEnabled)
-    }
-
-    private func showAppearancePicker() {
-        let options = HomePreferences.Appearance.allCases.map {
-            OptionListViewController.Option(key: $0.rawValue, title: NSLocalizedString("setting_appearance_\($0.rawValue)", comment: ""))
-        }
-        let vc = OptionListViewController(title: NSLocalizedString("setting_appearance", comment: ""), options: options,
-                                          selectedKey: HomePreferences.shared.appearance.rawValue) { [weak self] key in
-            let appearance = HomePreferences.Appearance(rawValue: key) ?? .system
-            HomePreferences.shared.appearance = appearance
-            (UIApplication.shared.delegate as? AppDelegate)?.window?.overrideUserInterfaceStyle = appearance.style
-            self?.setUpBaseDate()
-        }
-        navigationController?.pushViewController(vc, animated: !UIAccessibility.isReduceMotionEnabled)
-    }
 
     private func showSystemPreferenceInfo(_ title: String, message: String? = nil, messageText: String? = nil) {
         let alert = UIAlertController(title: NSLocalizedString(title, comment: ""),
@@ -374,46 +413,8 @@ extension SettingViewController {
     }
 }
 
-// MARK: - Language Picker
+// MARK: - Language
 extension SettingViewController {
-
-    private func showLanguagePicker() {
-        let alert = UIAlertController(title: NSLocalizedString("setting_language", comment: ""),
-                                      message: nil,
-                                      preferredStyle: .actionSheet)
-
-        let options: [(String, String?)] = [
-            (NSLocalizedString("setting_language_follow_system", comment: ""), nil),
-            ("简体中文", "zh-Hans"),
-            ("繁體中文", "zh-Hant"),
-            ("English", "en"),
-            ("日本語", "ja"),
-            ("한국어", "ko")
-        ]
-
-        for (title, code) in options {
-            alert.addAction(UIAlertAction(title: title, style: .default) { [weak self] _ in
-                if let code = code {
-                    UserDefaults.standard.set([code], forKey: "AppleLanguages")
-                } else {
-                    UserDefaults.standard.removeObject(forKey: "AppleLanguages")
-                }
-                UserDefaults.standard.synchronize()
-                self?.showRestartAlert()
-            })
-        }
-
-        alert.addAction(UIAlertAction(title: NSLocalizedString("common_cancel", comment: ""),
-                                      style: .cancel))
-
-        if let popover = alert.popoverPresentationController {
-            popover.sourceView = view
-            popover.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 0, height: 0)
-            popover.permittedArrowDirections = []
-        }
-
-        present(alert, animated: true)
-    }
 
     private func showRestartAlert() {
         let alert = UIAlertController(

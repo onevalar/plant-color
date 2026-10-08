@@ -45,12 +45,12 @@ final class ColorValueView: UIView {
             stack.addArrangedSubview(control)
             if index < rows.count - 1 {
                 let line = UIView()
-                line.backgroundColor = UIColor.black.withAlphaComponent(0.06)
+                line.backgroundColor = .separator
                 line.heightAnchor.constraint(equalToConstant: 0.5).isActive = true
                 stack.addArrangedSubview(line)
             }
         }
-        backgroundColor = UIColor.black.withAlphaComponent(0.04)
+        backgroundColor = .secondarySystemGroupedBackground
         layer.cornerRadius = 12
         clipsToBounds = true
     }
@@ -68,17 +68,17 @@ private final class ValueRow: UIControl {
         let titleLabel = UILabel()
         titleLabel.text = title
         titleLabel.font = .systemFont(ofSize: 13, weight: .medium)
-        titleLabel.textColor = .gray
+        titleLabel.textColor = .secondaryLabel
         titleLabel.setContentHuggingPriority(.required, for: .horizontal)
         titleLabel.widthAnchor.constraint(equalToConstant: 48).isActive = true
 
         let valueLabel = UILabel()
         valueLabel.text = value
         valueLabel.font = .monospacedDigitSystemFont(ofSize: 15, weight: .regular)
-        valueLabel.textColor = .darkText
+        valueLabel.textColor = .label
 
         let icon = UIImageView(image: UIImage(systemName: "doc.on.doc"))
-        icon.tintColor = .lightGray
+        icon.tintColor = .tertiaryLabel
         icon.contentMode = .scaleAspectFit
         icon.setContentHuggingPriority(.required, for: .horizontal)
         icon.widthAnchor.constraint(equalToConstant: 18).isActive = true

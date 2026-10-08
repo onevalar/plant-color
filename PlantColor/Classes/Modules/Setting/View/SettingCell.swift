@@ -6,6 +6,15 @@ class SettingCell: UITableViewCell {
     @IBOutlet private weak var titleNameLabel: UILabel!
     @IBOutlet private weak var mySwitch: UISwitch!
     private let preferenceSwitch = UISwitch()
+    /// 下拉菜单行：一个盖满整行的透明按钮，点哪里都弹出菜单
+    private let menuButton = UIButton(type: .system)
+    private lazy var menuIndicator: UIImageView = {
+        let view = UIImageView(image: UIImage(systemName: "chevron.up.chevron.down"))
+        view.tintColor = .tertiaryLabel
+        view.preferredSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: 12, weight: .semibold)
+        view.sizeToFit()
+        return view
+    }()
     static let height: CGFloat = 52
     var switchDidClick: ((Bool) -> Void)?
     var item: SetModel? { didSet { updateContent() } }
@@ -24,6 +33,15 @@ class SettingCell: UITableViewCell {
         selectionStyle = .none
         preferenceSwitch.addTarget(self, action: #selector(switchChange(_:)), for: .valueChanged)
         preferenceSwitch.onTintColor = .settingsAccent
+        menuButton.translatesAutoresizingMaskIntoConstraints = false
+        menuButton.showsMenuAsPrimaryAction = true
+        contentView.addSubview(menuButton)
+        NSLayoutConstraint.activate([
+            menuButton.topAnchor.constraint(equalTo: contentView.topAnchor),
+            menuButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            menuButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            menuButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+        ])
     }
     private func updateContent() {
         guard let item else { return }
@@ -44,8 +62,17 @@ class SettingCell: UITableViewCell {
         } else { content.image = UIImage(named: item.imageName) }
         content.imageProperties.maximumSize = CGSize(width: 24, height: 24)
         contentConfiguration = content
-        accessoryType = item.showSwitch ? .none : .disclosureIndicator
-        accessoryView = item.showSwitch ? preferenceSwitch : nil
+        let hasMenu = item.menu != nil
+        menuButton.isHidden = !hasMenu
+        if let choices = item.menu {
+            menuButton.menu = UIMenu(children: choices.map { choice in
+                UIAction(title: choice.title, state: choice.isSelected ? .on : .off) { _ in choice.handler() }
+            })
+        } else {
+            menuButton.menu = nil
+        }
+        accessoryType = (item.showSwitch || hasMenu) ? .none : .disclosureIndicator
+        accessoryView = item.showSwitch ? preferenceSwitch : (hasMenu ? menuIndicator : nil)
         preferenceSwitch.isOn = item.switchState
         preferenceSwitch.accessibilityLabel = item.title
         if item.showSwitch {
@@ -54,6 +81,11 @@ class SettingCell: UITableViewCell {
             accessibilityValue = nil
             accessibilityTraits = []
             accessibilityElements = [preferenceSwitch]
+        } else if hasMenu {
+            isAccessibilityElement = false
+            accessibilityElements = [menuButton]
+            menuButton.accessibilityLabel = item.title
+            menuButton.accessibilityValue = item.detail
         } else {
             accessibilityElements = nil
             isAccessibilityElement = true

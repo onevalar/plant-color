@@ -256,3 +256,10 @@
 "favorites_title" = "收藏";
 "favorites_heading" = "留住心动的颜色";
 "favorites_count" = "%ld 种色彩，来自你的日常。";
+"home_show_info" = "简介";
+"home_info_hint" = "打开这个颜色的简介";
+"home_open_detail" = "查看完整详情";
+"setting_content_management" = "详情页内容";
+"setting_about_feedback" = "关于与反馈";
+"setting_section_appearance" = "外观";
+"share_ratio_standard" = "标准";

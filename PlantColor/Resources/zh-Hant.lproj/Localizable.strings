@@ -256,3 +256,10 @@
 "favorites_title" = "收藏";
 "favorites_heading" = "留住心動的顏色";
 "favorites_count" = "%ld 種色彩，來自你的日常。";
+"home_show_info" = "簡介";
+"home_info_hint" = "開啟這個顏色的簡介";
+"home_open_detail" = "查看完整詳情";
+"setting_content_management" = "詳情頁內容";
+"setting_about_feedback" = "關於與回饋";
+"setting_section_appearance" = "外觀";
+"share_ratio_standard" = "標準";

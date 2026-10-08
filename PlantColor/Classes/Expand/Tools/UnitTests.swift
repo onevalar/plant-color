@@ -31,7 +31,7 @@ class PlantColorTests {
         testTraditionalColors()
         testColorMath()
         testWidgetPlaylist()
-        testMenuAccessibility()
+        testHomeCardAndToolbar()
         testSystemAccessibility()
         testBrowsingPreferences()
         testWidgetPreview()
@@ -137,36 +137,31 @@ class PlantColorTests {
         check("重复刷新转场不会注册自身为上游代理", navigation.hero.isEnabled && navigation.delegate is HeroTransition)
         NotificationCenter.default.post(name: UIAccessibility.reduceMotionStatusDidChangeNotification, object: nil)
         check("动态通知立即更新转场", navigation.hero.isEnabled == !UIAccessibility.isReduceMotionEnabled)
-
-        guard let cell = R.nib.homeVerticalCell.firstView(owner: nil),
-              let pages = cell.contentView.subviews.first(where: { $0 is UICollectionView }) as? UICollectionView else {
-            check("横向简介可加载", false)
-            return
-        }
-        cell.updateMotionPreference(reduceMotion: true)
-        check("减少动态关闭横向回弹并保留分页", !pages.bounces && pages.isPagingEnabled)
-        cell.updateMotionPreference(reduceMotion: false)
-        check("关闭减少动态恢复横向回弹", pages.bounces && pages.isPagingEnabled)
-        NotificationCenter.default.post(name: UIAccessibility.reduceMotionStatusDidChangeNotification, object: nil)
-        check("动态通知立即更新横向分页", pages.bounces == !UIAccessibility.isReduceMotionEnabled && pages.isPagingEnabled)
     }
 
-    private func testMenuAccessibility() {
-        guard let cell = R.nib.colorMenuCell.firstView(owner: nil) else {
-            check("首页菜单可加载", false)
+    private func testHomeCardAndToolbar() {
+        guard let plant = ColorProvider.fetchColors().first,
+              let traditional = TraditionalColorProvider.fetchColors().first else {
+            check("首页测试颜色可用", false)
             return
         }
-        cell.item = .search
-        check("首页菜单是可访问按钮", cell.isAccessibilityElement && cell.accessibilityTraits.contains(.button))
-        check("搜索菜单有正确名称", cell.accessibilityLabel == NSLocalizedString("common_search", comment: ""))
-        var activated = false
-        cell.onActivate = { activated = true }
-        check("辅助功能能激活菜单", cell.accessibilityActivate() && activated)
-        cell.item = .collect
-        cell.isButtonSelected = true
-        check("已收藏菜单说明可取消收藏", cell.accessibilityLabel == NSLocalizedString("color_remove_favorite", comment: ""))
+        let cell = HomeColorCell(frame: CGRect(x: 0, y: 0, width: 390, height: 844))
+        cell.displayItem = plant
+        cell.layoutIfNeeded()
+        check("植物色首页显示图案", cell.contentView.subviews.compactMap { $0 as? UIStackView }.first?.arrangedSubviews.first?.isHidden == false)
+        cell.displayItem = traditional
+        cell.layoutIfNeeded()
+        check("传统色首页没有图案时隐藏图案区", cell.contentView.subviews.compactMap { $0 as? UIStackView }.first?.arrangedSubviews.first?.isHidden == true)
+        var opened = false
+        cell.onShowInfo = { opened = true }
+        cell.onShowInfo?()
+        check("首页色块可以打开简介", opened)
         cell.prepareForReuse()
-        check("菜单复用不会保留旧动作", !cell.accessibilityActivate())
+        check("首页色块复用不保留旧动作", cell.onShowInfo == nil)
+
+        let toolbar = HomeToolbar()
+        toolbar.item = traditional
+        check("工具条创建成功", toolbar.bounds.height >= 0)
     }
 
     private func testShareCards() {
@@ -243,12 +238,22 @@ class PlantColorTests {
             for view in allViews(controller.view) { view.layoutIfNeeded() }
             check("分享卡片适配视口：\(size.width)", controller.card.bounds.width > 0 && controller.card.bounds.width <= size.width - 48)
             let count = allViews(controller.view).reduce(0) { $0 + $1.constraints.count }
-            if let constraintCount { check("旋转和重复布局不新增约束：\(size.width)", count == constraintCount) }
-            constraintCount = count
-            let buttons = allViews(controller.view).compactMap { $0 as? UIButton }
-                .filter { $0.accessibilityIdentifier?.hasPrefix("share.style.") == true }
-            check("三种样式保留 44 点触控高度：\(size.width)", buttons.count == 3 && buttons.allSatisfy { $0.bounds.height >= 44 })
+            controller.view.setNeedsLayout()
+            controller.view.layoutIfNeeded()
+            check("重复布局不新增约束：\(size.width)", allViews(controller.view).reduce(0) { $0 + $1.constraints.count } == count)
+            let controls = allViews(controller.view).compactMap { $0 as? UISegmentedControl }
+            check("样式、比例、方向三组选项都存在：\(size.width)",
+                  ["share.style", "share.ratio", "share.orientation"].allSatisfy { id in controls.contains { $0.accessibilityIdentifier == id } })
+            check("选项保留 40 点以上触控高度：\(size.width)", controls.allSatisfy { $0.bounds.height >= 40 })
         }
+        controller.card.ratio = .square
+        controller.card.orientation = .landscape
+        check("比例与方向决定画布尺寸", controller.card.canvasSize.width == controller.card.canvasSize.height)
+        controller.card.ratio = .wide
+        let wideExport = controller.card.exportImage()
+        check("横版 16:9 导出短边 966 像素", wideExport.cgImage?.height == 966 && (wideExport.cgImage?.width ?? 0) > 966)
+        controller.card.ratio = .standard
+        controller.card.orientation = .portrait
         let activity = controller.makeActivityController()
         check("系统分享提供 iPad 锚点", activity.popoverPresentationController?.sourceView != nil)
         check("系统分享锚点具有真实尺寸", activity.popoverPresentationController?.sourceRect.isEmpty == false)

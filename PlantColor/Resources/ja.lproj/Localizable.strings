@@ -256,3 +256,10 @@
 "favorites_title" = "お気に入り";
 "favorites_heading" = "心に残る色を集めて";
 "favorites_count" = "日々の発見から集めた %ld 色。";
+"home_show_info" = "解説";
+"home_info_hint" = "この色の解説を開きます";
+"home_open_detail" = "詳細をすべて見る";
+"setting_content_management" = "詳細ページの内容";
+"setting_about_feedback" = "アプリについて・フィードバック";
+"setting_section_appearance" = "外観";
+"share_ratio_standard" = "標準";
