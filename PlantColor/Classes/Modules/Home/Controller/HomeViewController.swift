@@ -26,30 +26,30 @@ class HomeViewController: CollectionViewController {
     private var isShuffled = false
     private var needsInitialRestore = true
 
-    private lazy var modeSegmentView: HomeModeSegmentView = {
-        let view = HomeModeSegmentView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.modeDidChange = { [weak self] mode in
-            self?.switchToMode(mode)
-        }
-        return view
-    }()
+    /// 整屏背景色：随滚动在相邻两个颜色之间连续过渡，页与页之间没有"硬切"的色边
+    let backgroundColorView = UIView()
+    private var lastStyleRow = -1
 
-    private lazy var toolbar: HomeToolbar = {
-        let bar = HomeToolbar()
+    private lazy var topBar: HomeTopBar = {
+        let bar = HomeTopBar()
         bar.translatesAutoresizingMaskIntoConstraints = false
-        bar.onInfo = { [weak self] in self?.showInfo() }
-        bar.onSearch = { [weak self] in
-            let vc = NavigationController(rootViewController: ColorListViewController(type: .all))
-            self?.present(vc, animated: true)
-        }
-        bar.onShare = { [weak self] in
-            guard let item = self?.currentItem else { return }
-            let vc = NavigationController(rootViewController: ShareViewController(item: item))
-            self?.present(vc, animated: true)
-        }
+        bar.onModeChange = { [weak self] in self?.switchToMode($0) }
         bar.onSettings = { [weak self] in
             self?.present(NavigationController(rootViewController: SettingViewController()), animated: true)
+        }
+        bar.onSearch = { [weak self] in
+            self?.navigationController?.pushViewController(ColorLibraryViewController(type: .all), animated: true)
+        }
+        return bar
+    }()
+
+    private lazy var actionBar: HomeActionBar = {
+        let bar = HomeActionBar()
+        bar.translatesAutoresizingMaskIntoConstraints = false
+        bar.onInfo = { [weak self] in self?.showInfo() }
+        bar.onShare = { [weak self] in
+            guard let item = self?.currentItem else { return }
+            self?.present(NavigationController(rootViewController: ShareViewController(item: item)), animated: true)
         }
         return bar
     }()
@@ -61,35 +61,35 @@ class HomeViewController: CollectionViewController {
         return displayItems.indices.contains(row) ? displayItems[row] : displayItems.first
     }
 
-    /// 让工具条和切换条的颜色、操作对象跟上当前色块
+    /// 让悬浮控件的颜色、操作对象跟上当前色块
     private func refreshCurrentItem() {
         guard let item = currentItem else { return }
-        toolbar.item = item
-        modeSegmentView.updateTextColor(item.textUIColor)
-        // 玻璃的明暗跟着色块走：浅色块上用浅色玻璃，深色块上用深色玻璃，
-        // 这样不管系统是浅色还是深色模式，图标和文字都清楚
+        actionBar.item = item
+        // 玻璃的明暗跟着色块走：浅色块上用浅色玻璃，深色块上用深色玻璃
         let isLightColor = (RGBColor(hex: item.colorHEX)?.lab.l ?? 60) > 60
-        let style: UIUserInterfaceStyle = isLightColor ? .light : .dark
-        toolbar.overrideUserInterfaceStyle = style
-        modeSegmentView.overrideUserInterfaceStyle = style
+        topBar.apply(ink: item.textUIColor, style: isLightColor ? .light : .dark)
+        actionBar.overrideUserInterfaceStyle = isLightColor ? .light : .dark
     }
 
     private func showInfo() {
         guard let item = currentItem else { return }
         let sheet = ColorInfoSheetViewController(item: item) { [weak self] in
-            let vc = NavigationController(rootViewController: item.makeDetailViewController())
-            self?.present(vc, animated: true)
+            self?.navigationController?.pushViewController(item.makeDetailViewController(), animated: true)
         }
         present(sheet, animated: !UIAccessibility.isReduceMotionEnabled)
     }
 
-    private lazy var timer: SwiftTimer = {
+    private var storedTimer: SwiftTimer?
 
-        let timer = SwiftTimer.repeaticTimer(interval: .seconds(Int(switchInterval))) { [weak self] _ in
+    /// 自动切换用的定时器（用到时才创建；销毁时不能再触发创建，否则会在释放过程中引用自己）
+    private var timer: SwiftTimer {
+        if let storedTimer { return storedTimer }
+        let created = SwiftTimer.repeaticTimer(interval: .seconds(Int(switchInterval))) { [weak self] _ in
             self?.autoScroll()
         }
-        return timer
-    }()
+        storedTimer = created
+        return created
+    }
 
     init() {
         let flowLayout = UICollectionViewFlowLayout()
@@ -105,12 +105,27 @@ class HomeViewController: CollectionViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
         startTimerIfNeeded()
         refreshCurrentItem()
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        #if DEBUG
+        // 调试用：用环境变量把首页停在两页之间，方便截图检查过渡效果
+        if let raw = ProcessInfo.processInfo.environment["PLANT_DEBUG_PAGE_POSITION"], let position = Double(raw) {
+            collectionView.contentOffset.y = CGFloat(position) * collectionView.bounds.height
+        }
+        #endif
+    }
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        // 首页自己不显示导航栏；进入其它页面时让它们用系统导航栏
+        if presentedViewController == nil {
+            navigationController?.setNavigationBarHidden(false, animated: animated)
+        }
         rememberBrowsingPosition()
         timer.suspend()
     }
@@ -123,12 +138,13 @@ class HomeViewController: CollectionViewController {
         let row = saved.flatMap { position in displayItems.firstIndex { $0.id == position.colorID } } ?? 0
         collectionView.scrollToItem(at: IndexPath(item: row, section: 0), at: .top, animated: false)
         rememberBrowsingPosition()
+        updateBlend()
         refreshCurrentItem()
     }
 
     deinit {
         settingToken?.invalidate()
-        timer.suspend()
+        storedTimer?.suspend()
         NotificationCenter.default.removeObserver(self)
     }
 
@@ -150,7 +166,11 @@ class HomeViewController: CollectionViewController {
      override func makeUI() {
         super.makeUI()
 
-         navigation.bar.isHidden = true
+         view.backgroundColor = .systemBackground
+         view.insertSubview(backgroundColorView, at: 0)
+         backgroundColorView.frame = view.bounds
+         backgroundColorView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+         collectionView.backgroundColor = .clear
          collectionView.isPagingEnabled = true
          collectionView.bounces = !UIAccessibility.isReduceMotionEnabled
          NotificationCenter.default.addObserver(self, selector: #selector(accessibilityMotionChanged),
@@ -165,28 +185,22 @@ class HomeViewController: CollectionViewController {
          if HomePreferences.shared.startup == .last {
              currentMode = HomePreferences.shared.lastMode
          }
-         modeSegmentView.selectMode(currentMode)
+         topBar.select(currentMode)
 
          isShuffled = settingConfig?.randomSwitching ?? false
          loadItems()
          collectionView.reloadData()
          observeSettingChanges()
 
-         // Add floating pill segment view
-         view.addSubview(modeSegmentView)
+         // 悬浮控件：顶部（设置 · 切换 · 搜索）、底部（收藏 · 简介 · 分享）
+         view.addSubview(topBar)
+         view.addSubview(actionBar)
          NSLayoutConstraint.activate([
-             modeSegmentView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-             modeSegmentView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12),
-             modeSegmentView.widthAnchor.constraint(equalToConstant: 200),
-             modeSegmentView.heightAnchor.constraint(equalToConstant: 44),
-         ])
-
-         // 底部悬浮工具条
-         view.addSubview(toolbar)
-         NSLayoutConstraint.activate([
-             toolbar.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-             toolbar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -DS.barBottomGap),
-             toolbar.widthAnchor.constraint(equalToConstant: 316),
+             topBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 6),
+             topBar.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+             topBar.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+             actionBar.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+             actionBar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -DS.barBottomGap),
          ])
     }
 
@@ -256,6 +270,7 @@ class HomeViewController: CollectionViewController {
                                         animated: false)
         }
         rememberBrowsingPosition()
+        updateBlend()
         refreshCurrentItem()
     }
 
@@ -268,32 +283,57 @@ class HomeViewController: CollectionViewController {
         }
         currentMode = mode
 
-        // 先回到顶部再换数据，避免两边数量不同导致偏移越界
-        if !displayItems.isEmpty {
-            collectionView.scrollToItem(at: IndexPath(item: 0, section: 0),
-                                        at: .top,
-                                        animated: false)
-        }
-
-        switch mode {
-        case .botanical:
-            displayItems = botanicalItems
-        case .traditional:
-            displayItems = traditionalItems
-        }
-
-        collectionView.reloadData()
-
-        let rememberedID = HomePreferences.shared.position(for: mode)?.colorID
-        let position = savedPositions[mode] ?? rememberedID.flatMap { id in displayItems.firstIndex { $0.id == id } } ?? 0
-        if position < displayItems.count {
+        let swap = { [self] in
+            displayItems = mode == .botanical ? botanicalItems : traditionalItems
+            collectionView.reloadData()
             collectionView.layoutIfNeeded()
-            collectionView.scrollToItem(at: IndexPath(item: position, section: 0),
-                                        at: .top,
-                                        animated: false)
+            let rememberedID = HomePreferences.shared.position(for: mode)?.colorID
+            let position = savedPositions[mode] ?? rememberedID.flatMap { id in displayItems.firstIndex { $0.id == id } } ?? 0
+            let row = displayItems.indices.contains(position) ? position : 0
+            collectionView.contentOffset = CGPoint(x: 0, y: CGFloat(row) * collectionView.bounds.height)
+            updateBlend()
+            refreshCurrentItem()
+        }
+        // 两套颜色整体交叉淡入淡出，而不是瞬间换掉
+        if UIAccessibility.isReduceMotionEnabled {
+            swap()
+        } else {
+            UIView.transition(with: view, duration: 0.35, options: [.transitionCrossDissolve, .allowUserInteraction], animations: swap)
         }
         rememberBrowsingPosition()
-        refreshCurrentItem()
+    }
+
+    // MARK: - 连续的颜色过渡
+
+    /// 背景色随滚动位置在相邻两个颜色之间渐变；每一页的内容随离开中心的程度淡出。
+    /// 这样翻页时看到的是"颜色慢慢洇开"，而不是一块色块硬生生顶走另一块。
+    private func updateBlend() {
+        let height = collectionView.bounds.height
+        guard height > 0, !displayItems.isEmpty else { return }
+        let position = min(max(collectionView.contentOffset.y / height, 0), CGFloat(displayItems.count - 1))
+        let lower = Int(floor(position))
+        let upper = min(lower + 1, displayItems.count - 1)
+        let fraction = position - CGFloat(lower)
+        backgroundColorView.backgroundColor = Self.blend(displayItems[lower].color, displayItems[upper].color, fraction)
+
+        for cell in collectionView.visibleCells {
+            guard let colorCell = cell as? HomeColorCell else { continue }
+            let offset = (cell.frame.midY - (collectionView.contentOffset.y + height / 2)) / height
+            colorCell.setTransition(progress: offset)
+        }
+        // 控件的明暗在过半时切换，避免在中间态来回闪
+        let row = Int(round(position))
+        if row != lastStyleRow {
+            lastStyleRow = row
+            refreshCurrentItem()
+        }
+    }
+
+    private static func blend(_ from: UIColor, _ to: UIColor, _ t: CGFloat) -> UIColor {
+        var a: (CGFloat, CGFloat, CGFloat, CGFloat) = (0, 0, 0, 0), b = a
+        from.getRed(&a.0, green: &a.1, blue: &a.2, alpha: &a.3)
+        to.getRed(&b.0, green: &b.1, blue: &b.2, alpha: &b.3)
+        return UIColor(red: a.0 + (b.0 - a.0) * t, green: a.1 + (b.1 - a.1) * t, blue: a.2 + (b.2 - a.2) * t, alpha: 1)
     }
 
     private func rememberBrowsingPosition() {
@@ -338,6 +378,7 @@ extension HomeViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeColorCell", for: indexPath) as! HomeColorCell
         cell.displayItem = displayItems[indexPath.row]
         cell.onShowInfo = { [weak self] in self?.showInfo() }
+        cell.setTransition(progress: 0)
         return cell
     }
 }
@@ -353,6 +394,8 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
 // MARK: - UIScrollViewDelegate
 extension HomeViewController: UIScrollViewDelegate {
 
+    func scrollViewDidScroll(_ scrollView: UIScrollView) { updateBlend() }
+
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) { settleOnCurrentColor() }
     func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) { settleOnCurrentColor() }
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
@@ -362,6 +405,7 @@ extension HomeViewController: UIScrollViewDelegate {
     /// 停稳在某个颜色上：记住位置，并让工具条对准它
     private func settleOnCurrentColor() {
         rememberBrowsingPosition()
+        updateBlend()
         refreshCurrentItem()
     }
 

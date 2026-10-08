@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import EachNavigationBar
 import SFSafeSymbols
 
 class ViewController: UIViewController {
@@ -15,6 +14,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
 
         super.viewDidLoad()
+        navigationItem.backButtonDisplayMode = .minimal
         makeUI()
     }
 
@@ -53,29 +53,30 @@ class ViewController: UIViewController {
 
     // MARK: - init
     func makeUI() {
-
-        view.backgroundColor = .white
-        
-        navigation.item.rightBarButtonItem = UIBarButtonItem(image: .sf(systemSymbol: .multiply),
-                                                             style: .plain,
-                                                             target: self,
-                                                             action: #selector(rightBarButtonItemDidClick))
+        view.backgroundColor = .systemBackground
     }
-    
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        addCloseButtonIfNeeded()
+    }
+
+    /// 作为弹出页的第一页（没有返回按钮）时，补一个"关闭"，保证任何页面都能退出。
+    /// 页面自己已经设置了左右按钮（如"完成"）就不再添加。
+    private func addCloseButtonIfNeeded() {
+        guard let navigationController,
+              navigationController.viewControllers.first === self,
+              navigationController.presentingViewController != nil,
+              navigationItem.leftBarButtonItem == nil,
+              (navigationItem.rightBarButtonItems ?? []).isEmpty else { return }
+        let close = UIBarButtonItem(systemItem: .close, primaryAction: UIAction { [weak self] _ in
+            self?.dismiss(animated: true)
+        })
+        close.accessibilityLabel = NSLocalizedString("common_close", comment: "")
+        navigationItem.rightBarButtonItem = close
+    }
+
     @objc func rightBarButtonItemDidClick() {
         dismiss(animated: true)
-    }
-
-    /// Opt-in compatibility for auxiliary screens using the legacy per-screen bar.
-    /// Expose real controls instead of the hidden system navigation bar on iOS 26.
-    func exposeAuxiliaryNavigationControls() {
-        guard let navigationController, navigationController.viewControllers.first !== self else { return }
-        let back = UIButton(type: .system)
-        back.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
-        back.accessibilityLabel = NSLocalizedString("common_back", comment: "")
-        back.frame.size = CGSize(width: 44, height: 44)
-        navigation.bar.backBarButtonItem = BackBarButtonItem(style: .custom(back), tintColor: navigation.bar.tintColor)
-        let actions = navigation.item.rightBarButtonItems?.compactMap(\.customView) ?? []
-        view.accessibilityElements = [back] + actions + view.subviews.filter { $0 !== navigation.bar }
     }
 }

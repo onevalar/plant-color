@@ -1,5 +1,4 @@
 import UIKit
-import EachNavigationBar
 import Photos
 
 /// 分享色卡：预览居中 + 底部玻璃控制面板（样式 / 比例 / 方向 / 色值），横屏时面板移到右侧。
@@ -35,12 +34,9 @@ final class ShareViewController: ViewController {
     override func makeUI() {
         super.makeUI()
         view.backgroundColor = .systemGroupedBackground
-        navigation.bar.backgroundColor = .clear
-        navigation.bar.tintColor = .settingsAccent
-        navigation.bar.prefersLargeTitles = false
-        navigation.item.largeTitleDisplayMode = .never
-        navigation.item.title = String(format: NSLocalizedString("share_color_title", comment: ""), colorModel.displayName)
-        navigation.item.rightBarButtonItem = UIBarButtonItem(
+        navigationItem.largeTitleDisplayMode = .never
+        navigationItem.title = String(format: NSLocalizedString("share_color_title", comment: ""), colorModel.displayName)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
             title: NSLocalizedString("common_done", comment: ""), style: .plain,
             target: self, action: #selector(finish))
 
@@ -218,7 +214,7 @@ final class ShareViewController: ViewController {
     /// 竖屏：面板在底部；横屏（宽屏）：面板在右侧，预览在左侧
     private func buildLayoutSets() {
         let safe = view.safeAreaLayoutGuide
-        let top = navigation.bar.bottomAnchor
+        let top = safe.topAnchor
         let maxTrayHeight = tray.heightAnchor.constraint(lessThanOrEqualTo: safe.heightAnchor, multiplier: 0.58)
         portraitLayout = [
             tray.leadingAnchor.constraint(equalTo: safe.leadingAnchor, constant: 12),

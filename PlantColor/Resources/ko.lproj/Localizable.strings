@@ -13,8 +13,8 @@
 "common_share" = "공유";
 
 // MARK: - Home
-"home_mode_plant" = "식물 색채";
-"home_mode_traditional" = "전통 색채";
+"home_mode_plant" = "식물색";
+"home_mode_traditional" = "전통색";
 "home_latin_prefix" = "학명: ";
 
 // MARK: - Loading
@@ -263,3 +263,11 @@
 "setting_about_feedback" = "정보 및 피드백";
 "setting_section_appearance" = "외관";
 "share_ratio_standard" = "표준";
+"home_mode_label" = "색상 유형";
+"common_close" = "닫기";
+"common_filter" = "필터";
+"filter_source" = "종류";
+"filter_series" = "색상 계열";
+"library_show_list" = "목록으로 보기";
+"library_show_grid" = "그리드로 보기";
+"library_no_results" = "일치하는 색이 없습니다";

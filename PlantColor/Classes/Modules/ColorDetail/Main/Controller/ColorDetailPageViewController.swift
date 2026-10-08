@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import EachNavigationBar
 
 /// 详情页里的一块内容
 enum DetailBlock {
@@ -41,16 +40,16 @@ class ColorDetailPageViewController: ViewController {
 
     override func makeUI() {
         super.makeUI()
-        navigation.item.title = ""
-        navigation.bar.prefersLargeTitles = false
-        navigation.bar.backgroundColor = .clear
-        navigation.item.rightBarButtonItems = ColorDetailActions.barItems(for: item, from: self)
+        navigationItem.title = nil
+        navigationItem.largeTitleDisplayMode = .never
+        navigationItem.rightBarButtonItems = ColorDetailActions.barItems(for: item, from: self)
         view.backgroundColor = .systemGroupedBackground
 
         let scroll = UIScrollView()
         scroll.alwaysBounceVertical = true
         scroll.showsVerticalScrollIndicator = false
         scroll.keyboardDismissMode = .onDrag
+        scroll.contentInsetAdjustmentBehavior = .automatic
         scroll.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scroll)
 
@@ -61,12 +60,12 @@ class ColorDetailPageViewController: ViewController {
         scroll.addSubview(content)
 
         NSLayoutConstraint.activate([
-            scroll.topAnchor.constraint(equalTo: navigation.bar.bottomAnchor),
+            scroll.topAnchor.constraint(equalTo: view.topAnchor),
             scroll.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scroll.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scroll.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             content.topAnchor.constraint(equalTo: scroll.contentLayoutGuide.topAnchor, constant: 8),
-            content.bottomAnchor.constraint(equalTo: scroll.contentLayoutGuide.bottomAnchor, constant: -(view.safeAreaInsets.bottom + 40)),
+            content.bottomAnchor.constraint(equalTo: scroll.contentLayoutGuide.bottomAnchor, constant: -40),
             content.leadingAnchor.constraint(equalTo: scroll.frameLayoutGuide.leadingAnchor, constant: DS.margin),
             content.trailingAnchor.constraint(equalTo: scroll.frameLayoutGuide.trailingAnchor, constant: -DS.margin),
         ])
@@ -91,9 +90,6 @@ class ColorDetailPageViewController: ViewController {
         card.backgroundColor = item.color
         card.layer.cornerRadius = 28
         card.layer.cornerCurve = .continuous
-        if item.colorKind == .plant {
-            card.hero.id = "color_\(item.id)"
-        }
 
         let name = UILabel()
         name.text = item.displayName

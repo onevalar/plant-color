@@ -13,7 +13,7 @@
 "common_share" = "Share";
 
 // MARK: - Home
-"home_mode_plant" = "Botanical";
+"home_mode_plant" = "Plants";
 "home_mode_traditional" = "Traditional";
 "home_latin_prefix" = "Latin: ";
 
@@ -158,7 +158,7 @@
 "permission_undetermined" = "Permission not determined";
 "permission_unknown" = "Unknown permission status";
 "common_copied" = "Copied %@";
-"color_kind_plant" = "Plant";
+"color_kind_plant" = "Plants";
 "color_kind_traditional" = "Traditional";
 "detail_tap_to_copy" = "Tap a value to copy it";
 "harmony_title" = "Color Matches";
@@ -263,3 +263,11 @@
 "setting_about_feedback" = "About & Feedback";
 "setting_section_appearance" = "Appearance";
 "share_ratio_standard" = "Standard";
+"home_mode_label" = "Color type";
+"common_close" = "Close";
+"common_filter" = "Filter";
+"filter_source" = "Source";
+"filter_series" = "Color Family";
+"library_show_list" = "Show as list";
+"library_show_grid" = "Show as grid";
+"library_no_results" = "No matching colors";

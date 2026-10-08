@@ -37,18 +37,15 @@ class OptionListViewController: TableViewController {
 
     override func makeUI() {
         super.makeUI()
-        navigation.item.title = navTitle
-        navigation.bar.backgroundColor = .main
+        navigationItem.title = navTitle
         view.backgroundColor = .main
         tableView.backgroundColor = .main
         view.tintColor = .settingsAccent
-        navigation.bar.tintColor = .settingsAccent
         tableView.register(R.nib.rateCell)
         tableView.delegate = self
         tableView.dataSource = self
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = RateCell.height
-        exposeAuxiliaryNavigationControls()
     }
 }
 

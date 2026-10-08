@@ -75,9 +75,9 @@ class ColorDetailManageViewController: TableViewController {
     }
 
     private func setUpNav() {
-        navigation.item.title = NSLocalizedString(kind == .plant ? "manage_title" : "manage_traditional_title",
+        navigationItem.title = NSLocalizedString(kind == .plant ? "manage_title" : "manage_traditional_title",
                                                   comment: "")
-        navigation.item.rightBarButtonItem = UIBarButtonItem(title: NSLocalizedString("common_edit", comment: ""),
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: NSLocalizedString("common_edit", comment: ""),
                                                              style: .done,
                                                              target: self,
                                                              action: #selector(editPressed))
@@ -86,7 +86,7 @@ class ColorDetailManageViewController: TableViewController {
     @objc private func editPressed() {
         tableView.setEditing(!tableView.isEditing, animated: true)
         let title = tableView.isEditing ? NSLocalizedString("common_done", comment: "") : NSLocalizedString("common_edit", comment: "")
-        navigation.item.rightBarButtonItem = UIBarButtonItem(title: title,
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: title,
                                                              style: .done,
                                                              target: self,
                                                              action: #selector(editPressed))

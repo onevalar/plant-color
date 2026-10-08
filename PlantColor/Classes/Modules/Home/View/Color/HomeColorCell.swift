@@ -104,10 +104,24 @@ final class HomeColorCell: UICollectionViewCell {
         ]
     }
 
+    /// progress：这一页离屏幕中心有多远（-1…1，0 为正中）。越远越淡，并略微缩小。
+    func setTransition(progress: CGFloat) {
+        let distance = min(abs(progress), 1)
+        stack.alpha = max(0, 1 - distance * 1.7)
+        if UIAccessibility.isReduceMotionEnabled {
+            stack.transform = .identity
+        } else {
+            let scale = 1 - 0.06 * distance
+            stack.transform = CGAffineTransform(scaleX: scale, y: scale)
+        }
+    }
+
     private func configure() {
         guard let item = displayItem else { return }
         let textColor = item.textUIColor
-        contentView.backgroundColor = item.color
+        // 背景由首页统一绘制（相邻颜色之间连续渐变），这里保持透明
+        contentView.backgroundColor = .clear
+        backgroundColor = .clear
 
         let hasArt = !item.imageName.isEmpty
         artView.image = hasArt ? UIImage(named: item.imageName) : nil
@@ -162,5 +176,6 @@ final class HomeColorCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         onShowInfo = nil
+        setTransition(progress: 0)
     }
 }

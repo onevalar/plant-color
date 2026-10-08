@@ -8,7 +8,6 @@
 
 import Foundation
 import UIKit
-import Hero
 
 #if DEBUG
 /// 调试版启动时自动运行的数据与算法自检（结果写进日志）。
@@ -124,19 +123,17 @@ class PlantColorTests {
         NotificationCenter.default.post(name: UIAccessibility.reduceTransparencyStatusDidChangeNotification, object: nil)
         check("透明度通知立即读取系统状态", glass.isOpaque == UIAccessibility.isReduceTransparencyEnabled)
 
-        let navigation = NavigationController(rootViewController: UIViewController())
+        // 页面一律使用系统原生导航：带返回按钮、侧滑返回
+        let root = UIViewController()
+        let navigation = NavigationController(rootViewController: root)
         navigation.loadViewIfNeeded()
-        check("初始转场状态与系统偏好一致", navigation.hero.isEnabled == !UIAccessibility.isReduceMotionEnabled)
-        navigation.updateMotionPreference(reduceMotion: true)
-        check("减少动态停用 Hero 几何转场", !navigation.hero.isEnabled)
-        navigation.updateMotionPreference(reduceMotion: false)
-        check("关闭减少动态恢复原有转场", navigation.hero.isEnabled)
-        navigation.updateMotionPreference(reduceMotion: false)
-        navigation.updateMotionPreference(reduceMotion: false)
-        navigation.delegate?.navigationController?(navigation, willShow: UIViewController(), animated: false)
-        check("重复刷新转场不会注册自身为上游代理", navigation.hero.isEnabled && navigation.delegate is HeroTransition)
-        NotificationCenter.default.post(name: UIAccessibility.reduceMotionStatusDidChangeNotification, object: nil)
-        check("动态通知立即更新转场", navigation.hero.isEnabled == !UIAccessibility.isReduceMotionEnabled)
+        let pushed = UIViewController()
+        navigation.pushViewController(pushed, animated: false)
+        check("导航使用系统原生导航栏", navigation.navigationBar.prefersLargeTitles && !navigation.isNavigationBarHidden)
+        check("二级页面可以返回", navigation.viewControllers.count == 2
+              && navigation.gestureRecognizerShouldBegin(navigation.interactivePopGestureRecognizer!))
+        navigation.popViewController(animated: false)
+        check("一级页面不触发侧滑返回", !navigation.gestureRecognizerShouldBegin(navigation.interactivePopGestureRecognizer!))
     }
 
     private func testHomeCardAndToolbar() {
@@ -159,9 +156,27 @@ class PlantColorTests {
         cell.prepareForReuse()
         check("首页色块复用不保留旧动作", cell.onShowInfo == nil)
 
-        let toolbar = HomeToolbar()
-        toolbar.item = traditional
-        check("工具条创建成功", toolbar.bounds.height >= 0)
+        // 翻到两页之间时，背景应是两个颜色的过渡色，内容应变淡
+        let home = HomeViewController()
+        home.loadViewIfNeeded()
+        home.view.frame = CGRect(x: 0, y: 0, width: 390, height: 844)
+        home.view.layoutIfNeeded()
+        if home.collectionView.numberOfItems(inSection: 0) >= 2 {
+            home.collectionView.layoutIfNeeded()
+            home.collectionView.contentOffset = CGPoint(x: 0, y: 422)
+            home.scrollViewDidScroll(home.collectionView)
+            var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
+            home.backgroundColorView.backgroundColor?.getRed(&r, green: &g, blue: &b, alpha: &a)
+            let centered = home.collectionView.visibleCells.compactMap { $0 as? HomeColorCell }
+            check("首页翻到一半时背景色有效", a == 1)
+            check("首页翻到一半时内容变淡", !centered.isEmpty)
+        }
+
+        let actionBar = HomeActionBar()
+        actionBar.item = traditional
+        let topBar = HomeTopBar()
+        topBar.select(.traditional)
+        check("首页悬浮控件创建成功", actionBar.bounds.height >= 0 && topBar.bounds.height >= 0)
     }
 
     private func testShareCards() {

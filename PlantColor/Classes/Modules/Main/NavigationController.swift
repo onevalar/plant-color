@@ -1,72 +1,41 @@
 //
 //  NavigationController.swift
-//  HelloSVU_Swift
+//  PlantColor
 //
-//  Created by Insect on 2017/5/23.
-//  Copyright © 2017年 Insect. All rights reserved.
+//  使用系统原生导航：自带返回按钮、侧滑返回、大标题，在新系统上自动是 Liquid Glass 样式。
+//  （原先用第三方"每个页面一条假导航栏"的方案，在新系统上返回按钮会丢失、顶部留白很大。）
 //
 
-import EachNavigationBar
-import FDFullscreenPopGesture
-import QYUINavigationBarExtension
 import UIKit
 
-class NavigationController: UINavigationController {
+final class NavigationController: UINavigationController, UIGestureRecognizerDelegate {
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationBar.prefersLargeTitles = true
+        navigationBar.tintColor = .settingsAccent
 
-        // 转场动画
-        updateMotionPreference()
-        NotificationCenter.default.addObserver(self, selector: #selector(accessibilityMotionChanged),
-                                               name: UIAccessibility.reduceMotionStatusDidChangeNotification, object: nil)
-        // Keep Hero's enabled state and navigation delegate consistent. Clearing only the
-        // transition delegate makes the next accessibility refresh register Hero as its
-        // own previous delegate, recursively forwarding navigation callbacks.
-        // 全屏滑动返回
-        fd_fullscreenPopGestureRecognizer.isEnabled = true
-        // 导航栏背景和文字设置
-        setUpNavigation()
+        if #unavailable(iOS 26.0) {
+            // 旧系统：背景透明，滚动时才出现细线，接近新系统观感
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithTransparentBackground()
+            navigationBar.standardAppearance = appearance
+            navigationBar.scrollEdgeAppearance = appearance
+            navigationBar.compactAppearance = appearance
+        }
+        // 导航栏被隐藏（首页）时，侧滑返回手势默认会失效，这里手动保留
+        interactivePopGestureRecognizer?.delegate = self
     }
 
-    func updateMotionPreference(reduceMotion: Bool = UIAccessibility.isReduceMotionEnabled) {
-        hero.isEnabled = !reduceMotion
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        viewControllers.count > 1
     }
 
-    @objc private func accessibilityMotionChanged() { updateMotionPreference() }
-
-    private func setUpNavigation() {
-        
-        navigation.configuration.isShadowHidden = true
-        navigation.configuration.isEnabled = true
-        navigation.configuration.titleTextAttributes = [.foregroundColor: UIColor.navBarTitle]
-        navigation.configuration.prefersLargeTitles = true
-        navigation.configuration.largeTitle.displayMode = .always
-        navigation.configuration.backItem = UINavigationController.Configuration.BackItem(style: .image(.sf(systemSymbol: .chevronBackward)),
-                                                                                          tintColor: nil)
-    }
-
-    override var childForStatusBarStyle: UIViewController? {
-        topViewController
-    }
-
-    override var childForStatusBarHidden: UIViewController? {
-        topViewController
-    }
-
-    override var shouldAutorotate: Bool {
-        topViewController?.shouldAutorotate ?? true
-    }
+    override var childForStatusBarStyle: UIViewController? { topViewController }
+    override var childForStatusBarHidden: UIViewController? { topViewController }
+    override var shouldAutorotate: Bool { topViewController?.shouldAutorotate ?? true }
 
     deinit {
-        NotificationCenter.default.removeObserver(self)
         AppLogger.shared.debug("\(type(of: self)): deinit")
-    }
-}
-
-// MARK: - 返回点击事件
-
-extension NavigationController {
-    @objc private func backButtonDidClick() {
-        popViewController(animated: true)
     }
 }

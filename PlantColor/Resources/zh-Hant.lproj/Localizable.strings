@@ -13,8 +13,8 @@
 "common_share" = "分享";
 
 // MARK: - Home
-"home_mode_plant" = "植物色彩";
-"home_mode_traditional" = "傳統色彩";
+"home_mode_plant" = "植物色";
+"home_mode_traditional" = "傳統色";
 "home_latin_prefix" = "拉丁名: ";
 
 // MARK: - Loading
@@ -263,3 +263,11 @@
 "setting_about_feedback" = "關於與回饋";
 "setting_section_appearance" = "外觀";
 "share_ratio_standard" = "標準";
+"home_mode_label" = "色彩類型";
+"common_close" = "關閉";
+"common_filter" = "篩選";
+"filter_source" = "來源";
+"filter_series" = "色系";
+"library_show_list" = "切換為列表";
+"library_show_grid" = "切換為網格";
+"library_no_results" = "沒有找到相關顏色";

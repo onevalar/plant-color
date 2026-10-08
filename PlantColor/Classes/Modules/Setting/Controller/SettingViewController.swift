@@ -7,7 +7,6 @@
 
 import UIColor_Hex_Swift
 import UIKit
-import Hero
 
 class SettingViewController: TableViewController {
     
@@ -44,7 +43,6 @@ class SettingViewController: TableViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        navigationController?.hero.navigationAnimationType = .auto
     }
     
     override func makeUI() {
@@ -101,14 +99,12 @@ class SettingViewController: TableViewController {
         case .content: titleKey = "setting_content_management"
         case .about: titleKey = "setting_about_feedback"
         }
-        navigation.item.title = NSLocalizedString(titleKey, comment: "")
+        navigationItem.title = NSLocalizedString(titleKey, comment: "")
         if page == .root {
-            navigation.item.rightBarButtonItem = UIBarButtonItem(title: NSLocalizedString("common_done", comment: ""),
+            navigationItem.rightBarButtonItem = UIBarButtonItem(title: NSLocalizedString("common_done", comment: ""),
                                                                  style: .plain, target: self, action: #selector(done))
         }
-        navigation.bar.backgroundColor = .main
-        navigation.bar.tintColor = .settingsAccent
-        navigation.item.rightBarButtonItem?.tintColor = .settingsAccent
+        navigationItem.rightBarButtonItem?.tintColor = .settingsAccent
     }
     
     func setUpBaseDate() {
@@ -251,10 +247,10 @@ extension SettingViewController: UITableViewDelegate {
         switch item.setType {
 
         case .AllColor:
-            navigationController?.pushViewController(ColorListViewController(type: .all),
+            navigationController?.pushViewController(ColorLibraryViewController(type: .all),
                                                      animated: true)
         case .MyCollection:
-            navigationController?.pushViewController(ColorListViewController(type: .collect),
+            navigationController?.pushViewController(ColorLibraryViewController(type: .collect),
                                                      animated: true)
             
         case .ScientificManagement:

@@ -263,3 +263,11 @@
 "setting_about_feedback" = "アプリについて・フィードバック";
 "setting_section_appearance" = "外観";
 "share_ratio_standard" = "標準";
+"home_mode_label" = "色の種類";
+"common_close" = "閉じる";
+"common_filter" = "絞り込み";
+"filter_source" = "種類";
+"filter_series" = "色系統";
+"library_show_list" = "リスト表示";
+"library_show_grid" = "グリッド表示";
+"library_no_results" = "該当する色がありません";
