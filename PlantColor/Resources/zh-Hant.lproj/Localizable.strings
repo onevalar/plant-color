@@ -3,6 +3,7 @@
 // MARK: - Common
 "common_edit" = "編輯";
 "common_done" = "完成";
+"common_back" = "返回";
 "common_cancel" = "取消";
 "common_confirm" = "確定";
 "common_clear" = "清除";
@@ -198,3 +199,60 @@
 "color_diff_greener" = "更偏綠";
 "color_diff_yellower" = "更偏黃";
 "color_diff_bluer" = "更偏藍";
+
+// Color library quick actions
+"color_search_placeholder" = "名稱、拼音或色值";
+"color_copy_hex" = "複製 HEX 色值";
+"color_add_favorite" = "收藏顏色";
+"color_remove_favorite" = "取消收藏";
+"color_view_list" = "列表檢視";
+"color_view_grid" = "網格檢視";
+"color_filter_series" = "色系";
+
+/* Browsing and system appearance */
+"setting_section_browsing" = "瀏覽";
+"setting_section_display" = "顯示與輔助功能";
+"setting_startup_display" = "開啟時顯示";
+"setting_startup_last" = "上次瀏覽";
+"setting_startup_first" = "從第一張開始";
+"setting_haptic_feedback" = "觸覺回饋";
+"setting_appearance" = "介面外觀";
+"setting_appearance_system" = "跟隨系統";
+"setting_appearance_light" = "淺色";
+"setting_appearance_dark" = "深色";
+"setting_reduce_transparency" = "降低透明度";
+"setting_reduce_motion" = "減少動態效果";
+"setting_text_size" = "文字大小";
+"setting_value_on" = "開啟";
+"setting_value_off" = "關閉";
+"setting_value_none" = "未設定";
+"setting_about_app" = "關於植物彩雅";
+"setting_about_version" = "版本 %@\n\n探索植物與中國傳統色彩。色彩資料、原始植物插畫和瀏覽位置保留在本機。";
+"setting_reduce_transparency_info" = "跟隨系統設定。可在「設定 → 輔助使用 → 顯示與文字大小 → 降低透明度」調整。開啟後浮層使用實色背景，原始色卡不變。";
+"setting_reduce_motion_info" = "跟隨系統設定。可在「設定 → 輔助使用 → 動態效果 → 減少動態效果」調整。開啟後停用回彈、自動翻頁動畫和幾何轉場，仍可縱向換色、橫向看簡介。";
+"setting_text_size_info" = "設定、選項等輔助頁面跟隨系統文字大小。可在「設定 → 螢幕顯示與亮度 → 文字大小」調整；更大字級位於「輔助使用 → 顯示與文字大小」。原始色卡和插畫構圖保持不變。";
+
+/* Widget preview and configuration */
+"widget_preview_original" = "原色";
+"widget_preview_tinted" = "系統著色";
+"widget_preview_title" = "把一抹植物色帶回桌面";
+"widget_preview_subtitle" = "每天遇見一種自然的顏色。";
+"widget_preview_hint" = "長按主畫面，加入「植物彩雅」小工具。著色預覽不會更改系統外觀；實際色調由主畫面決定，更新時間由系統安排。";
+"widget_preview_accessibility" = "小工具預覽：%@";
+"widget_open_preview" = "開啟預覽顏色";
+"widget_preview_settings" = "預覽與設定";
+
+/* Share card presets and system export */
+"share_card_original" = "原色卡片";
+"share_card_pure" = "純色";
+"share_card_introduction" = "含簡介";
+"share_show_values" = "顯示色值";
+"share_color_title" = "分享 %@";
+"share_system_action" = "分享…";
+"share_save_action" = "儲存到相簿";
+"app_name" = "植物彩雅";
+
+// Favorites
+"favorites_title" = "收藏";
+"favorites_heading" = "留住心動的顏色";
+"favorites_count" = "%ld 種色彩，來自你的日常。";

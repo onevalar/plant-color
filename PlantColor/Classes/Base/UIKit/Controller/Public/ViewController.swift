@@ -65,4 +65,17 @@ class ViewController: UIViewController {
     @objc func rightBarButtonItemDidClick() {
         dismiss(animated: true)
     }
+
+    /// Opt-in compatibility for auxiliary screens using the legacy per-screen bar.
+    /// Expose real controls instead of the hidden system navigation bar on iOS 26.
+    func exposeAuxiliaryNavigationControls() {
+        guard let navigationController, navigationController.viewControllers.first !== self else { return }
+        let back = UIButton(type: .system)
+        back.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
+        back.accessibilityLabel = NSLocalizedString("common_back", comment: "")
+        back.frame.size = CGSize(width: 44, height: 44)
+        navigation.bar.backBarButtonItem = BackBarButtonItem(style: .custom(back), tintColor: navigation.bar.tintColor)
+        let actions = navigation.item.rightBarButtonItems?.compactMap(\.customView) ?? []
+        view.accessibilityElements = [back] + actions + view.subviews.filter { $0 !== navigation.bar }
+    }
 }

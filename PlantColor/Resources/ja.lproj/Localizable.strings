@@ -3,6 +3,7 @@
 // MARK: - Common
 "common_edit" = "編集";
 "common_done" = "完了";
+"common_back" = "戻る";
 "common_cancel" = "キャンセル";
 "common_confirm" = "確認";
 "common_clear" = "クリア";
@@ -198,3 +199,60 @@
 "color_diff_greener" = "より緑みが強く";
 "color_diff_yellower" = "より黄みが強く";
 "color_diff_bluer" = "より青みが強く";
+
+// Color library quick actions
+"color_search_placeholder" = "名前、ピンイン、カラー値";
+"color_copy_hex" = "HEX カラーをコピー";
+"color_add_favorite" = "お気に入りに追加";
+"color_remove_favorite" = "お気に入りから削除";
+"color_view_list" = "リスト表示";
+"color_view_grid" = "グリッド表示";
+"color_filter_series" = "色系統";
+
+/* Browsing and system appearance */
+"setting_section_browsing" = "閲覧";
+"setting_section_display" = "表示とアクセシビリティ";
+"setting_startup_display" = "起動時の表示";
+"setting_startup_last" = "前回の閲覧位置";
+"setting_startup_first" = "最初の色から開始";
+"setting_haptic_feedback" = "触覚フィードバック";
+"setting_appearance" = "外観";
+"setting_appearance_system" = "システムに合わせる";
+"setting_appearance_light" = "ライト";
+"setting_appearance_dark" = "ダーク";
+"setting_reduce_transparency" = "透明度を下げる";
+"setting_reduce_motion" = "視差効果を減らす";
+"setting_text_size" = "文字サイズ";
+"setting_value_on" = "オン";
+"setting_value_off" = "オフ";
+"setting_value_none" = "未設定";
+"setting_about_app" = "植物彩雅について";
+"setting_about_version" = "バージョン %@\n\n植物と中国の伝統色を探索。色のデータ、元の植物イラスト、閲覧位置はこのデバイスに保存されます。";
+"setting_reduce_transparency_info" = "iOS の設定に従います。「設定 → アクセシビリティ → 画面表示とテキストサイズ → 透明度を下げる」で変更できます。有効時は操作パネルを不透明にし、元の色カードは維持します。";
+"setting_reduce_motion_info" = "iOS の設定に従います。「設定 → アクセシビリティ → 動作 → 視差効果を減らす」で変更できます。バウンス、自動ページ送りのアニメーション、幾何学的な画面遷移を無効にし、縦の色切り替えと横の紹介は維持します。";
+"setting_text_size_info" = "設定と選択画面はシステムの文字サイズに従います。「設定 → 画面表示と明るさ → テキストサイズを変更」、または「アクセシビリティ → 画面表示とテキストサイズ」で変更できます。元の色カードとイラストの配置は維持します。";
+
+/* Widget preview and configuration */
+"widget_preview_original" = "元の色";
+"widget_preview_tinted" = "システムの色合い";
+"widget_preview_title" = "植物の色をホーム画面に";
+"widget_preview_subtitle" = "毎日、自然の色に出会う。";
+"widget_preview_hint" = "ホーム画面を長押しして植物彩雅を追加します。色合いはプレビューのみです。実際の色はホーム画面、更新時刻はシステムが決めます。";
+"widget_preview_accessibility" = "ウィジェットのプレビュー：%@";
+"widget_open_preview" = "プレビューの色を開く";
+"widget_preview_settings" = "プレビューと設定";
+
+/* Share card presets and system export */
+"share_card_original" = "オリジナル";
+"share_card_pure" = "単色";
+"share_card_introduction" = "紹介付き";
+"share_show_values" = "色の値を表示";
+"share_color_title" = "%@ を共有";
+"share_system_action" = "共有…";
+"share_save_action" = "写真に保存";
+"app_name" = "植物彩雅";
+
+// Favorites
+"favorites_title" = "お気に入り";
+"favorites_heading" = "心に残る色を集めて";
+"favorites_count" = "日々の発見から集めた %ld 色。";

@@ -12,6 +12,8 @@ import UIKit
 import RealmSwift
 
 class ColorListBaseViewController: ViewController {
+    override var preferredStatusBarStyle: UIStatusBarStyle { .default }
+    var showsCatalogFilters: Bool { true }
 
     var isGrid: Bool = false {
         didSet {
@@ -24,7 +26,7 @@ class ColorListBaseViewController: ViewController {
 
             if isShowColorSeriesView {
 
-                UIView.animate(withDuration: 0.25) {
+                UIView.animate(withDuration: UIAccessibility.isReduceMotionEnabled ? 0 : 0.25) {
                     self.colorSeriesFilterView.snp.remakeConstraints {
                         $0.top.equalTo(self.filterMenu.snp.bottom)
                         $0.height.equalTo(ColorSeriesFilterView.height)
@@ -33,7 +35,7 @@ class ColorListBaseViewController: ViewController {
                     self.view.layoutIfNeeded()
                 }
             } else {
-                UIView.animate(withDuration: 0.25) {
+                UIView.animate(withDuration: UIAccessibility.isReduceMotionEnabled ? 0 : 0.25) {
                     self.colorSeriesFilterView.snp.remakeConstraints {
                         $0.top.equalTo(self.filterMenu.snp.top).offset(-ColorSeriesFilterView.height)
                         $0.height.equalTo(ColorSeriesFilterView.height)
@@ -136,6 +138,7 @@ class ColorListBaseViewController: ViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        guard showsCatalogFilters else { return }
 
         searchView.snp.remakeConstraints {
             $0.top.equalToSuperview().offset(navigation.bar.bottom)
@@ -148,7 +151,7 @@ class ColorListBaseViewController: ViewController {
             $0.top.equalTo(searchView.snp.bottom).offset(2)
             $0.left.equalToSuperview().offset(14)
             $0.right.equalToSuperview().offset(-14)
-            $0.height.equalTo(30)
+            $0.height.equalTo(36)
         }
 
         filterMenu.snp.remakeConstraints {
@@ -179,6 +182,7 @@ class ColorListBaseViewController: ViewController {
         super.makeUI()
 
         setUpNav()
+        guard showsCatalogFilters else { return }
         view.addSubview(searchView)
         view.addSubview(sourceSegment)
         view.addSubview(filterMenu)
@@ -188,7 +192,8 @@ class ColorListBaseViewController: ViewController {
 
     private func setUpNav() {
         navigation.item.title = type.title
-        navigation.bar.backgroundColor = .white
+        navigation.bar.backgroundColor = .main
+        view.backgroundColor = .main
     }
 
     func loadingNewData(result: (() -> Void)? = nil) {
@@ -202,6 +207,42 @@ class ColorListBaseViewController: ViewController {
         items = combined
         AppLogger.shared.info("成功加载\(items.count)个颜色项目")
         result?()
+    }
+
+
+    /// Native quick actions are shared by list and grid; the primary tap still opens the original detail.
+    func colorActions(for item: any ColorDisplayable) -> UIMenu {
+        let copy = UIAction(title: NSLocalizedString("color_copy_hex", comment: ""), image: UIImage(systemName: "doc.on.doc")) { [weak self] _ in
+            self?.copyColor(item)
+        }
+        let favorite = UIAction(title: NSLocalizedString(item.isCollect ? "color_remove_favorite" : "color_add_favorite", comment: ""), image: UIImage(systemName: item.isCollect ? "heart.slash" : "heart")) { [weak self] _ in
+            self?.toggleFavorite(item)
+        }
+        return UIMenu(title: item.displayName, children: [copy, favorite])
+    }
+
+    func colorAccessibilityActions(for item: any ColorDisplayable) -> [UIAccessibilityCustomAction] {
+        [
+            UIAccessibilityCustomAction(name: NSLocalizedString("color_copy_hex", comment: "")) { [weak self] _ in
+                guard let self else { return false }
+                self.copyColor(item)
+                return true
+            },
+            UIAccessibilityCustomAction(name: NSLocalizedString(item.isCollect ? "color_remove_favorite" : "color_add_favorite", comment: "")) { [weak self] _ in
+                guard let self else { return false }
+                self.toggleFavorite(item)
+                return true
+            }
+        ]
+    }
+
+    private func copyColor(_ item: any ColorDisplayable) {
+        ColorClipboard.copy(item.colorHEX, from: view)
+    }
+
+    private func toggleFavorite(_ item: any ColorDisplayable) {
+        item.toggleCollect()
+        loadingNewData { [weak self] in self?.loadingDataFinished() }
     }
 
     private func loadPlantItems() -> [ColorModel] {

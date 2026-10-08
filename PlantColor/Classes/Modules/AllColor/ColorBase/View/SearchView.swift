@@ -10,7 +10,7 @@ import SnapKit
 
 class SearchView: View {
     
-    public static let height: CGFloat = 40
+    public static let height: CGFloat = 48
     
     public var searchButtonClicked: ((String?) -> Void)?
 
@@ -23,23 +23,24 @@ class SearchView: View {
 
     private lazy var searchBar: UISearchBar = {
         let searchBar = UISearchBar()
-        searchBar.placeholder = NSLocalizedString("common_search", comment: "")
+        searchBar.placeholder = NSLocalizedString("color_search_placeholder", comment: "")
         searchBar.searchBarStyle = .minimal
         searchBar.delegate = self
+        searchBar.searchTextField.font = .preferredFont(forTextStyle: .body)
+        searchBar.searchTextField.adjustsFontForContentSizeCategory = true
+        searchBar.searchTextField.autocorrectionType = .no
+        searchBar.searchTextField.spellCheckingType = .no
+        searchBar.accessibilityLabel = NSLocalizedString("common_search", comment: "")
         return searchBar
     }()
     
     override func makeUI() {
         super.makeUI()
         addSubview(searchBar)
+        searchBar.snp.makeConstraints { $0.edges.equalToSuperview() }
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        searchBar.snp.makeConstraints {
-            $0.left.right.bottom.top.equalToSuperview()
-        }
-    }
+
 }
 
 // MARK: - UISearchBarDelegate

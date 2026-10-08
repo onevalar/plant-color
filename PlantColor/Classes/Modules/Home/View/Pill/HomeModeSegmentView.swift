@@ -17,6 +17,7 @@ class HomeModeSegmentView: UIView {
     var modeDidChange: ((HomeColorMode) -> Void)?
 
     private var currentMode: HomeColorMode = .botanical
+    private var contentTextColor: UIColor?
 
     private let glassBackground = GlassEffectView()
 
@@ -56,7 +57,7 @@ class HomeModeSegmentView: UIView {
     }
 
     private func setupUI() {
-        glassBackground.cornerRadius = 20
+        glassBackground.cornerRadius = 22
         glassBackground.translatesAutoresizingMaskIntoConstraints = false
         addSubview(glassBackground)
 
@@ -89,9 +90,16 @@ class HomeModeSegmentView: UIView {
         indicatorLeading?.isActive = true
 
         updateAppearance(animated: false)
+        NotificationCenter.default.addObserver(self, selector: #selector(accessibilityAppearanceChanged),
+                                               name: UIAccessibility.reduceTransparencyStatusDidChangeNotification, object: nil)
     }
 
     private var indicatorLeading: NSLayoutConstraint?
+
+    func selectMode(_ mode: HomeColorMode) {
+        currentMode = mode
+        updateAppearance(animated: false)
+    }
 
     @objc private func segmentTapped(_ sender: UIButton) {
         guard let mode = HomeColorMode(rawValue: sender.tag),
@@ -113,7 +121,15 @@ class HomeModeSegmentView: UIView {
             self.traditionalButton.alpha = isTraditional ? 1.0 : 0.5
         }
 
-        if animated {
+        let reduceTransparency = UIAccessibility.isReduceTransparencyEnabled
+        indicator.backgroundColor = reduceTransparency ? .systemGray5 : .white.withAlphaComponent(0.6)
+        let textColor = reduceTransparency ? UIColor.label : (contentTextColor ?? tintColor)
+        botanicalButton.setTitleColor(textColor, for: .normal)
+        traditionalButton.setTitleColor(textColor, for: .normal)
+        botanicalButton.accessibilityTraits = isTraditional ? .button : [.button, .selected]
+        traditionalButton.accessibilityTraits = isTraditional ? [.button, .selected] : .button
+
+        if animated && !UIAccessibility.isReduceMotionEnabled {
             UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut, animations: update)
         } else {
             update()
@@ -127,7 +143,16 @@ class HomeModeSegmentView: UIView {
     }
 
     func updateTextColor(_ color: UIColor) {
-        botanicalButton.setTitleColor(color, for: .normal)
-        traditionalButton.setTitleColor(color, for: .normal)
+        contentTextColor = color
+        updateAppearance(animated: false)
     }
+
+    @objc private func accessibilityAppearanceChanged() { updateAppearance(animated: false) }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        updateAppearance(animated: false)
+    }
+
+    deinit { NotificationCenter.default.removeObserver(self) }
 }

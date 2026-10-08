@@ -8,25 +8,38 @@
 import SwiftUI
 import WidgetKit
 
-struct PlantWidgetView: View {
+struct PlantWidgetView: SwiftUI.View {
+
+    enum PreviewMode { case original, tinted }
 
     @Environment(\.widgetFamily) private var family
 
     var plant: PlantModel
+    /// The app previews the same content without using WidgetKit's container outside an extension.
+    var previewMode: PreviewMode? = nil
+    var imageBundle: Bundle = .main
 
     private var textColor: Color {
-        Color(hex: plant.textColor)
+        previewMode == .tinted ? Color(UIColor.settingsPreviewAccent) : Color(hex: plant.textColor)
     }
 
-    var body: some View {
-        content
-            .foregroundColor(textColor)
-            .widgetBackground(Color(hex: plant.colorHEX))
-            .widgetURL(plant.deepLink)
+    @ViewBuilder var body: some SwiftUI.View {
+        if let previewMode {
+            medium
+                .foregroundColor(textColor)
+                .padding(20)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(previewMode == .tinted ? Color(UIColor.secondarySystemBackground) : Color(hex: plant.colorHEX))
+        } else {
+            content
+                .foregroundColor(textColor)
+                .widgetBackground(Color(hex: plant.colorHEX))
+                .widgetURL(plant.deepLink)
+        }
     }
 
     @ViewBuilder
-    private var content: some View {
+    private var content: some SwiftUI.View {
         switch family {
         case .systemMedium:
             medium
@@ -39,7 +52,7 @@ struct PlantWidgetView: View {
 
     // MARK: - 小
 
-    private var small: some View {
+    private var small: some SwiftUI.View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(alignment: .top, spacing: 4) {
                 nameText(size: plant.name.count > 2 ? 24 : 32)
@@ -54,7 +67,7 @@ struct PlantWidgetView: View {
 
     // MARK: - 中
 
-    private var medium: some View {
+    private var medium: some SwiftUI.View {
         HStack(alignment: .center, spacing: 16) {
             VStack(alignment: .leading, spacing: 8) {
                 nameText(size: plant.name.count > 3 ? 30 : 40)
@@ -70,7 +83,7 @@ struct PlantWidgetView: View {
 
     // MARK: - 大
 
-    private var large: some View {
+    private var large: some SwiftUI.View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .top) {
                 nameText(size: plant.name.count > 3 ? 40 : 52)
@@ -85,7 +98,7 @@ struct PlantWidgetView: View {
 
     // MARK: - 零件
 
-    private func nameText(size: CGFloat) -> some View {
+    private func nameText(size: CGFloat) -> some SwiftUI.View {
         Text(plant.name)
             .font(.system(size: size, weight: .semibold))
             .lineLimit(1)
@@ -94,9 +107,10 @@ struct PlantWidgetView: View {
 
     /// 配图：设置里打开"显示图案"，且这个颜色有图时才显示
     @ViewBuilder
-    private func figure(size: CGFloat) -> some View {
+    private func figure(size: CGFloat) -> some SwiftUI.View {
         if plant.showFigure, !plant.imageName.isEmpty {
-            Image(plant.imageName)
+            Image(plant.imageName, bundle: imageBundle)
+                .renderingMode(previewMode == .tinted ? .template : .original)
                 .resizable()
                 .scaledToFit()
                 .frame(width: size, height: size)
@@ -105,7 +119,7 @@ struct PlantWidgetView: View {
 
     /// 自定义文字优先，否则显示色值（可在设置里关闭）
     @ViewBuilder
-    private func detail(fontSize: CGFloat, lineLimit: Int) -> some View {
+    private func detail(fontSize: CGFloat, lineLimit: Int) -> some SwiftUI.View {
         if !plant.customContent.isEmpty {
             Text(plant.customContent)
                 .font(.system(size: fontSize + 2))
@@ -120,7 +134,7 @@ struct PlantWidgetView: View {
         }
     }
 
-    private func valueRow(_ title: String, _ value: String, fontSize: CGFloat) -> some View {
+    private func valueRow(_ title: String, _ value: String, fontSize: CGFloat) -> some SwiftUI.View {
         HStack(spacing: 6) {
             Text(title)
                 .font(.system(size: fontSize, weight: .medium))
@@ -134,11 +148,21 @@ struct PlantWidgetView: View {
     }
 }
 
-extension View {
+private extension UIColor {
+    static var settingsPreviewAccent: UIColor {
+        UIColor { traits in
+            traits.userInterfaceStyle == .dark
+                ? UIColor(red: 160 / 255, green: 185 / 255, blue: 167 / 255, alpha: 1)
+                : UIColor(red: 61 / 255, green: 86 / 255, blue: 72 / 255, alpha: 1)
+        }
+    }
+}
+
+extension SwiftUI.View {
 
     /// iOS 17 起小组件背景必须用 containerBackground；更早的系统用普通背景并自己留边距
     @ViewBuilder
-    func widgetBackground(_ color: Color) -> some View {
+    func widgetBackground(_ color: Color) -> some SwiftUI.View {
         if #available(iOS 17.0, *) {
             containerBackground(color, for: .widget)
         } else {

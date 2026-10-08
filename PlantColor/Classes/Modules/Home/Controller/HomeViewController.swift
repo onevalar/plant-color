@@ -25,6 +25,7 @@ class HomeViewController: CollectionViewController {
     private var settingToken: NotificationToken?
     /// 当前列表是否已按"随机切换"打乱
     private var isShuffled = false
+    private var needsInitialRestore = true
 
     private lazy var modeSegmentView: HomeModeSegmentView = {
         let view = HomeModeSegmentView()
@@ -62,12 +63,24 @@ class HomeViewController: CollectionViewController {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        rememberBrowsingPosition()
         timer.suspend()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        guard needsInitialRestore, collectionView.bounds.height > 0, !displayItems.isEmpty else { return }
+        needsInitialRestore = false
+        let saved = HomePreferences.shared.startup == .last ? HomePreferences.shared.position(for: currentMode) : nil
+        let row = saved.flatMap { position in displayItems.firstIndex { $0.id == position.colorID } } ?? 0
+        collectionView.scrollToItem(at: IndexPath(item: row, section: 0), at: .top, animated: false)
+        rememberBrowsingPosition()
     }
 
     deinit {
         settingToken?.invalidate()
         timer.suspend()
+        NotificationCenter.default.removeObserver(self)
     }
 
     /// 自动切换的间隔，取自设置里的"切换间隔"（如 "5s"），没设置时用默认值
@@ -90,6 +103,9 @@ class HomeViewController: CollectionViewController {
 
          navigation.bar.isHidden = true
          collectionView.isPagingEnabled = true
+         collectionView.bounces = !UIAccessibility.isReduceMotionEnabled
+         NotificationCenter.default.addObserver(self, selector: #selector(accessibilityMotionChanged),
+                                                name: UIAccessibility.reduceMotionStatusDidChangeNotification, object: nil)
          collectionView.dataSource = self
          collectionView.delegate = self
          collectionView.register(R.nib.homeVerticalCell)
@@ -97,6 +113,11 @@ class HomeViewController: CollectionViewController {
          disablesAdjustScrollViewInsets(collectionView)
 
          settingConfig = try? SettingConfig.re.objects().first
+         if HomePreferences.shared.startup == .last {
+             currentMode = HomePreferences.shared.lastMode
+             index = HomePreferences.shared.position(for: currentMode)?.page ?? 0
+         }
+         modeSegmentView.selectMode(currentMode)
 
          isShuffled = settingConfig?.randomSwitching ?? false
          loadItems()
@@ -109,8 +130,12 @@ class HomeViewController: CollectionViewController {
              modeSegmentView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
              modeSegmentView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12),
              modeSegmentView.widthAnchor.constraint(equalToConstant: 200),
-             modeSegmentView.heightAnchor.constraint(equalToConstant: 40),
+             modeSegmentView.heightAnchor.constraint(equalToConstant: 44),
          ])
+    }
+
+    @objc private func accessibilityMotionChanged() {
+        collectionView.bounces = !UIAccessibility.isReduceMotionEnabled
     }
 
     /// 设置页是半屏弹出的，关闭时首页不会重新出现，
@@ -175,6 +200,7 @@ class HomeViewController: CollectionViewController {
                                         at: .top,
                                         animated: false)
         }
+        rememberBrowsingPosition()
     }
 
     private func switchToMode(_ mode: HomeColorMode) {
@@ -185,6 +211,7 @@ class HomeViewController: CollectionViewController {
             savedPositions[currentMode] = Int(round(collectionView.contentOffset.y / collectionView.bounds.height))
         }
         currentMode = mode
+        index = HomePreferences.shared.position(for: mode)?.page ?? index
 
         // 先回到顶部再换数据，避免两边数量不同导致偏移越界
         if !displayItems.isEmpty {
@@ -200,15 +227,24 @@ class HomeViewController: CollectionViewController {
             displayItems = traditionalItems
         }
 
-        index = 0
         collectionView.reloadData()
 
-        if let position = savedPositions[mode], position > 0, position < displayItems.count {
+        let rememberedID = HomePreferences.shared.position(for: mode)?.colorID
+        let position = savedPositions[mode] ?? rememberedID.flatMap { id in displayItems.firstIndex { $0.id == id } } ?? 0
+        if position < displayItems.count {
             collectionView.layoutIfNeeded()
             collectionView.scrollToItem(at: IndexPath(item: position, section: 0),
                                         at: .top,
                                         animated: false)
         }
+        rememberBrowsingPosition()
+    }
+
+    private func rememberBrowsingPosition() {
+        guard !needsInitialRestore, collectionView.bounds.height > 0 else { return }
+        let row = Int(round(collectionView.contentOffset.y / collectionView.bounds.height))
+        guard displayItems.indices.contains(row) else { return }
+        HomePreferences.shared.remember(mode: currentMode, colorID: displayItems[row].id, page: index)
     }
 
     private func autoScroll() {
@@ -230,7 +266,8 @@ class HomeViewController: CollectionViewController {
         }
         collectionView.scrollToItem(at: IndexPath(item: index, section: 0),
                                     at: .bottom,
-                                    animated: true)
+                                    animated: !UIAccessibility.isReduceMotionEnabled)
+        if UIAccessibility.isReduceMotionEnabled { rememberBrowsingPosition() }
     }
 }
 
@@ -248,6 +285,7 @@ extension HomeViewController: UICollectionViewDataSource {
         cell.displayItem = displayItems[indexPath.row]
         cell.didEndScroll = { [weak self] in
             self?.index = $0
+            self?.rememberBrowsingPosition()
         }
         return cell
     }
@@ -256,6 +294,10 @@ extension HomeViewController: UICollectionViewDataSource {
 // MARK: - UICollectionViewDelegateFlowLayout
 extension HomeViewController: UICollectionViewDelegateFlowLayout {
 
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        (cell as? HomeVerticalCell)?.index = index
+    }
+
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         view.size
     }
@@ -263,6 +305,12 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
 
 // MARK: - UIScrollViewDelegate
 extension HomeViewController: UIScrollViewDelegate {
+
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) { rememberBrowsingPosition() }
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) { rememberBrowsingPosition() }
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if !decelerate { rememberBrowsingPosition() }
+    }
 
     func scrollViewWillEndDragging(_ scrollView: UIScrollView,
                                    withVelocity velocity: CGPoint,

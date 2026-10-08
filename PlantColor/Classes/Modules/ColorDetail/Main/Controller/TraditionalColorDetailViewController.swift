@@ -69,6 +69,7 @@ class TraditionalColorDetailViewController: ViewController {
             self?.navigationController?.pushViewController(item.makeDetailViewController(), animated: true)
         }
         content.addArrangedSubview(footer)
+        exposeAuxiliaryNavigationControls()
     }
 
     // MARK: - Content

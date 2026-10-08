@@ -11,12 +11,24 @@ import RealmSwift
 class ColorMenu: View {
     
     private let items: [MenuType] = [.collect, .search, .share, .setting]
+    private var favoriteToken: NotificationToken?
     
     public var displayItem: (any ColorDisplayable)? {
         didSet {
+            favoriteToken?.invalidate()
+            favoriteToken = nil
             collectionView.reloadData()
+            guard let object = displayItem as? Object, object.realm != nil, !object.isInvalidated else { return }
+            favoriteToken = object.observe { [weak self] change in
+                if case .change(_, let properties) = change,
+                   properties.contains(where: { $0.name == "isCollect" }) {
+                    self?.collectionView.reloadData()
+                }
+            }
         }
     }
+
+    deinit { favoriteToken?.invalidate() }
     
     private lazy var collectionView: CollectionView = {
         
@@ -54,8 +66,10 @@ extension ColorMenu: UICollectionViewDataSource {
                                                       for: indexPath,
                                                       cellType: ColorMenuCell.self)
         cell.displayItem = displayItem
-        cell.item = items[indexPath.row]
-        cell.isButtonSelected = displayItem?.isCollect ?? false
+        let action = items[indexPath.row]
+        cell.item = action
+        cell.isButtonSelected = action == .collect && (displayItem?.isCollect ?? false)
+        cell.onActivate = { [weak self] in self?.performMenuAction(action) }
         return cell
     }
 }
@@ -65,8 +79,12 @@ extension ColorMenu: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
+        performMenuAction(items[indexPath.row])
+    }
+
+    private func performMenuAction(_ action: MenuType) {
         Feedback.lightPrepare()
-        switch items[indexPath.row] {
+        switch action {
         case .collect:
             collectClick()
         case .setting:

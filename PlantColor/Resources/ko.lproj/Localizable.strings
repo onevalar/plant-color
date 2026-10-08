@@ -3,6 +3,7 @@
 // MARK: - Common
 "common_edit" = "편집";
 "common_done" = "완료";
+"common_back" = "뒤로";
 "common_cancel" = "취소";
 "common_confirm" = "확인";
 "common_clear" = "지우기";
@@ -198,3 +199,60 @@
 "color_diff_greener" = "더 푸르고";
 "color_diff_yellower" = "더 노랗고";
 "color_diff_bluer" = "더 푸르스름하고";
+
+// Color library quick actions
+"color_search_placeholder" = "이름, 병음 또는 색상 값";
+"color_copy_hex" = "HEX 색상 복사";
+"color_add_favorite" = "색상 즐겨찾기";
+"color_remove_favorite" = "즐겨찾기 해제";
+"color_view_list" = "목록 보기";
+"color_view_grid" = "그리드 보기";
+"color_filter_series" = "색상 계열";
+
+/* Browsing and system appearance */
+"setting_section_browsing" = "둘러보기";
+"setting_section_display" = "디스플레이 및 손쉬운 사용";
+"setting_startup_display" = "시작 시 표시";
+"setting_startup_last" = "마지막으로 본 위치";
+"setting_startup_first" = "첫 번째 색상부터";
+"setting_haptic_feedback" = "햅틱 피드백";
+"setting_appearance" = "화면 모드";
+"setting_appearance_system" = "시스템 설정";
+"setting_appearance_light" = "라이트";
+"setting_appearance_dark" = "다크";
+"setting_reduce_transparency" = "투명도 줄이기";
+"setting_reduce_motion" = "동작 줄이기";
+"setting_text_size" = "텍스트 크기";
+"setting_value_on" = "켬";
+"setting_value_off" = "끔";
+"setting_value_none" = "설정 안 됨";
+"setting_about_app" = "식물채아 정보";
+"setting_about_version" = "버전 %@\n\n식물과 중국 전통 색상을 살펴보세요. 색상 데이터, 원본 식물 삽화 및 탐색 위치는 이 기기에 보관됩니다.";
+"setting_reduce_transparency_info" = "iOS 설정을 따릅니다. 설정 → 손쉬운 사용 → 디스플레이 및 텍스트 크기 → 투명도 줄이기에서 변경하세요. 켜면 떠 있는 컨트롤에 단색 배경을 사용하며 원본 색상 카드는 유지됩니다.";
+"setting_reduce_motion_info" = "iOS 설정을 따릅니다. 설정 → 손쉬운 사용 → 동작 → 동작 줄이기에서 변경하세요. 바운스, 자동 페이지 애니메이션 및 기하학적 전환을 끄며 세로 색상 탐색과 가로 소개는 유지합니다.";
+"setting_text_size_info" = "설정과 옵션 화면은 시스템 텍스트 크기를 따릅니다. 설정 → 디스플레이 및 밝기 → 텍스트 크기 또는 손쉬운 사용 → 디스플레이 및 텍스트 크기에서 조절하세요. 원본 색상 카드와 삽화의 구성은 유지합니다.";
+
+/* Widget preview and configuration */
+"widget_preview_original" = "원래 색상";
+"widget_preview_tinted" = "시스템 색조";
+"widget_preview_title" = "홈 화면에서 만나는 자연의 색";
+"widget_preview_subtitle" = "매일 새로운 자연의 색을 만나세요.";
+"widget_preview_hint" = "홈 화면을 길게 눌러 식물채아를 추가하세요. 색조는 미리보기이며 실제 색상은 홈 화면에서, 새로 고침 시간은 시스템에서 결정합니다.";
+"widget_preview_accessibility" = "위젯 미리보기: %@";
+"widget_open_preview" = "미리보기 색상 열기";
+"widget_preview_settings" = "미리보기 및 설정";
+
+/* Share card presets and system export */
+"share_card_original" = "원본 카드";
+"share_card_pure" = "단색";
+"share_card_introduction" = "소개 포함";
+"share_show_values" = "색상 값 표시";
+"share_color_title" = "%@ 공유";
+"share_system_action" = "공유…";
+"share_save_action" = "사진에 저장";
+"app_name" = "식물채아";
+
+// Favorites
+"favorites_title" = "즐겨찾기";
+"favorites_heading" = "마음에 드는 색을 간직하세요";
+"favorites_count" = "일상에서 발견한 %ld가지 색상.";

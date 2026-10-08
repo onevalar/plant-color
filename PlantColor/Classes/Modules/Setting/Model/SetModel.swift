@@ -45,6 +45,18 @@ enum SetType: Int, Codable {
 
     /// 传统色详情页的版块管理
     case TraditionalManagement
+
+    // Append new cases: existing Codable raw values are persisted by older builds.
+    case StartupDisplay
+    case HapticFeedback
+    case AutomaticSwitchOptions
+    case Appearance
+    case ReduceTransparency
+    case ReduceMotion
+    case TextSize
+    case About
+    case WidgetOptions
+    case WidgetOpenCurrent
 }
 
 struct SetModel: Codable {
@@ -55,5 +67,7 @@ struct SetModel: Codable {
     let showSwitch  : Bool
     let switchState : Bool
     let setType     : SetType
+
+    var detail: String? = nil
     
 }

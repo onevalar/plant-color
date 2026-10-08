@@ -11,19 +11,23 @@ import UIKit
 public extension UIColor {
 
     static var navBarBackground: UIColor {
-        .white
+        .systemBackground
     }
     
     static var navBarTitle: UIColor {
-        .black
+        .label
     }
     
     
     static var icon: UIColor {
-        .black
+        .label
     }
     
     static var main: UIColor {
-        .RGBA(245, 245, 245)
+        UIColor { $0.userInterfaceStyle == .dark ? .systemGroupedBackground : .RGBA(245, 246, 243) }
+    }
+
+    static var settingsAccent: UIColor {
+        UIColor { $0.userInterfaceStyle == .dark ? .RGBA(160, 185, 167) : .RGBA(61, 86, 72) }
     }
 }

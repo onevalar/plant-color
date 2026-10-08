@@ -9,6 +9,21 @@ import UIKit
 import UIColor_Hex_Swift
 
 class HomeVerticalCell: UICollectionViewCell {
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        NotificationCenter.default.addObserver(self, selector: #selector(accessibilityMotionChanged),
+                                               name: UIAccessibility.reduceMotionStatusDidChangeNotification, object: nil)
+        updateMotionPreference()
+    }
+
+    func updateMotionPreference(reduceMotion: Bool = UIAccessibility.isReduceMotionEnabled) {
+        collectionView.bounces = !reduceMotion
+    }
+
+    @objc private func accessibilityMotionChanged() { updateMotionPreference() }
+
+    deinit { NotificationCenter.default.removeObserver(self) }
     
     var didEndScroll: ((Int) -> Void)?
     

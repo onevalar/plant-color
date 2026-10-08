@@ -20,6 +20,7 @@ extension AppDelegate {
         setUpThirdPartyConfig()
         
         window = UIWindow(frame: UIScreen.main.bounds)
+        window?.overrideUserInterfaceStyle = HomePreferences.shared.appearance.style
         if ColorImporter.needsImport { // 第一次启动，或颜色数据有更新
             window?.rootViewController = NavigationController(rootViewController: LoadingViewController())
         } else {

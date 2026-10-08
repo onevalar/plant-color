@@ -21,6 +21,8 @@ class ColorGridCell: UICollectionViewCell {
         super.awakeFromNib()
         cornerRadius = 10
         isOpaque = true
+        isAccessibilityElement = true
+        accessibilityTraits = .button
     }
 
     public var item: (any ColorDisplayable)? {
@@ -34,6 +36,8 @@ class ColorGridCell: UICollectionViewCell {
                 imageView.image = UIImage(named: "\(item.imageName)_mini")
             }
             nameLabel.text = item.displayName
+            accessibilityLabel = item.displayName + ", " + item.colorHEX
+            accessibilityValue = item.isCollect ? NSLocalizedString("setting_my_collection", comment: "") : nil
             nameLabel.textColor = item.textUIColor
             backgroundColor = item.color
 

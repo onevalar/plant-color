@@ -8,7 +8,7 @@
 import UIKit
 
 /// A view that provides a glass/blur background effect.
-/// Uses UIGlassEffect on iOS 26+ and UIBlurEffect fallback on older versions.
+/// Uses the system material, or an opaque system surface when transparency is reduced.
 class GlassEffectView: UIView {
 
     override var cornerRadius: CGFloat {
@@ -56,5 +56,18 @@ class GlassEffectView: UIView {
             effectView.trailingAnchor.constraint(equalTo: trailingAnchor),
             effectView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
+        NotificationCenter.default.addObserver(self, selector: #selector(accessibilityAppearanceChanged),
+                                               name: UIAccessibility.reduceTransparencyStatusDidChangeNotification, object: nil)
+        updateAccessibilityAppearance()
     }
+
+    @objc private func accessibilityAppearanceChanged() { updateAccessibilityAppearance() }
+
+    func updateAccessibilityAppearance(reduceTransparency: Bool = UIAccessibility.isReduceTransparencyEnabled) {
+        effectView.isHidden = reduceTransparency
+        isOpaque = reduceTransparency
+        backgroundColor = reduceTransparency ? .secondarySystemBackground : .clear
+    }
+
+    deinit { NotificationCenter.default.removeObserver(self) }
 }

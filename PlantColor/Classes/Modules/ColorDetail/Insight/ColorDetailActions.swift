@@ -12,25 +12,31 @@ enum ColorDetailActions {
     static func barItems(for item: any ColorDisplayable,
                          from viewController: UIViewController) -> [UIBarButtonItem] {
 
-        let heart = UIBarButtonItem()
-
-        func heartAction() -> UIAction {
+        let heart = UIButton(type: .system)
+        heart.frame.size = CGSize(width: 44, height: 44)
+        func updateHeart(_ button: UIButton) {
             let name = item.isCollect ? "heart.fill" : "heart"
-            return UIAction(image: UIImage(systemName: name)) { [weak heart] _ in
-                Feedback.lightPrepare()
-                item.toggleCollect()
-                heart?.primaryAction = heartAction()
-                heart?.tintColor = item.isCollect ? .systemRed : nil
-            }
+            button.setImage(UIImage(systemName: name), for: .normal)
+            button.accessibilityLabel = NSLocalizedString(item.isCollect ? "color_remove_favorite" : "color_add_favorite", comment: "")
+            button.tintColor = item.isCollect ? .systemRed : nil
         }
-        heart.primaryAction = heartAction()
-        heart.tintColor = item.isCollect ? .systemRed : nil
+        heart.addAction(UIAction { [weak heart] _ in
+            guard let heart else { return }
+            Feedback.lightPrepare()
+            item.toggleCollect()
+            updateHeart(heart)
+        }, for: .touchUpInside)
+        updateHeart(heart)
 
-        let share = UIBarButtonItem(primaryAction: UIAction(image: UIImage(systemName: "square.and.arrow.up")) { [weak viewController] _ in
+        let share = UIButton(type: .system)
+        share.frame.size = CGSize(width: 44, height: 44)
+        share.setImage(UIImage(systemName: "square.and.arrow.up"), for: .normal)
+        share.accessibilityLabel = NSLocalizedString("common_share", comment: "")
+        share.addAction(UIAction { [weak viewController] _ in
             viewController?.navigationController?.pushViewController(ShareViewController(item: item),
                                                                      animated: true)
-        })
-        return [share, heart]
+        }, for: .touchUpInside)
+        return [UIBarButtonItem(customView: share), UIBarButtonItem(customView: heart)]
     }
 }
 

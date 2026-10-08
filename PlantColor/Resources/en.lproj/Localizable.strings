@@ -3,6 +3,7 @@
 // MARK: - Common
 "common_edit" = "Edit";
 "common_done" = "Done";
+"common_back" = "Back";
 "common_cancel" = "Cancel";
 "common_confirm" = "OK";
 "common_clear" = "Clear";
@@ -198,3 +199,60 @@
 "color_diff_greener" = "greener";
 "color_diff_yellower" = "yellower";
 "color_diff_bluer" = "bluer";
+
+// Color library quick actions
+"color_search_placeholder" = "Name, pinyin or color value";
+"color_copy_hex" = "Copy HEX Color";
+"color_add_favorite" = "Favorite Color";
+"color_remove_favorite" = "Remove Favorite";
+"color_view_list" = "List View";
+"color_view_grid" = "Grid View";
+"color_filter_series" = "Color Family";
+
+/* Browsing and system appearance */
+"setting_section_browsing" = "Browsing";
+"setting_section_display" = "Display & Accessibility";
+"setting_startup_display" = "On opening";
+"setting_startup_last" = "Last viewed";
+"setting_startup_first" = "Start with the first color";
+"setting_haptic_feedback" = "Haptic feedback";
+"setting_appearance" = "Appearance";
+"setting_appearance_system" = "System";
+"setting_appearance_light" = "Light";
+"setting_appearance_dark" = "Dark";
+"setting_reduce_transparency" = "Reduce Transparency";
+"setting_reduce_motion" = "Reduce Motion";
+"setting_text_size" = "Text size";
+"setting_value_on" = "On";
+"setting_value_off" = "Off";
+"setting_value_none" = "Not set";
+"setting_about_app" = "About PlantColor";
+"setting_about_version" = "Version %@\n\nExplore botanical and traditional Chinese colors. Color data, original botanical illustrations and browsing history stay on this device.";
+"setting_reduce_transparency_info" = "Follows iOS. Adjust Settings → Accessibility → Display & Text Size → Reduce Transparency. When enabled, floating controls use solid backgrounds. Original color cards stay unchanged.";
+"setting_reduce_motion_info" = "Follows iOS. Adjust Settings → Accessibility → Motion → Reduce Motion. Disables bounce, automatic page animations and geometric transitions while keeping vertical color browsing and horizontal introductions.";
+"setting_text_size_info" = "Settings and option pages follow the system text size. Adjust Settings → Display & Brightness → Text Size, or Accessibility → Display & Text Size for larger sizes. Original color-card and illustration layouts stay unchanged.";
+
+/* Widget preview and configuration */
+"widget_preview_original" = "Original";
+"widget_preview_tinted" = "System tint";
+"widget_preview_title" = "Bring a little nature to your Home Screen";
+"widget_preview_subtitle" = "Meet a new natural color each day.";
+"widget_preview_hint" = "Touch and hold the Home Screen to add PlantColor. Tint is a preview only; the Home Screen controls its actual color and the system schedules refreshes.";
+"widget_preview_accessibility" = "Widget preview: %@";
+"widget_open_preview" = "Open preview color";
+"widget_preview_settings" = "Preview & configuration";
+
+/* Share card presets and system export */
+"share_card_original" = "Original card";
+"share_card_pure" = "Solid color";
+"share_card_introduction" = "With introduction";
+"share_show_values" = "Show color value";
+"share_color_title" = "Share %@";
+"share_system_action" = "Share…";
+"share_save_action" = "Save to Photos";
+"app_name" = "Plant Color";
+
+// Favorites
+"favorites_title" = "Favorites";
+"favorites_heading" = "Keep the colors you love";
+"favorites_count" = "From your everyday discoveries · %ld saved";

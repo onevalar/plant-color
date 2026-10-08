@@ -38,6 +38,7 @@ class ColorDetailViewController: TableViewController {
         tableView.showsVerticalScrollIndicator = false
         loadData()
         setUpInsightFooter()
+        exposeAuxiliaryNavigationControls()
     }
 
     private var footerView: ColorInsightFooterView?

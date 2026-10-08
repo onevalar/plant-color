@@ -19,6 +19,14 @@ class ColorFilterMenu: UIView {
     @IBOutlet private weak var gridButton: UIButton!
     @IBOutlet private weak var colorSeriesButton: UIButton!
 
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        backgroundColor = .main
+        listButton.accessibilityLabel = NSLocalizedString("color_view_list", comment: "")
+        gridButton.accessibilityLabel = NSLocalizedString("color_view_grid", comment: "")
+        colorSeriesButton.setTitle(NSLocalizedString("color_filter_series", comment: ""), for: .normal)
+    }
+
     @IBAction private func listButtonDidClick(sender: UIButton) {
         listDidClick?()
     }

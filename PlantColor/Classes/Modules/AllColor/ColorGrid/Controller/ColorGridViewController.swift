@@ -20,6 +20,8 @@ class ColorGridViewController: ColorListBaseViewController {
 
         view.addSubview(collectionView)
         collectionView.register(R.nib.colorGridCell)
+        collectionView.keyboardDismissMode = .onDrag
+        collectionView.backgroundColor = .main
         collectionView.dataSource = self
         collectionView.delegate = self
         loadingNewData()
@@ -46,7 +48,11 @@ class ColorGridViewController: ColorListBaseViewController {
         let vc = ColorListViewController(type: type, searchKey: searchKey, colorSeries: colorSeries, sourceFilter: sourceFilter)
         vc.isGrid = isGrid
 //        vc.tableView.contentOffset.y = collectionView.contentOffset.y + collectionView.contentInset.top
-        hero.replaceViewController(with: vc)
+        if UIAccessibility.isReduceMotionEnabled, let navigationController {
+            navigationController.setViewControllers(Array(navigationController.viewControllers.dropLast()) + [vc], animated: false)
+        } else {
+            hero.replaceViewController(with: vc)
+        }
     }
 }
 
@@ -62,6 +68,7 @@ extension ColorGridViewController: UICollectionViewDataSource {
                                                       for: indexPath,
                                                       cellType: ColorGridCell.self)
         cell.item = items[indexPath.row]
+        cell.accessibilityCustomActions = colorAccessibilityActions(for: items[indexPath.row])
         return cell
     }
 }
@@ -69,6 +76,11 @@ extension ColorGridViewController: UICollectionViewDataSource {
 // MARK: - UICollectionViewDelegate
 
 extension ColorGridViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        let item = items[indexPath.item]
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ in self?.colorActions(for: item) }
+    }
+
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         pushToDetail(index: indexPath.row)
     }

@@ -40,10 +40,15 @@ class OptionListViewController: TableViewController {
         navigation.item.title = navTitle
         navigation.bar.backgroundColor = .main
         view.backgroundColor = .main
+        tableView.backgroundColor = .main
+        view.tintColor = .settingsAccent
+        navigation.bar.tintColor = .settingsAccent
         tableView.register(R.nib.rateCell)
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.rowHeight = RateCell.height
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = RateCell.height
+        exposeAuxiliaryNavigationControls()
     }
 }
 

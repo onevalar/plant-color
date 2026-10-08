@@ -16,13 +16,23 @@ class NavigationController: UINavigationController {
         super.viewDidLoad()
 
         // 转场动画
-        hero.isEnabled = true
-        transitioningDelegate = nil
+        updateMotionPreference()
+        NotificationCenter.default.addObserver(self, selector: #selector(accessibilityMotionChanged),
+                                               name: UIAccessibility.reduceMotionStatusDidChangeNotification, object: nil)
+        // Keep Hero's enabled state and navigation delegate consistent. Clearing only the
+        // transition delegate makes the next accessibility refresh register Hero as its
+        // own previous delegate, recursively forwarding navigation callbacks.
         // 全屏滑动返回
         fd_fullscreenPopGestureRecognizer.isEnabled = true
         // 导航栏背景和文字设置
         setUpNavigation()
     }
+
+    func updateMotionPreference(reduceMotion: Bool = UIAccessibility.isReduceMotionEnabled) {
+        hero.isEnabled = !reduceMotion
+    }
+
+    @objc private func accessibilityMotionChanged() { updateMotionPreference() }
 
     private func setUpNavigation() {
         
@@ -48,6 +58,7 @@ class NavigationController: UINavigationController {
     }
 
     deinit {
+        NotificationCenter.default.removeObserver(self)
         AppLogger.shared.debug("\(type(of: self)): deinit")
     }
 }

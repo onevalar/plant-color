@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A831D4E09C471820B8A0F101 /* PlantShareCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A831D4E09C471820B8A0F102 /* PlantShareCardView.swift */; };
 		146B53C24C976B9ECBC1A4DA /* TraditionalColorDetailCellType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D4A408C66BE5B92E200126 /* TraditionalColorDetailCellType.swift */; };
 		194F5FD7DDBBEA81F5F0D812 /* ColorCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44744EDA3726C019D9309523 /* ColorCatalog.swift */; };
 		1B62F8A09045227ADD423772 /* Pods_PlantWidgetExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D84A5E790924FB7970FECB8E /* Pods_PlantWidgetExtension.framework */; };
@@ -201,6 +202,9 @@
 		F64F208F7869904174A9D566 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E11377C235A243466C0C816 /* Logger.swift */; };
 		F95D2284576F89B3E9F9D250 /* OptionListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7883B612464C57272468863E /* OptionListViewController.swift */; };
 		FCBAEA259B660DBBB601CDBF /* TraditionalColorDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F878A09214930CC9D3DBD9FA /* TraditionalColorDetailViewController.swift */; };
+		4A1327A86F7E438E8AB8F980 /* WidgetPreviewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AD11BC98004B0397D9D76B /* WidgetPreviewHeader.swift */; };
+		0312A7B4892E42259E9970F0 /* PlantModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B81E3EE427B2406A00424ABC /* PlantModel.swift */; };
+		6EE29A0ECA424414B19EF293 /* PlantWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0A588704B886FC97E98F03 /* PlantWidgetView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -228,6 +232,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A831D4E09C471820B8A0F102 /* PlantShareCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantShareCardView.swift; sourceTree = "<group>"; };
 		0D3A4767FDF0F294F4A99635 /* ColorDetailActions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorDetailActions.swift; sourceTree = "<group>"; };
 		0F824734FB0F5015695000B6 /* HomeModeSegmentView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomeModeSegmentView.swift; sourceTree = "<group>"; };
 		10DB2A49B2AA9FC6BBBE9FCE /* zh-Hant */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -433,6 +438,7 @@
 		F878A09214930CC9D3DBD9FA /* TraditionalColorDetailViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TraditionalColorDetailViewController.swift; sourceTree = "<group>"; };
 		F9A12AFBE04A7B0FDA543AA0 /* TraditionalColorModel+AttributeString.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "TraditionalColorModel+AttributeString.swift"; sourceTree = "<group>"; };
 		FEBF2B0BDB7AAC36A6B37265 /* UnitTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UnitTests.swift; sourceTree = "<group>"; };
+		E6AD11BC98004B0397D9D76B /* WidgetPreviewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ../View/WidgetPreviewHeader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -521,6 +527,7 @@
 		9C828B7927B2C5C7002A45EC /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				E6AD11BC98004B0397D9D76B /* WidgetPreviewHeader.swift */,
 				9C828B7A27B2C765002A45EC /* SettingViewController.swift */,
 				7883B612464C57272468863E /* OptionListViewController.swift */,
 			);
@@ -1138,6 +1145,7 @@
 			isa = PBXGroup;
 			children = (
 				E52BF5F22828B47F0095D9A2 /* SharePreview.swift */,
+				A831D4E09C471820B8A0F102 /* PlantShareCardView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1850,6 +1858,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4A1327A86F7E438E8AB8F980 /* WidgetPreviewHeader.swift in Sources */,
+				0312A7B4892E42259E9970F0 /* PlantModel.swift in Sources */,
+				6EE29A0ECA424414B19EF293 /* PlantWidgetView.swift in Sources */,
+
 				E553BCEC27B2334400D48A34 /* MenuType.swift in Sources */,
 				B8FD5259275F442D00F94200 /* CollectionViewController.swift in Sources */,
 				B8FD524C275F442D00F94200 /* ColorConfigs.swift in Sources */,
@@ -1893,6 +1905,7 @@
 				B8FD5221275F442D00F94200 /* DateExtensions.swift in Sources */,
 				E52B775E28202F320055826B /* ColorDetailManageSectionHeader.swift in Sources */,
 				E52BF5F32828B47F0095D9A2 /* SharePreview.swift in Sources */,
+				A831D4E09C471820B8A0F101 /* PlantShareCardView.swift in Sources */,
 				B8FD521E275F442D00F94200 /* UIViewControllerExtension.swift in Sources */,
 				B8FD5255275F442D00F94200 /* ViewController.swift in Sources */,
 				B8FD5230275F442D00F94200 /* Refresh.swift in Sources */,
