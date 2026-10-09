@@ -42,6 +42,8 @@ final class DeepLinkRouter {
         guard parts.count == 2,
               let kind = ColorKind(rawValue: parts[0]),
               let id = Int(parts[1]) else { return }
+        // 传统色界面关闭期间，旧小组件里残留的传统色链接直接忽略
+        guard kind == .plant || FeatureFlags.traditionalColorsEnabled else { return }
 
         let item: (any ColorDisplayable)?
         switch kind {

@@ -323,7 +323,11 @@ extension SettingViewController: UITableViewDelegate {
         case .AccessibilityOptions:
             navigationController?.pushViewController(SettingViewController(page: .accessibility), animated: !UIAccessibility.isReduceMotionEnabled)
         case .ContentOptions:
-            navigationController?.pushViewController(SettingViewController(page: .content), animated: !UIAccessibility.isReduceMotionEnabled)
+            // 只有植物色时，直接进入详情页内容管理，不用再多一层选择
+            let next: UIViewController = FeatureFlags.traditionalColorsEnabled
+                ? SettingViewController(page: .content)
+                : ColorDetailManageViewController(kind: .plant)
+            navigationController?.pushViewController(next, animated: !UIAccessibility.isReduceMotionEnabled)
         case .AboutOptions:
             navigationController?.pushViewController(SettingViewController(page: .about), animated: !UIAccessibility.isReduceMotionEnabled)
         case .ReduceTransparency:
@@ -394,7 +398,7 @@ extension SettingViewController {
     }
 
     private func showWidgetSourcePicker() {
-        let sources: [WidgetSource] = [.all, .plant, .traditional, .collect]
+        let sources: [WidgetSource] = FeatureFlags.traditionalColorsEnabled ? [.all, .plant, .traditional, .collect] : [.all, .collect]
         let options = sources.map {
             OptionListViewController.Option(key: $0.rawValue,
                                             title: NSLocalizedString("widget_source_\($0.rawValue)", comment: ""))

@@ -182,7 +182,8 @@ class HomeViewController: CollectionViewController {
          disablesAdjustScrollViewInsets(collectionView)
 
          settingConfig = try? SettingConfig.re.objects().first
-         if HomePreferences.shared.startup == .last {
+         topBar.showsModeSwitch = FeatureFlags.traditionalColorsEnabled
+         if HomePreferences.shared.startup == .last, FeatureFlags.traditionalColorsEnabled {
              currentMode = HomePreferences.shared.lastMode
          }
          topBar.select(currentMode)
@@ -242,6 +243,9 @@ class HomeViewController: CollectionViewController {
             AppLogger.shared.error("加载植物颜色模型失败: \(error.localizedDescription)")
         }
 
+        if !FeatureFlags.traditionalColorsEnabled {
+            traditionalItems = []
+        } else {
         do {
             traditionalItems = try TraditionalColorModel.re.objects().toArray
             if traditionalItems.isEmpty {
@@ -251,6 +255,7 @@ class HomeViewController: CollectionViewController {
         } catch {
             traditionalItems = TraditionalColorProvider.fetchColors()
             AppLogger.shared.error("加载传统颜色模型失败: \(error.localizedDescription)")
+        }
         }
 
         if isShuffled {

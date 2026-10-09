@@ -47,7 +47,7 @@ final class ColorCatalog {
                 }
             }
         }
-        if let traditional = try? TraditionalColorModel.re.objects() {
+        if FeatureFlags.traditionalColorsEnabled, let traditional = try? TraditionalColorModel.re.objects() {
             for item in traditional {
                 if let rgb = RGBColor(hex: item.colorHEX) {
                     result.append(ColorSwatch(kind: .traditional, id: item.id, name: item.name,

@@ -201,7 +201,7 @@
 "color_diff_bluer" = "더 푸르스름하고";
 
 // Color library quick actions
-"color_search_placeholder" = "이름, 병음 또는 색상 값";
+"color_search_placeholder" = "이름, 과 또는 색상 값";
 "color_copy_hex" = "HEX 색상 복사";
 "color_add_favorite" = "색상 즐겨찾기";
 "color_remove_favorite" = "즐겨찾기 해제";

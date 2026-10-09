@@ -201,7 +201,7 @@
 "color_diff_bluer" = "より青みが強く";
 
 // Color library quick actions
-"color_search_placeholder" = "名前、ピンイン、カラー値";
+"color_search_placeholder" = "名前・科・色の値";
 "color_copy_hex" = "HEX カラーをコピー";
 "color_add_favorite" = "お気に入りに追加";
 "color_remove_favorite" = "お気に入りから削除";

@@ -201,7 +201,7 @@
 "color_diff_bluer" = "bluer";
 
 // Color library quick actions
-"color_search_placeholder" = "Name, pinyin or color value";
+"color_search_placeholder" = "Name, family or color value";
 "color_copy_hex" = "Copy HEX Color";
 "color_add_favorite" = "Favorite Color";
 "color_remove_favorite" = "Remove Favorite";

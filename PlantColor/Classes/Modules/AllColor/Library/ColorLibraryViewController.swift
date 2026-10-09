@@ -171,6 +171,8 @@ final class ColorLibraryViewController: ViewController, UICollectionViewDelegate
             sourceAction(NSLocalizedString("color_kind_plant", comment: ""), .plant),
             sourceAction(NSLocalizedString("color_kind_traditional", comment: ""), .traditional),
         ])
+        // 只有植物色时，"来源"筛选没有意义
+        let sections: [UIMenuElement] = FeatureFlags.traditionalColorsEnabled ? [source] : []
 
         let order: [ColorSeries] = [.red, .orange, .yellow, .green, .blue, .indigo, .purple, .brown, .gray]
         var seriesActions = [UIAction(title: NSLocalizedString("color_series_all", comment: ""), state: colorSeries == nil ? .on : .off) { [weak self] _ in
@@ -185,7 +187,7 @@ final class ColorLibraryViewController: ViewController, UICollectionViewDelegate
             })
         }
         let seriesMenu = UIMenu(title: NSLocalizedString("filter_series", comment: ""), children: seriesActions)
-        return UIMenu(children: [source, seriesMenu])
+        return UIMenu(children: sections + [seriesMenu])
     }
 
     private func filtersChanged() {
@@ -209,7 +211,7 @@ final class ColorLibraryViewController: ViewController, UICollectionViewDelegate
             var content = UIListContentConfiguration.subtitleCell()
             content.text = item.displayName
             content.textProperties.font = UIFontMetrics(forTextStyle: .headline).scaledFont(for: UIFont.fzktjwgb10(size: 20))
-            content.secondaryText = "\(item.colorHEX) · \(item.colorKind.title)"
+            content.secondaryText = FeatureFlags.traditionalColorsEnabled ? "\(item.colorHEX) · \(item.colorKind.title)" : item.colorHEX
             content.secondaryTextProperties.color = .secondaryLabel
             content.secondaryTextProperties.font = .preferredFont(forTextStyle: .footnote)
             content.image = Self.swatchImage(color: item.color)
@@ -312,7 +314,7 @@ final class ColorLibraryViewController: ViewController, UICollectionViewDelegate
     }
 
     private func loadTraditionalItems() -> [any ColorDisplayable] {
-        guard sourceFilter != .plant else { return [] }
+        guard FeatureFlags.traditionalColorsEnabled, sourceFilter != .plant else { return [] }
         do {
             let result: [TraditionalColorModel] = try TraditionalColorModel.re.objects().where { [weak self] element in
                 guard let self else { return element.id > 0 }

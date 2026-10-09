@@ -13,7 +13,10 @@ enum WidgetPlaylist {
     static var source: WidgetSource {
         get {
             let raw = WidgetKitHelper.sharedDefaults?.string(forKey: WidgetKitHelper.source) ?? ""
-            return WidgetSource(rawValue: raw) ?? .all
+            let stored = WidgetSource(rawValue: raw) ?? .all
+            // 传统色界面关闭时，只有"全部（即植物色）"和"仅收藏"两种有意义
+            if !FeatureFlags.traditionalColorsEnabled && stored != .collect { return .all }
+            return stored
         }
         set {
             WidgetKitHelper.sharedDefaults?.set(newValue.rawValue, forKey: WidgetKitHelper.source)
@@ -36,7 +39,7 @@ enum WidgetPlaylist {
                                         textColor: $0.textColor, imageName: "\($0.imageName)_widget")
                 }
         }
-        if source != .plant, let items = try? TraditionalColorModel.re.objects() {
+        if source != .plant, FeatureFlags.traditionalColorsEnabled, let items = try? TraditionalColorModel.re.objects() {
             traditional = items
                 .filter { !onlyCollected || $0.isCollect }
                 .map {

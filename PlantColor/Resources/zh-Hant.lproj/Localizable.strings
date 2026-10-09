@@ -201,7 +201,7 @@
 "color_diff_bluer" = "更偏藍";
 
 // Color library quick actions
-"color_search_placeholder" = "名稱、拼音或色值";
+"color_search_placeholder" = "名稱、科屬或色值";
 "color_copy_hex" = "複製 HEX 色值";
 "color_add_favorite" = "收藏顏色";
 "color_remove_favorite" = "取消收藏";

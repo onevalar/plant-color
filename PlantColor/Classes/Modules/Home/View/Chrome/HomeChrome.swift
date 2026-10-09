@@ -53,6 +53,11 @@ final class HomeTopBar: UIView {
 
     private let settings = GlassCircleButton(symbol: "gearshape", label: NSLocalizedString("setting_title", comment: ""))
     private let search = GlassCircleButton(symbol: "magnifyingglass", label: NSLocalizedString("common_search", comment: ""))
+    /// 是否显示"植物色 / 传统色"切换。只有一种颜色时不需要
+    var showsModeSwitch = true {
+        didSet { segmented.isHidden = !showsModeSwitch }
+    }
+
     private let segmented = UISegmentedControl(items: [NSLocalizedString("color_kind_plant", comment: ""),
                                                        NSLocalizedString("color_kind_traditional", comment: "")])
 

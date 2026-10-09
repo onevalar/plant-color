@@ -13,6 +13,7 @@
 		1B01091EEEF937D0A5C396F1 /* ColorInfoSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8BF4AA3AD71336058430EC /* ColorInfoSheetViewController.swift */; };
 		1B62F8A09045227ADD423772 /* Pods_PlantWidgetExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D84A5E790924FB7970FECB8E /* Pods_PlantWidgetExtension.framework */; };
 		1E0A5AF8F5117F4E9ABCAEB1 /* ColorDetailPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35287175865AFE4A82DB4037 /* ColorDetailPageViewController.swift */; };
+		21AB0782C40F3AA9E08CA975 /* FeatureFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E735E86916850AD969A378 /* FeatureFlags.swift */; };
 		248BBDD27E536F75FCB087E3 /* ColorDescriber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91EE3599289EF76C65E68396 /* ColorDescriber.swift */; };
 		2CB49F7F2B19818D8D390245 /* HomeColorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F687EB74B19AFA8B2B1FF220 /* HomeColorCell.swift */; };
 		3BBD537BAABEC3CE7577E0AD /* TraditionalColorDetailConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA093BAADD803758694E7D2E /* TraditionalColorDetailConfig.swift */; };
@@ -205,6 +206,7 @@
 		284789B13B5880B1FBDA4F01 /* zh-Hans */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "PlantColor/Resources/zh-Hans.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
 		35287175865AFE4A82DB4037 /* ColorDetailPageViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorDetailPageViewController.swift; sourceTree = "<group>"; };
 		39FB48B68A06BBC6FDC82792 /* HomeChrome.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomeChrome.swift; sourceTree = "<group>"; };
+		40E735E86916850AD969A378 /* FeatureFlags.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FeatureFlags.swift; sourceTree = "<group>"; };
 		419A73613221F209E47B0D6C /* ColorImporter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorImporter.swift; sourceTree = "<group>"; };
 		44744EDA3726C019D9309523 /* ColorCatalog.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorCatalog.swift; sourceTree = "<group>"; };
 		581B9F06878B3157663C443C /* TraditionalColorModelExtension.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TraditionalColorModelExtension.swift; sourceTree = "<group>"; };
@@ -890,6 +892,7 @@
 				E5D6971D27B4A86000FD61B4 /* BonMotConfigs.swift */,
 				B8F7A6EB27B4F95900EB5AE6 /* FontConfigs.swift */,
 				E5FFC66F2816866A00801743 /* PlantDimensionsConfigs.swift */,
+				40E735E86916850AD969A378 /* FeatureFlags.swift */,
 			);
 			path = Private;
 			sourceTree = "<group>";
@@ -1903,6 +1906,7 @@
 				78384CB9B5125D2E33E1C9E2 /* ColorDetailContent.swift in Sources */,
 				FF63AB48DD54E1A402DE37A5 /* ColorLibraryViewController.swift in Sources */,
 				DA0EB96DB4831BD61AC4CCB4 /* HomeChrome.swift in Sources */,
+				21AB0782C40F3AA9E08CA975 /* FeatureFlags.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
