@@ -13,23 +13,6 @@ import DefaultsKit
 
 extension AppDelegate {
     
-    // MARK: - 设置根控制器
-    func initRootViewController() {
-
-        setAllDefaultConfig()
-        setUpThirdPartyConfig()
-        
-        window = UIWindow(frame: UIScreen.main.bounds)
-        window?.overrideUserInterfaceStyle = HomePreferences.shared.appearance.style
-        if ColorImporter.needsImport { // 第一次启动，或颜色数据有更新
-            window?.rootViewController = NavigationController(rootViewController: LoadingViewController())
-        } else {
-            window?.rootViewController = NavigationController(rootViewController: HomeViewController())
-        }
-        
-        window?.makeKeyAndVisible()
-    }
-    
     func requestIDFA() {
         if #available(iOS 14, *) {
             ATTrackingManager.requestTrackingAuthorization(completionHandler: { [weak self] status in

@@ -41,6 +41,7 @@
 		9CCC7CF62820C12E00626C58 /* RateCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9CCC7CF42820C12E00626C58 /* RateCell.xib */; };
 		9CCC7CF82820C1EA00626C58 /* RateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCC7CF72820C1EA00626C58 /* RateModel.swift */; };
 		9DAD8F54505349A995ECF808 /* String+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B262BAC0183E2B095764CD /* String+Localization.swift */; };
+		A1211F000000000000000001 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1211F000000000000000002 /* SceneDelegate.swift */; };
 		A478BC0AC4E5A5ABF691DE90 /* GlassKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B195B4EB5E1E8C8CE072755F /* GlassKit.swift */; };
 		A78AE5AED4057A79E35AE7E5 /* ColorValueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5352BE6F8CCF063C66FAF6C /* ColorValueView.swift */; };
 		A831D4E09C471820B8A0F101 /* PlantShareCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A831D4E09C471820B8A0F102 /* PlantShareCardView.swift */; };
@@ -228,6 +229,7 @@
 		9CCC7CF72820C1EA00626C58 /* RateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateModel.swift; sourceTree = "<group>"; };
 		9D8375BAC299455510A7FD50 /* Pods-PlantColor.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PlantColor.release.xcconfig"; path = "Target Support Files/Pods-PlantColor/Pods-PlantColor.release.xcconfig"; sourceTree = "<group>"; };
 		9E11377C235A243466C0C816 /* Logger.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		A1211F000000000000000002 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		A2BFC400DEF37111CA19AC50 /* Pods-PlantWidgetExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PlantWidgetExtension.release.xcconfig"; path = "Target Support Files/Pods-PlantWidgetExtension/Pods-PlantWidgetExtension.release.xcconfig"; sourceTree = "<group>"; };
 		A41F3C3F76B5A620FAAC3486 /* ColorClipboard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorClipboard.swift; sourceTree = "<group>"; };
 		A46225E0ADEB5BD585C73118 /* TraditionalColorModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TraditionalColorModel.swift; sourceTree = "<group>"; };
@@ -604,6 +606,7 @@
 			children = (
 				B8FD514D275F442C00F94200 /* AppDelegate+Root.swift */,
 				B8FD514E275F442C00F94200 /* AppDelegate.swift */,
+				A1211F000000000000000002 /* SceneDelegate.swift */,
 				E52B77642822D8DB0055826B /* AppDelegate+DefaultConfig.swift */,
 				7C3EC684D37D6D9E1FA74C77 /* DeepLinkRouter.swift */,
 			);
@@ -1799,6 +1802,7 @@
 				B8FD5215275F442D00F94200 /* UMCommonSwift.swift in Sources */,
 				B8FD520F275F442D00F94200 /* Feedback.swift in Sources */,
 				B8FD5208275F442D00F94200 /* AppDelegate.swift in Sources */,
+				A1211F000000000000000001 /* SceneDelegate.swift in Sources */,
 				B8FD5254275F442D00F94200 /* BasePageResult.swift in Sources */,
 				E5D6971E27B4A86000FD61B4 /* BonMotConfigs.swift in Sources */,
 				B8FD5264275F442D00F94200 /* BarButtonItem.swift in Sources */,
@@ -1979,7 +1983,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = PlantWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = H4982D35ZR;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "i386 x86_64";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2012,7 +2016,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = PlantWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = H4982D35ZR;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "i386 x86_64";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2161,7 +2165,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = "";
 				CODE_SIGN_ENTITLEMENTS = PlantColor/PlantColor.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = H4982D35ZR;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "i386 x86_64";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -2199,7 +2203,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = "";
 				CODE_SIGN_ENTITLEMENTS = PlantColor/PlantColor.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = H4982D35ZR;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "i386 x86_64";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";

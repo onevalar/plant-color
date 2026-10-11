@@ -191,7 +191,7 @@ class SettingViewController: TableViewController {
         appearanceRow.menu = HomePreferences.Appearance.allCases.map { option in
             MenuChoice(title: text("setting_appearance_\(option.rawValue)"), isSelected: preferences.appearance == option) { [weak self] in
                 HomePreferences.shared.appearance = option
-                (UIApplication.shared.delegate as? AppDelegate)?.window?.overrideUserInterfaceStyle = option.style
+                self?.view.window?.overrideUserInterfaceStyle = option.style
                 self?.setUpBaseDate()
             }
         }

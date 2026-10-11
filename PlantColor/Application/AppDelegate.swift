@@ -11,29 +11,11 @@ import UIKit
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    var window: UIWindow?
-    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
-        initRootViewController()
+        setAllDefaultConfig()
+        setUpThirdPartyConfig()
         initDefaultConfig()
         return true
-    }
-
-    func applicationDidBecomeActive(_ application: UIApplication) {
-        
-        requestIDFA()
-    }
-    
-    /// 点击小组件会带着 plantcolor://color/<plant|traditional>/<id> 打开 App
-    func application(_ app: UIApplication,
-                     open url: URL,
-                     options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
-        DeepLinkRouter.shared.handle(url)
-        return true
-    }
-
-    func applicationWillEnterForeground(_ application: UIApplication) {
-        
     }
 }

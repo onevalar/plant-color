@@ -43,8 +43,7 @@ target 'PlantColor' do
   # 友盟
   pod 'UMCommon'
   pod 'UMDevice'
-  # 可选集成，对应产品中稳定性模块（错误捕获），该功能已经独立成为新的应用性能监控产品U-APM
-  pod 'UMAPM'
+  # 不链接未启用的 UMAPM：旧版组件会在加载时拦截 UIViewController，导致新系统启动崩溃。
 
   # https://github.com/pujiaxin33/JXCategoryView
   pod 'JXCategoryView'

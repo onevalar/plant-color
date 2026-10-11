@@ -29,8 +29,6 @@ PODS:
   - SnapKit (5.7.1)
   - UIColor_Hex_Swift (5.1.9)
   - UIFontComplete (5.0.0)
-  - UMAPM (2.0.4):
-    - UMCommon
   - UMCommon (7.5.3):
     - UMDevice
   - UMDevice (3.4.0)
@@ -57,7 +55,6 @@ DEPENDENCIES:
   - SnapKit
   - UIColor_Hex_Swift
   - UIFontComplete
-  - UMAPM
   - UMCommon
   - UMDevice
   - WoodPeckeriOS
@@ -86,7 +83,6 @@ SPEC REPOS:
     - SnapKit
     - UIColor_Hex_Swift
     - UIFontComplete
-    - UMAPM
     - UMCommon
     - UMDevice
     - WoodPeckeriOS
@@ -114,11 +110,10 @@ SPEC CHECKSUMS:
   SnapKit: d612e99e678a2d3b95bf60b0705ed0a35c03484a
   UIColor_Hex_Swift: 20cb4e8d51b63e168a9da6933bc5d39cd8fb4ab5
   UIFontComplete: 843cb7b58fd6503b3918447918ea6daaeaceccff
-  UMAPM: f038b65a3df4fe8e2df3245642d84cff7f5f63c8
   UMCommon: 3b850836e8bc162b4e7f6b527d30071ed8ea75a1
   UMDevice: dcdf7ec167387837559d149fbc7d793d984faf82
   WoodPeckeriOS: d76940519d27513155959a659f0d1142b5ccc081
 
-PODFILE CHECKSUM: aefe82e0471c71aea10ade460b807e28cb355787
+PODFILE CHECKSUM: d3ed56b5ab39d524d0ca5c6bbf2c1e732266a0a4
 
 COCOAPODS: 1.16.2
