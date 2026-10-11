@@ -1,0 +1,2017 @@
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>首页文字与按钮颜色跟随底色调和</title>
+		<style>
+			:root {
+				color-scheme: light dark;
+				--bg: #ffffff;
+				--surface: #f6f7f9;
+				--border: #e1e4ea;
+				--line: #aeb6c4;
+				--text: #1b1f27;
+				--muted: #5d6675;
+				--accent: #2f5fd0;
+				--accent-soft: #eaf0fd;
+				--ok: #1f7a4d;
+				--ok-soft: #e4f4ec;
+				--warn: #8a5a00;
+				--warn-soft: #fdf1d8;
+				--bad: #b3261e;
+				--bad-soft: #fde8e6;
+				--sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+				--mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+			}
+			@media (prefers-color-scheme: dark) {
+				:root {
+					--bg: #14161a;
+					--surface: #1c1f25;
+					--border: #2c313a;
+					--line: #566070;
+					--text: #e7e9ee;
+					--muted: #9ba3b1;
+					--accent: #8fb0ff;
+					--accent-soft: #1e2a47;
+					--ok: #6fd3a0;
+					--ok-soft: #173326;
+					--warn: #f0c36a;
+					--warn-soft: #3a2e12;
+					--bad: #ff9d94;
+					--bad-soft: #401f1c;
+				}
+			}
+			* {
+				box-sizing: border-box;
+			}
+			html {
+				scroll-behavior: smooth;
+			}
+			body {
+				margin: 0;
+				background: var(--bg);
+				color: var(--text);
+				font: 16px/1.55 var(--sans);
+				-webkit-text-size-adjust: 100%;
+			}
+			.layout {
+				display: grid;
+				grid-template-columns: minmax(0, 1fr);
+				max-width: 46rem;
+				margin: 0 auto;
+				/* Bottom space keeps the last block clear of the review button in the corner. */
+				padding: 2.5rem 1.25rem 6rem;
+			}
+			.toc {
+				display: none;
+			}
+			@media (min-width: 64rem) {
+				.layout {
+					grid-template-columns: 13rem minmax(0, 46rem);
+					gap: 3rem;
+					max-width: 64rem;
+				}
+				.toc {
+					display: block;
+					position: sticky;
+					top: 2.5rem;
+					align-self: start;
+					max-height: calc(100vh - 5rem);
+					overflow-y: auto;
+					font-size: 0.875rem;
+				}
+			}
+			.toc ol {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+			}
+			.toc a {
+				display: block;
+				padding: 0.3rem 0.6rem;
+				border-left: 2px solid var(--border);
+				color: var(--muted);
+				text-decoration: none;
+			}
+			.toc a:hover,
+			.toc a[aria-current='true'] {
+				border-left-color: var(--accent);
+				color: var(--text);
+			}
+			h1,
+			h2,
+			h3 {
+				line-height: 1.25;
+				text-wrap: balance;
+			}
+			h1 {
+				margin: 0.4rem 0 0.75rem;
+				font-size: 2rem;
+				letter-spacing: -0.01em;
+			}
+			h2 {
+				margin: 0 0 0.9rem;
+				font-size: 1.3rem;
+			}
+			h3 {
+				margin: 0;
+				font-size: 1.02rem;
+			}
+			p,
+			ul,
+			ol,
+			dl,
+			figure,
+			pre {
+				margin: 0 0 0.9rem;
+			}
+			a {
+				color: var(--accent);
+			}
+			section {
+				margin-top: 2.75rem;
+			}
+			[id] {
+				scroll-margin-top: 1.5rem;
+			}
+			.kicker,
+			.meta {
+				margin: 0;
+				color: var(--muted);
+				font-size: 0.875rem;
+			}
+			.meta {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.5rem 0.75rem;
+				align-items: center;
+			}
+			.lede {
+				font-size: 1.15rem;
+				color: var(--text);
+			}
+
+			/* Summary: the part every reader sees. */
+			.facts {
+				display: grid;
+				gap: 1px;
+				margin: 0;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+				background: var(--border);
+				overflow: hidden;
+			}
+			.facts > div {
+				display: grid;
+				grid-template-columns: 8.5rem minmax(0, 1fr);
+				gap: 1rem;
+				padding: 0.7rem 1rem;
+				background: var(--surface);
+			}
+			.facts dt {
+				color: var(--muted);
+				font-size: 0.875rem;
+				font-weight: 600;
+			}
+			.facts dd {
+				margin: 0;
+			}
+			/* The first row is what the reader is asked to do, so it stands out from the rest. */
+			.facts > .ask {
+				background: var(--accent-soft);
+			}
+			.facts > .ask dt {
+				color: var(--accent);
+			}
+			@media (max-width: 34rem) {
+				h1 {
+					font-size: 1.6rem;
+				}
+				.facts > div {
+					grid-template-columns: minmax(0, 1fr);
+					gap: 0.15rem;
+				}
+			}
+
+			/* Items: one decision, step, or alternative per block, so one comment hits one thing. */
+			.items {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+				display: grid;
+				gap: 0.75rem;
+			}
+			.item {
+				padding: 0.9rem 1rem;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+			}
+			.item > :last-child {
+				margin-bottom: 0;
+			}
+			.item-head {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.5rem 0.6rem;
+				align-items: center;
+				margin-bottom: 0.5rem;
+			}
+			.item-head h3 {
+				flex: 1 1 12rem;
+			}
+			.tag {
+				padding: 0.05rem 0.4rem;
+				border-radius: 5px;
+				background: var(--accent-soft);
+				color: var(--accent);
+				font: 600 0.8rem/1.5 var(--mono);
+				white-space: nowrap;
+			}
+			:target {
+				outline: 2px solid var(--accent);
+				outline-offset: 3px;
+				border-radius: 10px;
+			}
+			.chip {
+				display: inline-block;
+				padding: 0.05rem 0.55rem;
+				border-radius: 999px;
+				background: var(--surface);
+				border: 1px solid var(--border);
+				color: var(--muted);
+				font-size: 0.78rem;
+				font-weight: 600;
+				white-space: nowrap;
+			}
+			.chip.review,
+			.chip.doing {
+				background: var(--warn-soft);
+				border-color: transparent;
+				color: var(--warn);
+			}
+			.chip.done,
+			.chip.pick {
+				background: var(--ok-soft);
+				border-color: transparent;
+				color: var(--ok);
+			}
+			.chip.blocked {
+				background: var(--bad-soft);
+				border-color: transparent;
+				color: var(--bad);
+			}
+			.options {
+				padding-left: 1.2rem;
+				list-style: disc;
+			}
+			.options li {
+				margin-bottom: 0.3rem;
+			}
+			.detail {
+				display: grid;
+				grid-template-columns: 4.5rem minmax(0, 1fr);
+				gap: 0.25rem 0.75rem;
+				font-size: 0.92rem;
+			}
+			.detail dt {
+				color: var(--muted);
+				font-weight: 600;
+			}
+			.detail dd {
+				margin: 0;
+			}
+			.quiet {
+				color: var(--muted);
+				font-size: 0.92rem;
+			}
+
+			.note {
+				margin: 0 0 0.9rem;
+				padding: 0.75rem 1rem;
+				border-left: 3px solid var(--accent);
+				border-radius: 0 8px 8px 0;
+				background: var(--accent-soft);
+			}
+			.note.warn {
+				border-left-color: var(--warn);
+				background: var(--warn-soft);
+			}
+			.note > :last-child {
+				margin-bottom: 0;
+			}
+
+			.table-wrap {
+				margin: 0 0 0.9rem;
+				overflow-x: auto;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+			}
+			table {
+				width: 100%;
+				/* On a phone the table scrolls sideways instead of squeezing its columns. */
+				min-width: 34rem;
+				border-collapse: collapse;
+				font-size: 0.92rem;
+			}
+			th,
+			td {
+				padding: 0.55rem 0.8rem;
+				border-bottom: 1px solid var(--border);
+				text-align: left;
+				vertical-align: top;
+			}
+			th {
+				background: var(--surface);
+				color: var(--muted);
+				font-size: 0.82rem;
+			}
+			tr:last-child td {
+				border-bottom: 0;
+			}
+			td:has(> .tag:only-child) {
+				width: 1%;
+				white-space: nowrap;
+			}
+
+			code {
+				padding: 0.1em 0.3em;
+				border-radius: 4px;
+				background: var(--surface);
+				font: 0.88em var(--mono);
+				overflow-wrap: anywhere;
+			}
+			pre {
+				padding: 0.8rem 1rem;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+				background: var(--surface);
+				overflow-x: auto;
+				font: 0.84rem/1.45 var(--mono);
+			}
+			pre code {
+				padding: 0;
+				background: none;
+				font: inherit;
+				overflow-wrap: normal;
+			}
+			/* Box-drawing diagrams need tight lines, or the vertical strokes show gaps. */
+			figure pre {
+				line-height: 1.2;
+			}
+			/* Before and After side by side; the panes stack when the page is narrow. */
+			.compare {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+				gap: 0.75rem;
+				margin: 0 0 0.9rem;
+			}
+			.compare > div {
+				min-width: 0;
+			}
+			.compare pre {
+				margin: 0;
+			}
+			.pane {
+				margin: 0 0 0.3rem;
+				color: var(--muted);
+				font-size: 0.82rem;
+				font-weight: 600;
+			}
+			/* The script at the end of the page adds these classes. */
+			pre .hot {
+				color: var(--accent);
+			}
+			.line {
+				display: block;
+			}
+			.line.add {
+				background: var(--ok-soft);
+				color: var(--ok);
+			}
+			.line.del {
+				background: var(--bad-soft);
+				color: var(--bad);
+			}
+			/* Visuals. .viz frames one picture. .flow, .parts, and .bars are ready-made pictures. */
+			.viz {
+				container-type: inline-size;
+				padding: 1.1rem 1rem;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+				background: var(--surface);
+				overflow-x: auto;
+			}
+			.viz > :last-child {
+				margin-bottom: 0;
+			}
+			.viz svg {
+				margin: 0 auto;
+				color: var(--text);
+				font-family: var(--sans);
+			}
+			.compare > div {
+				display: flex;
+				flex-direction: column;
+			}
+			.compare .viz {
+				flex: 1;
+			}
+
+			/* A flow: nodes joined by edges, top to bottom. */
+			.flow {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+			.node {
+				min-width: 6.5rem;
+				max-width: 100%;
+				padding: 0.45rem 0.85rem;
+				border: 1.5px solid var(--line);
+				border-radius: 8px;
+				background: var(--bg);
+				font-size: 0.92rem;
+				font-weight: 600;
+				line-height: 1.3;
+				text-align: center;
+			}
+			.node small {
+				display: block;
+				margin-top: 0.15rem;
+				color: var(--muted);
+				font-size: 0.8rem;
+				font-weight: 400;
+			}
+			.node.hot {
+				border-color: var(--accent);
+				background: var(--accent-soft);
+			}
+			.node.ok {
+				border-color: var(--ok);
+				background: var(--ok-soft);
+			}
+			.node.bad {
+				border-color: var(--bad);
+				background: var(--bad-soft);
+			}
+			.node.gone {
+				border-style: dashed;
+				background: none;
+				color: var(--muted);
+			}
+			/* The line is a background, the arrowhead is ::after, and ::before is the moving dot. */
+			.edge {
+				position: relative;
+				align-self: stretch;
+				display: grid;
+				grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+				column-gap: 1.2rem;
+				min-height: 2.5rem;
+				margin: 2px 0;
+				color: var(--line);
+				background: linear-gradient(currentColor, currentColor) top center / 1.5px calc(100% - 5px)
+					no-repeat;
+			}
+			.edge::after {
+				content: '';
+				position: absolute;
+				left: 50%;
+				bottom: 0;
+				translate: -50% 0;
+				border: 5px solid transparent;
+				border-top: 7px solid currentColor;
+				border-bottom-width: 0;
+			}
+			.edge > span {
+				grid-column: 2;
+				align-self: center;
+				padding: 0.4rem 0 0.6rem;
+				color: var(--muted);
+				font-size: 0.8rem;
+				line-height: 1.25;
+			}
+			.edge.hot,
+			.edge.hot > span {
+				color: var(--accent);
+			}
+			/* Nodes that belong together or run in parallel. */
+			.group {
+				position: relative;
+				display: flex;
+				flex-wrap: wrap;
+				align-items: flex-start;
+				justify-content: center;
+				gap: 0.5rem;
+				max-width: 100%;
+				padding: 1.7rem 0.6rem 0.6rem;
+				border: 1.5px dashed var(--line);
+				border-radius: 10px;
+			}
+			.group::before {
+				content: attr(data-label);
+				position: absolute;
+				top: 0.35rem;
+				left: 0.7rem;
+				color: var(--muted);
+				font-size: 0.75rem;
+				font-weight: 600;
+			}
+			/* Left to right, when the picture is wide enough. */
+			@container (min-width: 34rem) {
+				.flow.row {
+					flex-direction: row;
+					justify-content: center;
+				}
+				.flow.row > .edge {
+					align-self: center;
+					flex: 1 1 3rem;
+					min-width: 3rem;
+					max-width: 10rem;
+					grid-template-columns: minmax(0, 1fr);
+					grid-template-rows: 1fr 1fr;
+					min-height: 2.6rem;
+					margin: 0 2px;
+					background-position: left center;
+					background-size: calc(100% - 5px) 1.5px;
+				}
+				.flow.row > .edge::after {
+					left: auto;
+					right: 0;
+					bottom: auto;
+					top: 50%;
+					translate: 0 -50%;
+					border: 5px solid transparent;
+					border-left: 7px solid currentColor;
+					border-right-width: 0;
+				}
+				.flow.row > .edge > span {
+					grid-column: 1;
+					grid-row: 1;
+					align-self: end;
+					padding: 0 0.6rem 0.3rem 0.2rem;
+					text-align: center;
+				}
+				.flow.row > .group {
+					flex-direction: column;
+					align-items: stretch;
+				}
+			}
+
+			/* One text split into labelled parts. */
+			.parts {
+				display: grid;
+				gap: 0.5rem;
+			}
+			.parts > div {
+				display: grid;
+				grid-template-columns: 8.5rem minmax(0, 1fr);
+				gap: 0.75rem;
+				align-items: start;
+			}
+			.parts dt {
+				padding-top: 0.55rem;
+				color: var(--muted);
+				font-size: 0.8rem;
+				font-weight: 600;
+			}
+			.parts dd {
+				margin: 0;
+				padding: 0.5rem 0.8rem;
+				border: 1.5px solid var(--line);
+				border-radius: 8px;
+				background: var(--bg);
+				font-size: 0.92rem;
+			}
+			.parts.code dd {
+				font: 0.84rem/1.5 var(--mono);
+				white-space: pre-wrap;
+				overflow-wrap: anywhere;
+			}
+			.parts > .hot dt {
+				color: var(--accent);
+			}
+			.parts > .hot dd {
+				border-color: var(--accent);
+				background: var(--accent-soft);
+			}
+			@container (max-width: 26rem) {
+				.parts > div {
+					grid-template-columns: minmax(0, 1fr);
+					gap: 0.15rem;
+				}
+				.parts dt {
+					padding-top: 0;
+				}
+			}
+
+			/* Bars: --v on each row is its length in percent of the longest bar. */
+			.bars {
+				display: grid;
+				grid-template-columns: auto minmax(3rem, 1fr) auto;
+				gap: 0.45rem 0.7rem;
+				padding: 0;
+				list-style: none;
+				font-size: 0.9rem;
+			}
+			.bars li {
+				display: grid;
+				grid-column: 1 / -1;
+				grid-template-columns: subgrid;
+				align-items: center;
+			}
+			.bars li::after {
+				content: '';
+				grid-column: 2;
+				grid-row: 1;
+				width: calc(var(--v, 0) * 1%);
+				min-width: 2px;
+				height: 0.85rem;
+				border-radius: 3px;
+				background: var(--line);
+				/* A script that changes --v gets a smooth change. */
+				transition: width 0.25s ease-out;
+			}
+			.bars li > span {
+				grid-column: 1;
+				max-width: 11rem;
+			}
+			.bars li > b {
+				grid-column: 3;
+				font: 600 0.84rem var(--mono);
+			}
+			.bars li.hot::after {
+				background: var(--accent);
+			}
+			.bars li.hot > b {
+				color: var(--accent);
+			}
+
+			/* Motion. Every picture is complete when it stands still: in print, in a screenshot, and
+			   for a reader who turned motion off. */
+			@media screen and (prefers-reduced-motion: no-preference) {
+				/* A dot travels along a live edge. Use it for the path that the data takes. */
+				.edge.live::before {
+					content: '';
+					position: absolute;
+					left: 50%;
+					top: 0;
+					width: 7px;
+					height: 7px;
+					margin: -3.5px;
+					border-radius: 50%;
+					background: var(--accent);
+					animation: travel-down 1.8s linear infinite;
+				}
+				@keyframes travel-down {
+					0% {
+						top: 0;
+						opacity: 0;
+					}
+					15%,
+					80% {
+						opacity: 1;
+					}
+					100% {
+						top: calc(100% - 6px);
+						opacity: 0;
+					}
+				}
+				@container (min-width: 34rem) {
+					.flow.row > .edge.live::before {
+						left: 0;
+						top: 50%;
+						animation-name: travel-right;
+					}
+				}
+				@keyframes travel-right {
+					0% {
+						left: 0;
+						opacity: 0;
+					}
+					15%,
+					80% {
+						opacity: 1;
+					}
+					100% {
+						left: calc(100% - 6px);
+						opacity: 0;
+					}
+				}
+				/* The script at the end of the page adds .play when the figure scrolls into view. */
+				.play .seq > * {
+					animation: appear 0.45s ease-out both;
+					animation-delay: calc(var(--i, 0) * 0.3s);
+				}
+				.play .bars li::after {
+					transform-origin: left;
+					animation: grow 0.8s ease-out both;
+				}
+				@keyframes appear {
+					from {
+						opacity: 0;
+						transform: translateY(-6px);
+					}
+				}
+				@keyframes grow {
+					from {
+						transform: scaleX(0);
+					}
+				}
+			}
+			.replay {
+				margin-left: 0.5rem;
+				padding: 0;
+				border: 0;
+				background: none;
+				color: var(--accent);
+				font: inherit;
+				text-decoration: underline;
+				cursor: pointer;
+			}
+			@media print {
+				.replay {
+					display: none;
+				}
+			}
+			figure svg,
+			figure img {
+				display: block;
+				max-width: 100%;
+				height: auto;
+			}
+			figcaption {
+				margin-top: 0.4rem;
+				color: var(--muted);
+				font-size: 0.875rem;
+			}
+			details {
+				margin: 0 0 0.6rem;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+			}
+			summary {
+				padding: 0.6rem 1rem;
+				cursor: pointer;
+				font-weight: 600;
+			}
+			details > :not(summary) {
+				margin-left: 1rem;
+				margin-right: 1rem;
+			}
+			@media print {
+				.toc {
+					display: none;
+				}
+				.layout {
+					display: block;
+					max-width: none;
+					padding: 0;
+				}
+			}
+					@font-face {
+				font-family: 'PlantWenKai';
+				src: url('plant-color-contrast/wenkai.woff2') format('woff2');
+				font-display: swap;
+			}
+			#fig-gallery .controls {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+				gap: 0.9rem 1.4rem;
+				padding: 1rem 1.1rem;
+				border: 1px solid var(--border);
+				border-radius: 12px;
+				background: var(--surface);
+				margin: 0 0 0.8rem;
+			}
+			#fig-gallery .controls label {
+				display: grid;
+				gap: 0.25rem;
+				font-size: 0.86rem;
+				color: var(--muted);
+			}
+			#fig-gallery .controls label > span {
+				display: flex;
+				justify-content: space-between;
+			}
+			#fig-gallery .controls output {
+				color: var(--text);
+				font-variant-numeric: tabular-nums;
+				font-weight: 600;
+			}
+			#fig-gallery .controls input[type='range'] {
+				width: 100%;
+				accent-color: var(--accent);
+			}
+			#fig-gallery .controls select,
+			#fig-gallery .controls button {
+				font: inherit;
+				font-size: 0.9rem;
+				color: var(--text);
+				background: var(--bg);
+				border: 1px solid var(--border);
+				border-radius: 8px;
+				padding: 0.3rem 0.5rem;
+			}
+			#fig-gallery .controls button {
+				cursor: pointer;
+				align-self: end;
+			}
+			#fig-gallery .stats {
+				margin: 0 0 1rem;
+				font-size: 0.92rem;
+				color: var(--muted);
+			}
+			#fig-gallery .stats b {
+				color: var(--text);
+				font-variant-numeric: tabular-nums;
+			}
+			#fig-gallery .grid {
+				--scale: 0.4;
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(calc(390px * var(--scale) * 2 + 2.2rem), 1fr));
+				gap: 1rem;
+			}
+			#fig-gallery .card {
+				border: 1px solid var(--border);
+				border-radius: 14px;
+				padding: 0.75rem 0.85rem 0.85rem;
+				background: var(--bg);
+			}
+			#fig-gallery .card > header {
+				display: flex;
+				align-items: baseline;
+				gap: 0.5rem;
+				margin-bottom: 0.55rem;
+			}
+			#fig-gallery .card > header b {
+				font-size: 1.02rem;
+			}
+			#fig-gallery .card > header code {
+				font-size: 0.8rem;
+				color: var(--muted);
+			}
+			#fig-gallery .card > header .swatch {
+				width: 0.85rem;
+				height: 0.85rem;
+				border-radius: 4px;
+				align-self: center;
+				box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+			}
+			#fig-gallery .pair {
+				display: flex;
+				gap: 0.75rem;
+				justify-content: center;
+			}
+			#fig-gallery .pair > div {
+				display: grid;
+				justify-items: center;
+				align-content: start;
+				gap: 0.35rem;
+			}
+			#fig-gallery .pair .pane {
+				margin: 0;
+			}
+			#fig-gallery .frame {
+				width: calc(390px * var(--scale));
+				height: calc(844px * var(--scale));
+				border-radius: calc(56px * var(--scale));
+				overflow: hidden;
+				box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.14), 0 2px 10px rgba(0, 0, 0, 0.1);
+			}
+			#fig-gallery .phone {
+				position: relative;
+				width: 390px;
+				height: 844px;
+				transform: scale(var(--scale));
+				transform-origin: 0 0;
+				font-family: 'PlantWenKai', serif;
+			}
+			#fig-gallery .status {
+				position: absolute;
+				top: 17px;
+				left: 46px;
+				right: 34px;
+				display: flex;
+				justify-content: space-between;
+				font: 600 17px/1 -apple-system, system-ui, sans-serif;
+			}
+			#fig-gallery .status i {
+				width: 27px;
+				height: 13px;
+				border: 1.5px solid currentColor;
+				border-radius: 4px;
+				opacity: 0.9;
+				box-shadow: inset 0 0 0 2px transparent;
+				background: linear-gradient(currentColor, currentColor) 2px 2px / 70% calc(100% - 4px) no-repeat;
+			}
+			#fig-gallery .topbar,
+			#fig-gallery .actionbar {
+				position: absolute;
+				left: 16px;
+				right: 16px;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 12px;
+			}
+			#fig-gallery .topbar {
+				top: 65px;
+				height: 48px;
+			}
+			#fig-gallery .actionbar {
+				bottom: 42px;
+				height: 82px;
+			}
+			#fig-gallery .glass {
+				flex: none;
+				display: grid;
+				place-items: center;
+				width: 48px;
+				height: 48px;
+				border-radius: 50%;
+				box-shadow: inset 0 0.5px 0 rgba(255, 255, 255, 0.55), inset 0 0 0 0.5px rgba(255, 255, 255, 0.25),
+					0 2px 8px rgba(0, 0, 0, 0.08);
+			}
+			#fig-gallery .glass svg {
+				width: 23px;
+				height: 23px;
+				fill: none;
+				stroke: currentColor;
+				stroke-width: 1.7;
+				stroke-linecap: round;
+				stroke-linejoin: round;
+			}
+			#fig-gallery .art {
+				position: absolute;
+				top: 143px;
+				bottom: 160px;
+				left: 24px;
+				right: 24px;
+				width: calc(100% - 48px);
+				height: calc(100% - 303px);
+				object-fit: contain;
+			}
+			#fig-gallery .art.tint {
+				-webkit-mask: var(--mask) center / contain no-repeat;
+				mask: var(--mask) center / contain no-repeat;
+			}
+			#fig-gallery .words {
+				flex: 1;
+				min-width: 0;
+				text-align: center;
+			}
+			#fig-gallery .words .name {
+				display: block;
+				font-size: 32px;
+				line-height: 1.2;
+			}
+			#fig-gallery .words .summary {
+				display: block;
+				margin-top: 3px;
+				font-size: 12px;
+				line-height: 1.35;
+			}
+			#fig-gallery .home {
+				position: absolute;
+				bottom: 8px;
+				left: 50%;
+				width: 134px;
+				height: 5px;
+				margin-left: -67px;
+				border-radius: 3px;
+			}
+			#fig-gallery .scores {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+				width: calc(390px * var(--scale));
+				font-size: 0.78rem;
+				font-variant-numeric: tabular-nums;
+			}
+			#fig-gallery .scores li {
+				display: flex;
+				justify-content: space-between;
+				padding: 0.05rem 0.1rem;
+			}
+			#fig-gallery .scores li span {
+				color: var(--muted);
+			}
+			#fig-gallery .scores li.fail b {
+				color: var(--bad);
+			}
+			#fig-gallery .scores li.fail b::after {
+				content: ' ✕';
+			}
+			#fig-gallery .scores li.pass b::after {
+				content: ' ✓';
+				color: var(--ok);
+			}
+			#fig-gallery .inks {
+				margin: 0;
+				width: calc(390px * var(--scale));
+				font: 0.72rem/1.4 var(--mono);
+				color: var(--muted);
+			}
+			#fig-gallery .inks i {
+				display: inline-block;
+				width: 0.65rem;
+				height: 0.65rem;
+				border-radius: 2px;
+				vertical-align: -0.05rem;
+				margin-right: 0.2rem;
+				box-shadow: inset 0 0 0 1px rgba(127, 127, 127, 0.35);
+			}
+			#values-table .chipcolor {
+				display: inline-block;
+				width: 0.8rem;
+				height: 0.8rem;
+				border-radius: 3px;
+				vertical-align: -0.1rem;
+				margin-right: 0.3rem;
+				box-shadow: inset 0 0 0 1px rgba(127, 127, 127, 0.35);
+			}
+			#values-table td {
+				font-variant-numeric: tabular-nums;
+				white-space: nowrap;
+			}
+			#values-table td.fail {
+				color: var(--bad);
+			}
+
+			#fig-gallery .controls fieldset {
+				display: contents;
+			}
+			#fig-gallery .controls .group-title {
+				grid-column: 1 / -1;
+				margin: 0.3rem 0 -0.4rem;
+				font-size: 0.8rem;
+				font-weight: 600;
+				letter-spacing: 0.04em;
+				color: var(--text);
+			}
+			#fig-gallery .controls .presets {
+				display: flex;
+				gap: 0.4rem;
+				align-items: end;
+			}
+			#fig-gallery .controls .presets button[aria-pressed='true'] {
+				border-color: var(--accent);
+				background: var(--accent-soft);
+			}
+			#fig-gallery .controls .check {
+				display: flex;
+				align-items: center;
+				gap: 0.4rem;
+				grid-template-columns: none;
+				align-self: end;
+				color: var(--text);
+			}
+			#fig-gallery .artbox {
+				position: absolute;
+				top: 143px;
+				left: 0;
+				width: 390px;
+				height: 541px;
+				display: grid;
+				place-items: center;
+			}
+			#fig-gallery .artbox > div {
+				-webkit-mask: var(--mask) center / 100% 100% no-repeat;
+				mask: var(--mask) center / 100% 100% no-repeat;
+			}
+			#fig-gallery .scores li.info b::after {
+				content: '';
+			}
+			#fig-gallery .warn-up {
+				margin: 0;
+				width: calc(390px * var(--scale));
+				font-size: 0.72rem;
+				color: var(--warn);
+			}
+			#fig-gallery .card select {
+				font: inherit;
+				font-size: 0.78rem;
+				margin-left: auto;
+				color: var(--text);
+				background: var(--bg);
+				border: 1px solid var(--border);
+				border-radius: 6px;
+				padding: 0.1rem 0.3rem;
+			}
+			#fig-gallery .settings {
+				margin-top: 1rem;
+			}
+			#fig-gallery .settings pre {
+				white-space: pre-wrap;
+				font-size: 0.78rem;
+			}
+			#fig-art-tangli .pair-art {
+				max-width: 26rem;
+				margin: 0 auto;
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 1rem;
+			}
+			#fig-art-tangli .slot {
+				position: relative;
+				aspect-ratio: 342 / 541;
+				border-radius: 12px;
+				background: #b15a43;
+				display: grid;
+				place-items: center;
+				overflow: hidden;
+			}
+			#fig-art-tangli .slot img {
+				display: block;
+			}
+			#fig-art-tangli .slot b {
+				position: absolute;
+				left: 0.6rem;
+				bottom: 0.5rem;
+				font-size: 0.8rem;
+				color: #fff3ee;
+				font-weight: 600;
+			}
+</style>
+</head>
+<body>
+
+		<div class="layout">
+			<nav class="toc" aria-label="目录"></nav>
+
+			<main>
+				<header id="top">
+					<p class="kicker">预览 · 植物彩雅 iOS 首页</p>
+					<h1>文字、按钮和插画跟随底色调和，插画占比统一</h1>
+					<p class="lede">
+						每种植物色左边是现在的效果，右边是调整后的效果。文字、图标和插画线条的颜色从底色本身出发，深浅两个方向都试，选一个最接近底色、又足够清晰的颜色。插画按同一个目标占比缩放，左右分开的插画会拆开重新排列。
+					</p>
+					<p class="meta">
+						<span class="chip review">等你确认方向</span>
+						<span>第 2 版 · 2026-10-11</span>
+					</p>
+				</header>
+
+				<section id="summary" data-toc="摘要">
+					<h2>摘要</h2>
+					<dl class="facts">
+						<div class="ask" id="summary-ask">
+							<dt>需要你做的</dt>
+							<dd>
+								在<a href="#gallery">预览</a>里调参数，回答 <b>Q1</b>–<b>Q3</b>（颜色）和 <b>Q4</b>、<b>Q5</b>（插画占比和拆分排法）。某种植物想用别的排法，直接在它的卡片右上角切换；预览下方的"当前设置"会记下来，复制发给我即可。
+							</dd>
+						</div>
+						<div id="summary-answer">
+							<dt>结论</dt>
+							<dd>
+								颜色：现在 <b data-stat="nowFail">26</b> 种至少有一项不达标，调整后 <b data-stat="afterFail">0</b> 种；颜色不再固定往黑或白走，而是在底色附近取刚好清晰的那一个。插画：现在占比 <b data-stat="occNow">11%–38%</b>，调整后 <b data-stat="occAfter">—</b>。
+							</dd>
+						</div>
+						<div id="summary-scope">
+							<dt>预览范围</dt>
+							<dd>首页：色名、简述、四个玻璃按钮的图标、中间的植物插画。</dd>
+						</div>
+						<div id="summary-confidence">
+							<dt>可信度</dt>
+							<dd>对比度和占比都是按色值和像素精确计算的。玻璃质感、字体渲染、插画放大后的清晰度是网页近似，要在真机上确认（见 <b>R1</b>、<b>R3</b>）。</dd>
+						</div>
+					</dl>
+				</section>
+
+				<section id="changes" data-toc="第 2 版改动">
+					<h2>第 2 版改动</h2>
+					<ul>
+						<li id="change-color-search">
+							颜色不再"先比黑白、再往那边走"。现在深浅两个方向都试，每个方向都保留底色的色相和彩度，只移动明度到刚好达标，选移动最少的方向。默认目标降到各角色的最低标准加少量余量，所以颜色离底色更近、更有色彩。新增色相偏移、方向倾向和三档预设。见 <b>F1</b>、<b>Q1</b>、<b>Q2</b>。
+						</li>
+						<li id="change-art-size">新增插画占比统一：按"线稿膨胀后的面积"衡量视觉占比，所有插画缩放到同一个目标值。见 <b>F6</b>、<b>Q4</b>。</li>
+						<li id="change-art-split">左右分开的插画（16 种）可以拆成主体和副体，提供上下错落、主体放大加副体缩小、只保留主体三种排法，可逐个切换。见 <b>F7</b>、<b>Q5</b>。</li>
+					</ul>
+				</section>
+
+				<section id="gallery" data-toc="预览">
+					<h2>32 种颜色：现在 vs 调整后</h2>
+					<figure id="fig-gallery">
+						<div class="controls" id="gallery-controls">
+							<p class="group-title">颜色</p>
+							<div class="presets" id="ctl-presets">
+								<button type="button" data-preset="soft">柔和</button>
+								<button type="button" data-preset="standard">标准</button>
+								<button type="button" data-preset="crisp">清晰</button>
+							</div>
+							<label>
+								<span>色名 目标对比度 <output id="out-name"></output></span>
+								<input type="range" id="ctl-name" min="3" max="8" step="0.1" value="4" />
+							</label>
+							<label>
+								<span>简述 目标对比度 <output id="out-summary"></output></span>
+								<input type="range" id="ctl-summary" min="3" max="8" step="0.1" value="4.6" />
+							</label>
+							<label>
+								<span>图标 目标对比度 <output id="out-icon"></output></span>
+								<input type="range" id="ctl-icon" min="3" max="8" step="0.1" value="3.5" />
+							</label>
+							<label>
+								<span>插画线条 目标对比度 <output id="out-art"></output></span>
+								<input type="range" id="ctl-art" min="1.5" max="8" step="0.1" value="3" />
+							</label>
+							<label>
+								<span>保留底色的彩度 <output id="out-keep"></output></span>
+								<input type="range" id="ctl-keep" min="0" max="150" step="5" value="100" />
+							</label>
+							<label>
+								<span>色相偏移 <output id="out-shift"></output></span>
+								<input type="range" id="ctl-shift" min="-40" max="40" step="2" value="0" />
+							</label>
+							<label>
+								<span>深浅方向</span>
+								<select id="ctl-dir">
+									<option value="auto">自动：离底色最近的方向</option>
+									<option value="light">尽量用浅色</option>
+									<option value="dark">尽量用深色</option>
+								</select>
+							</label>
+
+							<p class="group-title">插画</p>
+							<label>
+								<span>目标占比 <output id="out-occ"></output></span>
+								<input type="range" id="ctl-occ" min="15" max="45" step="1" value="28" />
+							</label>
+							<label>
+								<span>左右分开的插画</span>
+								<select id="ctl-mode">
+									<option value="auto">自动：改动最少又能达到目标</option>
+									<option value="stack">上下错落</option>
+									<option value="mainplus">主体放大，副体缩小</option>
+									<option value="main">只保留主体</option>
+									<option value="original">保持原图</option>
+								</select>
+							</label>
+							<label class="check"><input type="checkbox" id="ctl-bleed" /> 允许延伸到屏幕左右边缘</label>
+
+							<p class="group-title">显示</p>
+							<label>
+								<span>筛选</span>
+								<select id="ctl-filter">
+									<option value="all">全部 32 种</option>
+									<option value="fail">现在颜色不达标的</option>
+									<option value="split">左右分开的插画</option>
+								</select>
+							</label>
+							<label>
+								<span>排序</span>
+								<select id="ctl-sort">
+									<option value="worst">现在的简述对比度从低到高</option>
+									<option value="occ">现在的插画占比从小到大</option>
+									<option value="app">App 内顺序</option>
+								</select>
+							</label>
+							<label>
+								<span>手机尺寸</span>
+								<select id="ctl-size">
+									<option value="0.4">小</option>
+									<option value="0.62">大</option>
+								</select>
+							</label>
+							<button type="button" id="ctl-reset">全部恢复默认</button>
+						</div>
+						<p class="stats" id="gallery-stats"></p>
+						<div class="grid" id="gallery-grid"></div>
+						<details class="settings" id="gallery-settings">
+							<summary>当前设置（复制发给我，我按它写进 App）</summary>
+							<pre id="settings-out"></pre>
+							<button type="button" id="settings-copy">复制</button>
+						</details>
+						<figcaption>
+							每部手机下面是实测 WCAG 对比度和插画占比。色名是 32pt 大字，最低 3:1；简述是 12pt 小字，最低 4.5:1；图标最低 3:1。插画是装饰图形，WCAG 不强制要求，3:1 只作参考。占比是插画在首页插画区域里的视觉面积。
+						</figcaption>
+					</figure>
+				</section>
+
+				<section id="findings" data-toc="发现">
+					<h2>发现</h2>
+					<ol class="items">
+						<li class="item" id="finding-wrong-side">
+							<div class="item-head">
+								<span class="tag">F1</span>
+								<h3>对比度不一定要靠黑白：多数底色在自身色相附近就能找到够清晰的颜色</h3>
+							</div>
+							<p>
+								WCAG 对比度只取决于亮度，与色相无关。因此保留底色的色相和彩度、只改明度，就能达到同样的对比度。目标定在"刚好达标再加一点余量"时，得到的颜色离底色很近，例如鞠衣的色名会是一种中等深度的金褐色，而不是近乎黑色。之前看起来黑白化，是因为第 1 版默认目标定得偏高（色名 6:1），而且算法越接近目标彩度降得越多。
+							</p>
+							<dl class="detail">
+								<dt>来源</dt>
+								<dd><code>PlantColor/Resources/PlantColor.json</code> 的 <code>textColor</code>：32 种里 18 种是 <code>#EEEEEE</code>，14 种是 <code>#333333</code>。鞠衣现在配 <code>#EEEEEE</code> 只有 2.01:1。</dd>
+							</dl>
+						</li>
+						<li class="item" id="finding-summary-alpha">
+							<div class="item-head">
+								<span class="tag">F2</span>
+								<h3>简述用 75% 透明度，对比度比色名再低一截</h3>
+							</div>
+							<p>
+								简述是 12pt 小字，本应比 32pt 的色名要求更高，现在反而更淡。只看文字色本身有 13 种不达标，计入透明度后变成 26 种。调整后，简述改用单独算出的实色。
+							</p>
+							<dl class="detail">
+								<dt>来源</dt>
+								<dd><code>HomeChrome.swift</code> 中 <code>summaryLabel.textColor = ink.withAlphaComponent(0.75)</code>。</dd>
+							</dl>
+						</li>
+						<li class="item" id="finding-midtones">
+							<div class="item-head">
+								<span class="tag">F3</span>
+								<h3>菘蓝这类中间调颜色，简述只能用很深的颜色</h3>
+							</div>
+							<p>
+								菘蓝 <code>#6B798E</code> 配纯白 4.42，配纯黑 4.75。简述要 4.5:1，只能用一种很深的蓝黑色。色名、图标、插画的要求低一些，仍然可以保留明显的蓝色。
+							</p>
+						</li>
+						<li class="item" id="finding-glass-style">
+							<div class="item-head">
+								<span class="tag">F4</span>
+								<h3>玻璃按钮的浅色或深色样式要跟着文字方向走</h3>
+							</div>
+							<p>
+								现在的规则是 Lab 明度大于 60 用浅色玻璃。改为：深色字配浅色玻璃，浅色字配深色玻璃，状态栏同样处理。图标的对比度是对着玻璃的颜色算的。
+							</p>
+							<dl class="detail">
+								<dt>来源</dt>
+								<dd><code>HomeViewController.swift</code> 第 69–71 行。</dd>
+							</dl>
+						</li>
+						<li class="item" id="finding-artwork">
+							<div class="item-head">
+								<span class="tag">F5</span>
+								<h3>32 张植物插画都是单色线稿，可以直接换成调和后的颜色</h3>
+							</div>
+							<p>
+								插画 PNG 只有一种颜色加透明度，深色约 <code>#303030</code>，浅色约 <code>#E0E0E0</code>。在 App 里用模板渲染（<code>withRenderingMode(.alwaysTemplate)</code>）再设 <code>tintColor</code> 即可，不用重新出图。
+							</p>
+						</li>
+						<li class="item" id="finding-art-size">
+							<div class="item-head">
+								<span class="tag">F6</span>
+								<h3>插画的视觉占比从 11% 到 38% 不等，主要是原图宽高比差异太大</h3>
+							</div>
+							<p>
+								首页插画区域是竖长的（342 × 541pt），而原图大多是横幅：杏子宽高比 3.1:1，放进去只有 11%；郁金裙是竖图，有 38%。现在 App 用"完整放下"的方式缩放，所以越宽的图越小。
+							</p>
+							<dl class="detail">
+								<dt>来源</dt>
+								<dd><code>HomeColorCell.swift</code> 的 <code>scaleAspectFit</code> 和四边约束。占比按线稿膨胀 3.5% 并填充孔洞后的面积计算，比外框更接近眼睛感受到的大小。</dd>
+							</dl>
+						</li>
+						<li class="item" id="finding-art-split">
+							<div class="item-head">
+								<span class="tag">F7</span>
+								<h3>16 张插画由两块独立图案组成，可以自动拆开重排</h3>
+							</div>
+							<p>
+								栀子、菘蓝、缃叶、芸黄、麴尘、盈盈、绿沈、樱花、绢纨、紫菂、莲红、杏子、棠梨、紫梅、丁香、苍筤这 <b data-stat="splitCount">16</b> 张能清楚分成主体和副体（缃叶、芸黄两部分靠得较近，用较小的半径才分开）。顺圣、鞠衣、柘黄、木槿的两部分互相交叠，拆不开，只能整体缩放；它们是横幅，所以占比上限较低。
+							</p>
+						</li>
+					</ol>
+				</section>
+
+				<section id="approach" data-toc="调整规则">
+					<h2>颜色深浅两边都试，选离底色最近的；插画按同一个视觉占比缩放</h2>
+					<p>
+						颜色：先把底色转成 OKLCH（按人眼感受划分明度、彩度、色相的颜色表示）。深、浅两个方向分别求色名、简述、图标、插画四种颜色：色相和彩度沿用底色（可用滑块调整），只移动明度，刚好达到目标就停。两个方向都能全部达标时，选明度移动最少、也就是离底色最近的那个方向。
+					</p>
+					<figure id="fig-rule">
+						<div class="viz">
+							<div class="flow row seq">
+								<div class="node">底色<small>如紫菀 #757CBB</small></div>
+								<div class="edge"><span>转 OKLCH</span></div>
+								<div class="group" data-label="两个方向都试">
+									<div class="node">往浅调<small>图标、插画能达标，色名和简述到不了</small></div>
+									<div class="node">往深调<small>四种颜色都能达标</small></div>
+								</div>
+								<div class="edge hot live"><span>选全部达标、移动最少的</span></div>
+								<div class="node hot">深靛蓝系<small>保留紫菀的色相和彩度</small></div>
+							</div>
+						</div>
+						<figcaption>不先比较黑白再决定方向。只有底色本身是中间调、某个方向够不到目标时，才排除那个方向。</figcaption>
+					</figure>
+					<p>
+						插画：每张图先算出视觉面积，再缩放到同一个目标占比；宽度或高度放不下时，在能放下的范围内尽量大。左右分开的插画拆成主体和副体，按选定的排法重新组合成竖向构图，再按目标占比缩放。主体和副体用同一缩放比例（"主体放大，副体缩小"除外），所以线条粗细一致。
+					</p>
+					<figure id="fig-art-tangli">
+						<div class="pair-art">
+							<div class="slot" id="tangli-before"><b>现在</b></div>
+							<div class="slot" id="tangli-after"><b>调整后</b></div>
+						</div>
+						<figcaption>棠梨：左右两块之间留着大片空白，整体只占插画区域的一小部分。拆开后上下错落排列，占比提到目标值。</figcaption>
+					</figure>
+					<aside class="note" id="note-same-in-app">
+						<p>网页里的计算就是之后要写进 App 的方法：颜色函数放进 <code>ColorMath.swift</code>，插画的拆分和重排离线生成新的图片资源。你在这里定下的参数会原样带过去。</p>
+					</aside>
+				</section>
+
+				<section id="decisions" data-toc="待决定">
+					<h2>待决定</h2>
+					<ol class="items">
+						<li class="item" id="q-keep-chroma">
+							<div class="item-head">
+								<span class="tag">Q1</span>
+								<h3>文字和线条保留多少底色的颜色？</h3>
+							</div>
+							<p>对应"保留底色的彩度"和"色相偏移"。彩度越高，文字越像底色的深色或浅色版本；偏移可以让深色字略偏暖或偏冷。</p>
+							<ul class="options">
+								<li><strong>A. 彩度 100%，不偏移。</strong>与底色同一色系，最协调。<span class="chip pick">推荐</span></li>
+								<li><strong>B. 彩度 60%。</strong>更克制，像带色调的灰。</li>
+								<li><strong>C. 彩度 130% 以上。</strong>文字比底色更鲜艳，装饰感更强。</li>
+							</ul>
+							<p class="quiet">不回答的话，我会用 A。</p>
+						</li>
+						<li class="item" id="q-contrast-level">
+							<div class="item-head">
+								<span class="tag">Q2</span>
+								<h3>文字和图标的对比度用哪一档？</h3>
+							</div>
+							<p>对应三个预设按钮。档位越高越清晰，颜色也越远离底色。</p>
+							<ul class="options">
+								<li><strong>A. 标准：色名 4、简述 4.6、图标 3.5。</strong>每项都比最低标准多一点余量，颜色仍贴近底色。<span class="chip pick">推荐</span></li>
+								<li><strong>B. 柔和：色名 3.2、简述 4.5、图标 3。</strong>刚好达标，最柔和，户外强光下可能偏淡。</li>
+								<li><strong>C. 清晰：色名、简述 6，图标 4.5。</strong>最清楚，多数颜色会接近深黑或浅白。</li>
+							</ul>
+							<p class="quiet">不回答的话，我会用 A。</p>
+						</li>
+						<li class="item" id="q-art-contrast">
+							<div class="item-head">
+								<span class="tag">Q3</span>
+								<h3>插画线条的对比度要多高？</h3>
+							</div>
+							<p>对应"插画线条 目标对比度"。插画是装饰，不受 WCAG 强制要求；线条太淡看不清，太重会抢过色名。</p>
+							<ul class="options">
+								<li><strong>A. 3。</strong>线条清楚，又明显比文字轻。<span class="chip pick">推荐</span></li>
+								<li><strong>B. 2.2 左右。</strong>更像水印，背景感更强。</li>
+								<li><strong>C. 与色名相同。</strong>线条和文字同一种颜色，最统一。</li>
+							</ul>
+							<p class="quiet">不回答的话，我会用 A。</p>
+						</li>
+						<li class="item" id="q-art-occupancy">
+							<div class="item-head">
+								<span class="tag">Q4</span>
+								<h3>插画的目标占比定多少？</h3>
+							</div>
+							<p>对应"目标占比"。目标越高，画面越满；但顺圣、鞠衣这类拆不开的横幅插画上限只有 20% 出头，目标太高时它们会显得偏小。</p>
+							<ul class="options">
+								<li><strong>A. 28%，不延伸到边缘。</strong>多数插画能达到，和现在的牡丹系列差不多大。<span class="chip pick">推荐</span></li>
+								<li><strong>B. 24%。</strong>几乎全部达到，最整齐，整体略小。</li>
+								<li><strong>C. 32% 以上，并允许延伸到屏幕边缘。</strong>画面最满，横幅插画会贴到屏幕边。</li>
+							</ul>
+							<p class="quiet">不回答的话，我会用 A。</p>
+						</li>
+						<li class="item" id="q-art-mode">
+							<div class="item-head">
+								<span class="tag">Q5</span>
+								<h3>左右分开的插画默认怎么排？</h3>
+							</div>
+							<p>对应"左右分开的插画"，也可以在每张卡片右上角单独选。</p>
+							<ul class="options">
+								<li><strong>A. 自动。</strong>优先保持原图；原图达不到目标时用上下错落；还不够再用主体放大。<span class="chip pick">推荐</span></li>
+								<li><strong>B. 全部上下错落。</strong>主体和副体都保留，构图最完整。</li>
+								<li><strong>C. 全部只保留主体。</strong>最简洁，但会去掉一部分原画内容。</li>
+							</ul>
+							<p class="quiet">不回答的话，我会用 A，加上你在卡片上单独选的。</p>
+						</li>
+					</ol>
+				</section>
+
+				<section id="values" data-toc="色值表">
+					<h2>色值表</h2>
+					<p class="quiet">随上面的参数实时更新。"现在"一列是简述的实测对比度（已计入 75% 透明度）。</p>
+					<div class="table-wrap">
+						<table id="values-table">
+							<thead>
+								<tr>
+									<th>植物</th>
+									<th>底色</th>
+									<th>现在</th>
+									<th>色名</th>
+									<th>简述</th>
+									<th>图标</th>
+									<th>插画</th>
+									<th>占比</th>
+								</tr>
+							</thead>
+							<tbody></tbody>
+						</table>
+					</div>
+				</section>
+
+				<section id="risks" data-toc="风险">
+					<h2>风险</h2>
+					<div class="table-wrap">
+						<table>
+							<thead>
+								<tr>
+									<th></th>
+									<th>风险</th>
+									<th>怎么发现</th>
+									<th>怎么处理</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr id="risk-web-vs-device">
+									<td><span class="tag">R1</span></td>
+									<td>网页和 iPhone 渲染不同：Liquid Glass 会折射底色，屏幕是 P3 广色域，文楷字重也略有差别。</td>
+									<td>真机上某种颜色比网页更淡或更脏。</td>
+									<td>在 App 里加调试页，真机逐个检查后微调参数。</td>
+								</tr>
+								<tr id="risk-scroll-gradient">
+									<td><span class="tag">R2</span></td>
+									<td>首页上下滑动时底色连续渐变，文字和插画颜色是在两端各算一次。</td>
+									<td>滑到一半时文字闪一下或变淡。</td>
+									<td>滑动时对两端的颜色做插值，真机检查中间帧。</td>
+								</tr>
+								<tr id="risk-upscale">
+									<td><span class="tag">R3</span></td>
+									<td>部分插画原图分辨率不高（如杏子宽 836px），放大后在 3 倍屏上线条会发虚。卡片上标有"需放大"的就是这种情况。</td>
+									<td>卡片上出现"需放大 x 倍"提示；真机上线条边缘模糊。</td>
+									<td>向画师要更高分辨率或矢量原稿；拿不到时把这几张的目标占比单独调低。</td>
+								</tr>
+								<tr id="risk-line-weight">
+									<td><span class="tag">R4</span></td>
+									<td>不同插画放大倍数不同，线条粗细会不一致。</td>
+									<td>并排看时有的线条明显更粗。</td>
+									<td>离线生成资源时按放大倍数轻微收细或加粗线条；有矢量原稿时直接统一线宽。</td>
+								</tr>
+								<tr id="risk-composition">
+									<td><span class="tag">R5</span></td>
+									<td>拆开重排改变了原画的构图，可能不符合画师的本意。</td>
+									<td>你或画师觉得某张重排后别扭。</td>
+									<td>在那张卡片上换排法，或保持原图。</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</section>
+
+				<section id="scope" data-toc="不在本次范围">
+					<h2>不在本次范围</h2>
+					<ul>
+						<li id="scope-other-screens">详情页、分享色卡、小组件也在用 <code>textColor</code> 和这些插画。方向确认后它们改用同一套颜色函数和新插画资源，这一版只预览首页。</li>
+						<li id="scope-traditional">传统色目前已下线（<code>FeatureFlags.traditionalColorsEnabled = false</code>），之后可以一并替换。</li>
+					</ul>
+				</section>
+
+				<section id="evidence" data-toc="依据">
+					<h2>依据</h2>
+					<details id="evidence-method">
+						<summary>对比度的计算方法</summary>
+						<p>
+							按 WCAG 2 的相对亮度公式计算，颜色先取整到 8 位色值再测，保证写进 App 的颜色也达标。"现在"一侧的简述先按 75% 透明度与底色混合再算。玻璃按钮按浅色玻璃混入 18% 白色、深色玻璃混入 14% 黑色近似。
+						</p>
+					</details>
+					<details id="evidence-occupancy">
+						<summary>插画占比和拆分的计算方法</summary>
+						<p>
+							把线稿按长边的 3.5% 膨胀并填满孔洞，得到"视觉面积"，占比 = 视觉面积 ÷ 插画区域面积（342 × 541pt）。膨胀后仍彼此分开、且各占 6% 以上的图块视为可拆分；找不到时再用 2% 的半径试一次。面积最大的图块是主体，其余归为副体，零碎的小块并入最近的图块。上下错落时，副体从主体下方逐步上移，直到快碰到主体为止，并在左右两种对齐中选占比更高的一种。
+						</p>
+					</details>
+					<details id="evidence-files">
+						<summary>读过的文件</summary>
+						<ul>
+							<li><code>PlantColor/Resources/PlantColor.json</code>：32 种植物的色值和现在的文字色</li>
+							<li><code>PlantColor/Classes/Modules/Home/View/Chrome/HomeChrome.swift</code>：首页按钮、色名、简述的字号和颜色</li>
+							<li><code>PlantColor/Classes/Modules/Home/View/Color/HomeColorCell.swift</code>：插画区域的位置和缩放方式</li>
+							<li><code>PlantColor/Classes/Modules/Home/Model/ColorDisplayable.swift</code>：首页简述文案</li>
+							<li><code>PlantColor/Classes/Modules/Home/Controller/HomeViewController.swift</code>：玻璃样式的选择规则</li>
+							<li><code>PlantColor/Resources/Assets/Assets.xcassets/Home/</code>：32 张首页插画</li>
+						</ul>
+					</details>
+				</section>
+			</main>
+		</div>
+<script>
+			// Builds the side contents list from the sections, so it cannot drift from the page.
+			const toc = document.querySelector('.toc')
+			const sections = [...document.querySelectorAll('main > section[id]')]
+			const list = document.createElement('ol')
+			const links = new Map()
+			for (const section of sections) {
+				const label = section.dataset.toc || section.querySelector('h2')?.textContent.trim()
+				if (!label) continue
+				const link = document.createElement('a')
+				link.href = `#${section.id}`
+				link.textContent = label
+				const count = section.querySelectorAll('.item, tbody > tr[id]').length
+				if (count > 0) link.textContent += ` (${count})`
+				links.set(section, link)
+				const entry = document.createElement('li')
+				entry.append(link)
+				list.append(entry)
+			}
+			toc.append(list)
+			const observer = new IntersectionObserver(
+				(entries) => {
+					for (const entry of entries) {
+						if (!entry.isIntersecting) continue
+						for (const link of links.values()) link.removeAttribute('aria-current')
+						links.get(entry.target)?.setAttribute('aria-current', 'true')
+					}
+				},
+				{ rootMargin: '0px 0px -70% 0px' },
+			)
+			for (const section of links.keys()) observer.observe(section)
+
+			// A line break before the end tag of a view would show as an empty last line.
+			for (const pre of document.querySelectorAll('figure pre')) {
+				const last = pre.lastChild
+				if (last?.nodeType === Node.TEXT_NODE) last.data = last.data.trimEnd()
+			}
+
+			// Colors the heavy glyphs in a drawing, so the changed parts stand out from the light lines.
+			const heavy = /([━┃┏┓┗┛┣┫┳┻╋▶◀▲▼●◆■]+)/
+			for (const pre of document.querySelectorAll('pre.diagram')) {
+				const walker = document.createTreeWalker(pre, NodeFilter.SHOW_TEXT)
+				const texts = []
+				while (walker.nextNode()) texts.push(walker.currentNode)
+				for (const text of texts) {
+					const parts = text.data.split(heavy)
+					if (parts.length === 1) continue
+					const pieces = parts.map((part, index) => {
+						if (index % 2 === 0) return part
+						const span = document.createElement('span')
+						span.className = 'hot'
+						span.textContent = part
+						return span
+					})
+					text.replaceWith(...pieces)
+				}
+			}
+
+			// Colors the added and removed lines in a diff view. The view holds text only.
+			for (const pre of document.querySelectorAll('pre.diff')) {
+				const lines = pre.textContent.split('\n').map((line) => {
+					const span = document.createElement('span')
+					span.className = line.startsWith('+') ? 'line add' : line.startsWith('-') ? 'line del' : 'line'
+					span.textContent = line === '' ? ' ' : line
+					return span
+				})
+				pre.replaceChildren(...lines)
+			}
+
+			// Plays the one-shot motion of a picture when it scrolls into view, and adds a Replay
+			// button. Without this script the pictures are complete and still.
+			if (matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+				const play = new IntersectionObserver((entries) => {
+					for (const entry of entries) {
+						if (!entry.isIntersecting) continue
+						entry.target.classList.add('play')
+						play.unobserve(entry.target)
+					}
+				})
+				for (const figure of document.querySelectorAll('figure')) {
+					if (!figure.querySelector('.seq, .bars')) continue
+					for (const sequence of figure.querySelectorAll('.seq')) {
+						;[...sequence.children].forEach((child, index) => child.style.setProperty('--i', index))
+					}
+					play.observe(figure)
+					// A picture with its own controls needs no Replay button.
+					if (figure.querySelector('input, select, button')) continue
+					const button = document.createElement('button')
+					button.type = 'button'
+					button.className = 'replay'
+					button.textContent = '重播'
+					button.addEventListener('click', () => {
+						figure.classList.remove('play')
+						void figure.offsetWidth
+						figure.classList.add('play')
+					})
+					const caption = figure.querySelector('figcaption') ?? figure
+					caption.append(button)
+				}
+			}
+		</script>
+	
+		<script>
+			const COLORS = [{"id": 1, "name": "栀子", "hex": "#FAC03D", "text": "#333333", "summary": "花开清白，果实染黄", "img": "zhizi", "modes": {"original": {"w": 1464, "h": 1103, "foot": 0.5245}, "stack": {"w": 1002, "h": 1380, "foot": 0.5971}, "mainplus": {"w": 1002, "h": 1118, "foot": 0.5721}, "main": {"w": 1002, "h": 928, "foot": 0.5624}}}, {"id": 2, "name": "檎丹", "hex": "#E94829", "text": "#EEEEEE", "summary": "林间野苹果的一抹红", "img": "qindan", "modes": {"original": {"w": 1834, "h": 1125, "foot": 0.6179}}}, {"id": 3, "name": "顺圣", "hex": "#7C191E", "text": "#EEEEEE", "summary": "秋菊花瓣间的浅紫", "img": "shunsheng", "modes": {"original": {"w": 2142, "h": 1194, "foot": 0.6045}}}, {"id": 4, "name": "欧碧", "hex": "#C0D695", "text": "#333333", "summary": "牡丹花间的一缕浅绿", "img": "oubi", "modes": {"original": {"w": 1419, "h": 1210, "foot": 0.6408}}}, {"id": 5, "name": "魏红", "hex": "#A73766", "text": "#EEEEEE", "summary": "千叶牡丹，层叠肉红", "img": "weihong", "modes": {"original": {"w": 1419, "h": 1210, "foot": 0.6408}}}, {"id": 6, "name": "丹罽", "hex": "#E60012", "text": "#EEEEEE", "summary": "荔枝枝头的鲜红", "img": "danji", "modes": {"original": {"w": 1596, "h": 1295, "foot": 0.5703}}}, {"id": 7, "name": "鞠衣", "hex": "#D3A237", "text": "#EEEEEE", "summary": "秋菊凝成的明黄", "img": "juyi", "modes": {"original": {"w": 2142, "h": 1194, "foot": 0.6045}}}, {"id": 8, "name": "菘蓝", "hex": "#6B798E", "text": "#EEEEEE", "summary": "一片绿叶，染出靛蓝", "img": "songlan", "modes": {"original": {"w": 1821, "h": 1330, "foot": 0.4554}, "stack": {"w": 815, "h": 2128, "foot": 0.6572}, "mainplus": {"w": 815, "h": 1718, "foot": 0.6064}, "main": {"w": 815, "h": 1330, "foot": 0.5713}}}, {"id": 9, "name": "郁金裙", "hex": "#D08635", "text": "#EEEEEE", "summary": "阳光浸润的姜黄", "img": "yujinqun", "modes": {"original": {"w": 1283, "h": 1535, "foot": 0.5063}}}, {"id": 10, "name": "缃叶", "hex": "#ECD452", "text": "#333333", "summary": "初生桑叶的嫩黄", "img": "xiangye", "modes": {"original": {"w": 644, "h": 391, "foot": 0.6471}, "stack": {"w": 529, "h": 575, "foot": 0.5109}, "mainplus": {"w": 529, "h": 452, "foot": 0.5519}, "main": {"w": 529, "h": 391, "foot": 0.5626}}}, {"id": 11, "name": "姚黄", "hex": "#D6BC46", "text": "#333333", "summary": "洛阳牡丹的一枝金黄", "img": "yaohuang", "modes": {"original": {"w": 1419, "h": 1210, "foot": 0.6408}}}, {"id": 12, "name": "鞓红", "hex": "#B04552", "text": "#EEEEEE", "summary": "牡丹盛放的浓红", "img": "tinghong", "modes": {"original": {"w": 1419, "h": 1210, "foot": 0.6408}}}, {"id": 13, "name": "银红", "hex": "#E7CAD3", "text": "#333333", "summary": "牡丹红里泛起银光", "img": "yinhong", "modes": {"original": {"w": 1419, "h": 1210, "foot": 0.6408}}}, {"id": 14, "name": "魏紫", "hex": "#903754", "text": "#EEEEEE", "summary": "牡丹层瓣间的紫意", "img": "weizi", "modes": {"original": {"w": 1419, "h": 1210, "foot": 0.6408}}}, {"id": 15, "name": "松花", "hex": "#FFEE6F", "text": "#333333", "summary": "松枝春日的新黄", "img": "songhua", "modes": {"original": {"w": 909, "h": 614, "foot": 0.6383}}}, {"id": 16, "name": "芸黄", "hex": "#D2A36C", "text": "#333333", "summary": "凌霄花开，明黄映夏", "img": "yunhuang", "modes": {"original": {"w": 758, "h": 340, "foot": 0.654}, "stack": {"w": 426, "h": 584, "foot": 0.6088}, "mainplus": {"w": 426, "h": 384, "foot": 0.6398}, "main": {"w": 426, "h": 324, "foot": 0.5759}}}, {"id": 17, "name": "麴尘", "hex": "#C0D09D", "text": "#333333", "summary": "初生柳叶的一抹嫩色", "img": "quchen", "modes": {"original": {"w": 772, "h": 625, "foot": 0.4003}, "stack": {"w": 467, "h": 742, "foot": 0.5256}, "mainplus": {"w": 293, "h": 682, "foot": 0.7065}, "main": {"w": 293, "h": 583, "foot": 0.6213}}}, {"id": 18, "name": "柘黄", "hex": "#C67915", "text": "#EEEEEE", "summary": "柘木染出的暖黄", "img": "zhehuang", "modes": {"original": {"w": 770, "h": 377, "foot": 0.5767}}}, {"id": 19, "name": "盈盈", "hex": "#F9D3E3", "text": "#333333", "summary": "桃花映水，浅浅春红", "img": "yingying", "modes": {"original": {"w": 2051, "h": 916, "foot": 0.4833}, "stack": {"w": 1221, "h": 1211, "foot": 0.5032}, "mainplus": {"w": 1221, "h": 1042, "foot": 0.4955}, "main": {"w": 1221, "h": 744, "foot": 0.5935}}}, {"id": 20, "name": "绿沈", "hex": "#938F4C", "text": "#EEEEEE", "summary": "西瓜皮上的深沉绿意", "img": "lvshen", "modes": {"original": {"w": 911, "h": 625, "foot": 0.5691}, "stack": {"w": 906, "h": 555, "foot": 0.6381}, "mainplus": {"w": 906, "h": 545, "foot": 0.5729}, "main": {"w": 906, "h": 545, "foot": 0.518}}}, {"id": 21, "name": "木槿", "hex": "#BA79B1", "text": "#EEEEEE", "summary": "朝开暮落，花开不息", "img": "mujin", "modes": {"original": {"w": 807, "h": 429, "foot": 0.7035}}}, {"id": 22, "name": "樱花", "hex": "#E4B8D5", "text": "#333333", "summary": "春风里的一树柔粉", "img": "yinghua", "modes": {"original": {"w": 948, "h": 718, "foot": 0.5046}, "stack": {"w": 584, "h": 946, "foot": 0.6067}, "mainplus": {"w": 584, "h": 994, "foot": 0.5036}, "main": {"w": 584, "h": 718, "foot": 0.4953}}}, {"id": 23, "name": "绢纨", "hex": "#ECE093", "text": "#333333", "summary": "成熟麦茎的浅黄", "img": "juanwan", "modes": {"original": {"w": 755, "h": 625, "foot": 0.3757}, "stack": {"w": 406, "h": 681, "foot": 0.6018}, "mainplus": {"w": 406, "h": 625, "foot": 0.5637}, "main": {"w": 406, "h": 625, "foot": 0.5108}}}, {"id": 24, "name": "紫菀", "hex": "#757CBB", "text": "#EEEEEE", "summary": "秋日花瓣的一点紫", "img": "ziwan", "modes": {"original": {"w": 593, "h": 443, "foot": 0.731}}}, {"id": 25, "name": "枣褐", "hex": "#68361A", "text": "#EEEEEE", "summary": "熟枣凝成的红褐", "img": "zaohe", "modes": {"original": {"w": 656, "h": 549, "foot": 0.5923}}}, {"id": 26, "name": "紫菂", "hex": "#9B8EA9", "text": "#EEEEEE", "summary": "莲蓬里嫩莲子的紫", "img": "zidi", "modes": {"original": {"w": 707, "h": 432, "foot": 0.4586}, "stack": {"w": 302, "h": 584, "foot": 0.7235}, "mainplus": {"w": 302, "h": 522, "foot": 0.6853}, "main": {"w": 302, "h": 432, "foot": 0.6864}}}, {"id": 27, "name": "莲红", "hex": "#D9A0B3", "text": "#333333", "summary": "莲花映水，清香悠长", "img": "lianhong", "modes": {"original": {"w": 707, "h": 432, "foot": 0.4586}, "stack": {"w": 302, "h": 584, "foot": 0.7235}, "mainplus": {"w": 302, "h": 522, "foot": 0.6853}, "main": {"w": 302, "h": 432, "foot": 0.6864}}}, {"id": 28, "name": "杏子", "hex": "#DA9233", "text": "#EEEEEE", "summary": "枝头熟杏的黄红", "img": "xingzi", "modes": {"original": {"w": 836, "h": 268, "foot": 0.5423}, "stack": {"w": 457, "h": 364, "foot": 0.5752}, "mainplus": {"w": 457, "h": 305, "foot": 0.5284}, "main": {"w": 457, "h": 199, "foot": 0.6214}}}, {"id": 29, "name": "棠梨", "hex": "#B15A43", "text": "#EEEEEE", "summary": "棠梨叶染出的红褐", "img": "tangli", "modes": {"original": {"w": 786, "h": 356, "foot": 0.5017}, "stack": {"w": 399, "h": 491, "foot": 0.6053}, "mainplus": {"w": 399, "h": 431, "foot": 0.5522}, "main": {"w": 399, "h": 306, "foot": 0.6505}}}, {"id": 30, "name": "紫梅", "hex": "#BB7A8C", "text": "#EEEEEE", "summary": "梅枝上凝聚的紫意", "img": "zimei", "modes": {"original": {"w": 730, "h": 363, "foot": 0.4899}, "stack": {"w": 464, "h": 529, "foot": 0.4653}, "mainplus": {"w": 464, "h": 459, "foot": 0.4504}, "main": {"w": 464, "h": 363, "foot": 0.5052}}}, {"id": 31, "name": "丁香", "hex": "#CE93BF", "text": "#333333", "summary": "细小花簇，幽香绵长", "img": "dingxiang", "modes": {"original": {"w": 736, "h": 355, "foot": 0.6129}, "stack": {"w": 460, "h": 514, "foot": 0.6024}, "mainplus": {"w": 460, "h": 366, "foot": 0.7209}, "main": {"w": 460, "h": 355, "foot": 0.6582}}}, {"id": 32, "name": "苍筤", "hex": "#99BCAC", "text": "#333333", "summary": "初生竹子的春日青绿", "img": "canglang", "modes": {"original": {"w": 730, "h": 451, "foot": 0.5144}, "stack": {"w": 347, "h": 699, "foot": 0.668}, "mainplus": {"w": 347, "h": 548, "foot": 0.6775}, "main": {"w": 347, "h": 451, "foot": 0.6776}}}]
+			const PRESETS = {
+				soft: { name: 3.2, summary: 4.5, icon: 3, art: 2.2 },
+				standard: { name: 4, summary: 4.6, icon: 3.5, art: 3 },
+				crisp: { name: 6, summary: 6, icon: 4.5, art: 4.5 },
+			}
+			const DEFAULTS = { ...PRESETS.standard, keep: 100, shift: 0, dir: 'auto', occ: 28, mode: 'auto', bleed: false }
+			const AREA_W = 342
+			const AREA_H = 541
+			const overrides = {}
+
+			// ---- 色彩换算 ----
+			const toLin = (c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4)
+			const toSrgb = (c) => (c <= 0.0031308 ? 12.92 * c : 1.055 * c ** (1 / 2.4) - 0.055)
+			const hexToRgb = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16) / 255)
+			const quantize = (rgb) => rgb.map((v) => Math.round(Math.min(Math.max(v, 0), 1) * 255) / 255)
+			const rgbToHex = (rgb) => '#' + rgb.map((v) => Math.round(v * 255).toString(16).padStart(2, '0')).join('').toUpperCase()
+			const luminance = (rgb) => {
+				const [r, g, b] = rgb.map(toLin)
+				return 0.2126 * r + 0.7152 * g + 0.0722 * b
+			}
+			const contrast = (a, b) => {
+				const [x, y] = [luminance(a), luminance(b)].sort((p, q) => q - p)
+				return (x + 0.05) / (y + 0.05)
+			}
+			const labL = (rgb) => {
+				const y = luminance(rgb)
+				return 116 * (y > 0.008856 ? Math.cbrt(y) : 7.787 * y + 16 / 116) - 16
+			}
+			const mix = (a, b, t) => a.map((v, i) => v * (1 - t) + b[i] * t)
+
+			function rgbToOklch(rgb) {
+				const [r, g, b] = rgb.map(toLin)
+				const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b)
+				const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b)
+				const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b)
+				const L = 0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s
+				const A = 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s
+				const B = 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s
+				return [L, Math.hypot(A, B), Math.atan2(B, A)]
+			}
+			function oklchToLinear(L, C, H) {
+				const A = C * Math.cos(H)
+				const B = C * Math.sin(H)
+				const l = (L + 0.3963377774 * A + 0.2158037573 * B) ** 3
+				const m = (L - 0.1055613458 * A - 0.0638541728 * B) ** 3
+				const s = (L - 0.0894841775 * A - 1.291485548 * B) ** 3
+				return [
+					4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+					-1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
+					-0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s,
+				]
+			}
+			// 超出 sRGB 时只降彩度，保持明度和色相
+			function oklchToRgb(L, C, H) {
+				const fits = (c) => oklchToLinear(L, c, H).every((v) => v >= -1e-5 && v <= 1 + 1e-5)
+				let c = C
+				if (!fits(c)) {
+					let lo = 0
+					let hi = C
+					for (let i = 0; i < 22; i++) {
+						const mid = (lo + hi) / 2
+						if (fits(mid)) lo = mid
+						else hi = mid
+					}
+					c = lo
+				}
+				return quantize(oklchToLinear(L, c, H).map((v) => toSrgb(Math.min(Math.max(v, 0), 1))))
+			}
+
+			const glassFill = (bg, lightStyle) => quantize(lightStyle ? mix(bg, [1, 1, 1], 0.18) : mix(bg, [0, 0, 0], 0.14))
+
+			// 在一个方向上找离底色最近、刚好达到 target 的颜色。色相和彩度沿用底色，只移动明度
+			function solveSide(ref, bgLch, target, side, p) {
+				const [L0, C0, H0] = bgLch
+				const end = side === 'dark' ? 0 : 1
+				const hue = H0 + (p.shift * Math.PI) / 180
+				const at = (t) => oklchToRgb(L0 + (end - L0) * t, C0 * (p.keep / 100), hue)
+				if (contrast(ref, at(1)) < target) return { rgb: at(1), move: Math.abs(end - L0), ok: false }
+				let lo = 0
+				let hi = 1
+				for (let i = 0; i < 26; i++) {
+					const mid = (lo + hi) / 2
+					if (contrast(ref, at(mid)) >= target) hi = mid
+					else lo = mid
+				}
+				return { rgb: at(hi), move: Math.abs(end - L0) * hi, ok: true }
+			}
+
+			function harmonize(bg, p) {
+				const lch = rgbToOklch(bg)
+				const sides = ['dark', 'light'].map((side) => {
+					const glass = glassFill(bg, side === 'dark')
+					const roles = {
+						name: solveSide(bg, lch, p.name, side, p),
+						summary: solveSide(bg, lch, p.summary, side, p),
+						icon: solveSide(glass, lch, p.icon, side, p),
+						art: solveSide(bg, lch, p.art, side, p),
+					}
+					const all = Object.values(roles)
+					return { side, glass, roles, ok: all.every((r) => r.ok), cost: Math.max(...all.map((r) => r.move)) }
+				})
+				let pick
+				const feasible = sides.filter((s) => s.ok)
+				if (p.dir !== 'auto' && feasible.some((s) => s.side === p.dir)) pick = feasible.find((s) => s.side === p.dir)
+				else if (feasible.length) pick = feasible.sort((a, b) => a.cost - b.cost)[0]
+				else pick = contrast(bg, [0, 0, 0]) >= contrast(bg, [1, 1, 1]) ? sides[0] : sides[1]
+				return pick
+			}
+
+			// ---- 插画布局 ----
+			const MODE_ORDER = ['original', 'stack', 'mainplus', 'main']
+			const MODE_LABEL = { original: '保持原图', stack: '上下错落', mainplus: '主体放大，副体缩小', main: '只保留主体' }
+			function artLayout(c, mode, target, bleed) {
+				const m = c.modes[mode]
+				const fitW = bleed ? 390 : AREA_W
+				const sTarget = Math.sqrt((target * AREA_W * AREA_H) / (m.foot * m.w * m.h))
+				const s = Math.min(sTarget, fitW / m.w, AREA_H / m.h)
+				return { mode, w: m.w * s, h: m.h * s, occ: (m.foot * m.w * m.h * s * s) / (AREA_W * AREA_H), up: 3 * s, reached: s >= sTarget * 0.98 }
+			}
+			function currentArt(c) {
+				const m = c.modes.original
+				const s = Math.min(AREA_W / m.w, AREA_H / m.h)
+				return { mode: 'original', w: m.w * s, h: m.h * s, occ: (m.foot * m.w * m.h * s * s) / (AREA_W * AREA_H), up: 3 * s }
+			}
+			function chooseMode(c, p) {
+				const wanted = overrides[c.img] || p.mode
+				if (wanted !== 'auto' && c.modes[wanted]) return wanted
+				const target = p.occ / 100
+				const available = MODE_ORDER.filter((k) => c.modes[k])
+				const reached = available.find((k) => artLayout(c, k, target, p.bleed).reached)
+				if (reached) return reached
+				return available.reduce((a, b) => (artLayout(c, b, target, p.bleed).occ > artLayout(c, a, target, p.bleed).occ ? b : a))
+			}
+
+			function evaluate(c, p) {
+				const bg = hexToRgb(c.hex)
+				const nowInk = hexToRgb(c.text)
+				const nowLight = labL(bg) > 60
+				const nowSummary = quantize(mix(bg, nowInk, 0.75))
+				const nowGlass = glassFill(bg, nowLight)
+				const h = harmonize(bg, p)
+				const r = h.roles
+				const mode = chooseMode(c, p)
+				return {
+					now: {
+						name: nowInk, summary: nowSummary, icon: nowInk, art: nowInk, glass: nowGlass, lightStyle: nowLight,
+						layout: currentArt(c), tint: false,
+						scores: [contrast(bg, nowInk), contrast(bg, nowSummary), contrast(nowGlass, nowInk), contrast(bg, nowInk)],
+					},
+					after: {
+						name: r.name.rgb, summary: r.summary.rgb, icon: r.icon.rgb, art: r.art.rgb, glass: h.glass, lightStyle: h.side === 'dark',
+						layout: artLayout(c, mode, p.occ / 100, p.bleed), tint: true,
+						scores: [contrast(bg, r.name.rgb), contrast(bg, r.summary.rgb), contrast(h.glass, r.icon.rgb), contrast(bg, r.art.rgb)],
+					},
+				}
+			}
+
+			// ---- 界面 ----
+			const ICONS = {
+				gear: '<circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5.5 5.5l1.7 1.7M16.8 16.8l1.7 1.7M5.5 18.5l1.7-1.7M16.8 7.2l1.7-1.7"/><circle cx="12" cy="12" r="6.6"/>',
+				search: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.3 15.3 21 21"/>',
+				heart: '<path d="M12 20.3s-7.6-4.6-8.9-9.6C2.2 7.2 4.4 4.3 7.6 4.3c2 0 3.4 1.1 4.4 2.6 1-1.5 2.4-2.6 4.4-2.6 3.2 0 5.4 2.9 4.5 6.4-1.3 5-8.9 9.6-8.9 9.6Z"/>',
+				share: '<path d="M12 3v12M7.5 7.5 12 3l4.5 4.5"/><path d="M8 10.5H6.2c-.9 0-1.7.8-1.7 1.7v7.1c0 .9.8 1.7 1.7 1.7h11.6c.9 0 1.7-.8 1.7-1.7v-7.1c0-.9-.8-1.7-1.7-1.7H16"/>',
+			}
+			const icon = (name) => `<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[name]}</svg>`
+			const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;')
+			const artFile = (c, mode) => `plant-color-contrast/img/${c.img}-${mode}.webp`
+
+			function artBox(c, v) {
+				const l = v.layout
+				return `<div class="artbox"><div style="width:${l.w.toFixed(1)}px;height:${l.h.toFixed(1)}px;background:${rgbToHex(v.art)};--mask:url(${artFile(c, l.mode)})"></div></div>`
+			}
+			function phone(c, v) {
+				const system = v.lightStyle ? '#000000' : '#FFFFFF'
+				const glass = (name) => `<span class="glass" style="background:${rgbToHex(v.glass)};color:${rgbToHex(v.icon)}">${icon(name)}</span>`
+				return `<div class="frame"><div class="phone" style="background:${c.hex}">
+					<div class="status" style="color:${system}"><span>9:41</span><i></i></div>
+					<div class="topbar">${glass('gear')}${glass('search')}</div>
+					${artBox(c, v)}
+					<div class="actionbar">${glass('heart')}<div class="words">
+						<span class="name" style="color:${rgbToHex(v.name)}">${esc(c.name)}</span>
+						<span class="summary" style="color:${rgbToHex(v.summary)}">${esc(c.summary)}</span>
+					</div>${glass('share')}</div>
+					<div class="home" style="background:${system};opacity:.85"></div>
+				</div></div>`
+			}
+			const LIMITS = [3, 4.5, 3, 3]
+			const LABELS = ['色名', '简述', '图标', '插画']
+			const pct = (x) => Math.round(x * 100) + '%'
+			const scores = (v) =>
+				'<ul class="scores">' +
+				v.scores.map((s, i) => `<li class="${s >= LIMITS[i] ? 'pass' : 'fail'}"><span>${LABELS[i]}</span><b>${s.toFixed(2)}</b></li>`).join('') +
+				`<li class="info"><span>插画占比</span><b>${pct(v.layout.occ)}</b></li></ul>`
+			const swatch = (rgb, label) => `<i style="background:${rgbToHex(rgb)}"></i>${rgbToHex(rgb)} ${label}`
+
+			const $ = (id) => document.getElementById(id)
+			const NUMERIC = ['name', 'summary', 'icon', 'art', 'keep', 'shift', 'occ']
+
+			function readParams() {
+				const p = {}
+				for (const k of NUMERIC) p[k] = +$(`ctl-${k}`).value
+				p.dir = $('ctl-dir').value
+				p.mode = $('ctl-mode').value
+				p.bleed = $('ctl-bleed').checked
+				return p
+			}
+			function writeParams(p) {
+				for (const k of NUMERIC) if (k in p) $(`ctl-${k}`).value = p[k]
+				if ('dir' in p) $('ctl-dir').value = p.dir
+				if ('mode' in p) $('ctl-mode').value = p.mode
+				if ('bleed' in p) $('ctl-bleed').checked = p.bleed
+			}
+
+			function render() {
+				const p = readParams()
+				$('out-name').textContent = p.name.toFixed(1) + ':1'
+				$('out-summary').textContent = p.summary.toFixed(1) + ':1'
+				$('out-icon').textContent = p.icon.toFixed(1) + ':1'
+				$('out-art').textContent = p.art.toFixed(1) + ':1'
+				$('out-keep').textContent = p.keep + '%'
+				$('out-shift').textContent = (p.shift > 0 ? '+' : '') + p.shift + '°'
+				$('out-occ').textContent = p.occ + '%'
+				for (const b of document.querySelectorAll('[data-preset]')) {
+					const pr = PRESETS[b.dataset.preset]
+					b.setAttribute('aria-pressed', String(Object.keys(pr).every((k) => Math.abs(pr[k] - p[k]) < 1e-6)))
+				}
+				$('gallery-grid').style.setProperty('--scale', $('ctl-size').value)
+
+				let rows = COLORS.map((c) => ({ c, r: evaluate(c, p) }))
+				const anyFail = (v) => v.scores.slice(0, 3).some((s, i) => s < LIMITS[i])
+				const nowFail = rows.filter(({ r }) => anyFail(r.now)).length
+				const afterFail = rows.filter(({ r }) => anyFail(r.after)).length
+				const occNow = rows.map(({ r }) => r.now.layout.occ)
+				const occAfter = rows.map(({ r }) => r.after.layout.occ)
+				const range = (xs) => `${pct(Math.min(...xs))}–${pct(Math.max(...xs))}`
+				const reached = rows.filter(({ r }) => r.after.layout.occ >= (p.occ / 100) * 0.98).length
+				const rearranged = rows.filter(({ r }) => r.after.layout.mode !== 'original').length
+				const upscaled = rows.filter(({ r }) => r.after.layout.up > 1.5).length
+				document.querySelector('[data-stat="nowFail"]').textContent = nowFail
+				document.querySelector('[data-stat="afterFail"]').textContent = afterFail
+				document.querySelector('[data-stat="occNow"]').textContent = range(occNow)
+				document.querySelector('[data-stat="occAfter"]').textContent = `${range(occAfter)}，${reached} 种达到目标 ${p.occ}%`
+				document.querySelector('[data-stat="splitCount"]').textContent = COLORS.filter((c) => c.modes.stack).length
+				$('gallery-stats').innerHTML =
+					`颜色：现在 <b>${nowFail}</b> 种至少有一项文字或图标不达标，调整后 <b>${afterFail}</b> 种。` +
+					`插画占比：现在 <b>${range(occNow)}</b>，调整后 <b>${range(occAfter)}</b>，<b>${reached}</b>/32 种达到目标；` +
+					`<b>${rearranged}</b> 种重新排列，<b>${upscaled}</b> 种需要放大 1.5 倍以上（见 R3）。`
+
+				const sort = $('ctl-sort').value
+				if (sort === 'worst') rows = [...rows].sort((a, b) => a.r.now.scores[1] - b.r.now.scores[1])
+				if (sort === 'occ') rows = [...rows].sort((a, b) => a.r.now.layout.occ - b.r.now.layout.occ)
+				const filter = $('ctl-filter').value
+				const visible = rows.filter(({ c, r }) => filter === 'all' || (filter === 'fail' && anyFail(r.now)) || (filter === 'split' && c.modes.stack))
+
+				$('gallery-grid').innerHTML = visible
+					.map(({ c, r }) => {
+						const select = c.modes.stack
+							? `<select data-plant="${c.img}" aria-label="${esc(c.name)} 插画排法">` +
+								['auto', ...MODE_ORDER]
+									.map((k) => `<option value="${k}" ${(overrides[c.img] || 'auto') === k ? 'selected' : ''}>${k === 'auto' ? '跟随全局' : MODE_LABEL[k]}</option>`)
+									.join('') +
+								'</select>'
+							: ''
+						const up = r.after.layout.up > 1.5 ? `<p class="warn-up">插画需放大 ${r.after.layout.up.toFixed(1)} 倍，线条可能发虚</p>` : ''
+						return `<article class="card" id="color-${c.img}">
+						<header><span class="swatch" style="background:${c.hex}"></span><b>${esc(c.name)}</b><code>${c.hex}</code>${select}</header>
+						<div class="pair">
+							<div><p class="pane">现在</p>${phone(c, r.now)}${scores(r.now)}
+								<p class="inks">${swatch(r.now.name, '文字和插画')}</p></div>
+							<div><p class="pane">调整后 · ${MODE_LABEL[r.after.layout.mode]}</p>${phone(c, r.after)}${scores(r.after)}
+								<p class="inks">${swatch(r.after.name, '色名')}<br>${swatch(r.after.summary, '简述')}<br>${swatch(r.after.icon, '图标')}<br>${swatch(r.after.art, '插画')}</p>${up}</div>
+						</div></article>`
+					})
+					.join('')
+
+				const cell = (rgb, s, limit) => `<td class="${s < limit ? 'fail' : ''}"><span class="chipcolor" style="background:${rgbToHex(rgb)}"></span>${rgbToHex(rgb)} · ${s.toFixed(2)}</td>`
+				$('values-table').tBodies[0].innerHTML = rows
+					.map(
+						({ c, r }) => `<tr id="value-${c.img}"><td>${esc(c.name)}</td>
+						<td><span class="chipcolor" style="background:${c.hex}"></span>${c.hex}</td>
+						<td class="${r.now.scores[1] < 4.5 ? 'fail' : ''}"><span class="chipcolor" style="background:${c.text}"></span>${c.text} · ${r.now.scores[1].toFixed(2)}</td>
+						${cell(r.after.name, r.after.scores[0], 3)}${cell(r.after.summary, r.after.scores[1], 4.5)}${cell(r.after.icon, r.after.scores[2], 3)}${cell(r.after.art, r.after.scores[3], 0)}
+						<td>${pct(r.now.layout.occ)} → ${pct(r.after.layout.occ)}</td></tr>`,
+					)
+					.join('')
+
+				// 棠梨示意图：与预览同一套计算
+				const tangli = COLORS.find((c) => c.img === 'tangli')
+				const tr = rows.find(({ c }) => c.img === 'tangli').r
+				const slot = (v, mode) => {
+					const l = v.layout
+					return `<img src="${artFile(tangli, mode)}" alt="" style="width:${((l.w / AREA_W) * 100).toFixed(1)}%;filter:brightness(0) invert(1);opacity:.85">`
+				}
+				$('tangli-before').innerHTML = slot(tr.now, 'original') + `<b>现在 · 占比 ${pct(tr.now.layout.occ)}</b>`
+				$('tangli-after').innerHTML = slot(tr.after, tr.after.layout.mode) + `<b>调整后 · ${MODE_LABEL[tr.after.layout.mode]} · ${pct(tr.after.layout.occ)}</b>`
+
+				const settings = { ...p, overrides: { ...overrides } }
+				$('settings-out').textContent = JSON.stringify(settings, null, 2)
+			}
+
+			document.getElementById('gallery-controls').addEventListener('input', render)
+			document.getElementById('gallery-controls').addEventListener('change', render)
+			for (const b of document.querySelectorAll('[data-preset]'))
+				b.addEventListener('click', () => {
+					writeParams(PRESETS[b.dataset.preset])
+					render()
+				})
+			$('gallery-grid').addEventListener('change', (e) => {
+				const sel = e.target.closest('select[data-plant]')
+				if (!sel) return
+				if (sel.value === 'auto') delete overrides[sel.dataset.plant]
+				else overrides[sel.dataset.plant] = sel.value
+				render()
+			})
+			$('ctl-reset').addEventListener('click', () => {
+				writeParams(DEFAULTS)
+				for (const k of Object.keys(overrides)) delete overrides[k]
+				render()
+			})
+			$('settings-copy').addEventListener('click', () => navigator.clipboard?.writeText($('settings-out').textContent))
+			render()
+		</script>
+
+</body>
+</html>
