@@ -22,13 +22,29 @@
 
 ## 开发环境
 
-- Xcode 15 及以上（建议 Xcode 26），Swift 5，最低支持 iOS 15
+- Xcode 16 及以上（建议使用支持发布的正式版），Swift 5，最低支持 iOS 15
 - CocoaPods
 
 ```bash
 pod install
 open PlantColor.xcworkspace
 ```
+
+## 应用图标
+
+- `assets/icon/plantcolor-icon-{light,dark}-1254.png` 是已确认的 1254 × 1254 PNG 母图，原样保留，不放大、不裁切、不重新生成画面。
+- `AppIcon.appiconset` 使用 1024 × 1024 的 Any / Dark 主图。Xcode 从主图生成 iPhone、iPad、主屏幕、搜索、设置与通知等所需资源；App Store 使用 Any 主图。系统负责圆角遮罩。
+- 支持图标外观的新系统按主屏幕外观选择深浅色；较旧系统使用 Any 图标。主屏幕图标外观与 App 内设置的主题是两套系统机制。
+- 应用内 `appIcon` 图片资源保留母图的完整 1254px 分辨率，并配置 Dark 外观。Widget 使用宿主 App 的图标。
+
+重新生成资源（需要 Pillow）：
+
+```bash
+python3 -m pip install Pillow
+python3 scripts/generate_icons.py
+```
+
+脚本只从原始母图进行一次 Lanczos 缩小，以无损 PNG 保存。上传 App Store 前，在主 App 和 Widget target 中统一提高 Version / Build；主 App 的 Info.plist 已绑定工程的版本设置。更新已上架应用仍需 Archive、上传新构建，并在现有 App Store Connect 记录中提交新版本审核。
 
 ## 数据文件
 

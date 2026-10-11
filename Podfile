@@ -106,7 +106,12 @@ end
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
-      config.build_settings.delete 'IPHONEOS_DEPLOYMENT_TARGET'
+      # Match the app's iOS 15 minimum; deleting this falls back to older
+      # deployment targets that recent Xcode SDKs no longer support.
+      deployment_target = config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] || '0'
+      if Gem::Version.new(deployment_target) < Gem::Version.new('15.0')
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.0'
+      end
       # 注意：不强制设置 ARCHS，让 Xcode 自动处理，避免与 Realm xcframework 冲突
 
       # 解决重复库警告
