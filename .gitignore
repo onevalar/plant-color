@@ -47,3 +47,6 @@ node_modules/
 # 工程文件的手工备份
 *.pbxproj.bak
 *.pbxproj.orig
+
+# Python
+__pycache__/
