@@ -11,6 +11,9 @@ import UIKit
 /// Uses the system material, or an opaque system surface when transparency is reduced.
 class GlassEffectView: UIView {
 
+    /// Botanical surface also used when Reduce Transparency is enabled.
+    var botanicalSurface: UIColor? { didSet { updateAccessibilityAppearance() } }
+
     override var cornerRadius: CGFloat {
         get { layer.cornerRadius }
         set {
@@ -66,7 +69,7 @@ class GlassEffectView: UIView {
     func updateAccessibilityAppearance(reduceTransparency: Bool = UIAccessibility.isReduceTransparencyEnabled) {
         effectView.isHidden = reduceTransparency
         isOpaque = reduceTransparency
-        backgroundColor = reduceTransparency ? .secondarySystemBackground : .clear
+        backgroundColor = botanicalSurface ?? (reduceTransparency ? .secondarySystemBackground : .clear)
     }
 
     deinit { NotificationCenter.default.removeObserver(self) }

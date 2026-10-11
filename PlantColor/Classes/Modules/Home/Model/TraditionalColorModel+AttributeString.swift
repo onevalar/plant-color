@@ -72,7 +72,7 @@ extension TraditionalColorModel {
     }
 
     private var listColorSmallStyle: BonMot.StringStyle {
-        StringStyle(.color(textUIColor.withAlphaComponent(0.5)),
+        StringStyle(.color(textUIColor),
                     .font(.systemFont(ofSize: 10)))
     }
 
@@ -82,7 +82,7 @@ extension TraditionalColorModel {
     }
 
     private var homeColorSmallStyle: BonMot.StringStyle {
-        StringStyle(.color(textUIColor.withAlphaComponent(0.5)),
+        StringStyle(.color(textUIColor),
                     .font(.systemFont(ofSize: 15)))
     }
 }

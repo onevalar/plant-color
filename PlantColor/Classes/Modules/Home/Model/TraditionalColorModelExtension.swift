@@ -21,7 +21,7 @@ extension TraditionalColorModel {
     }
 
     var textUIColor: UIColor {
-        UIColor(textColor)
+        palette.summary.uiColor
     }
 
     var color: UIColor {

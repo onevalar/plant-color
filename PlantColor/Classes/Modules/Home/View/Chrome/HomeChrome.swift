@@ -18,12 +18,12 @@ enum HomeColorMode: Int {
 final class GlassCircleButton: UIView {
 
     let button: GlassIconButton
+    private let glass = GlassEffectView()
 
     init(symbol: String, selectedSymbol: String? = nil, label: String, diameter: CGFloat = 48) {
         button = GlassIconButton(symbol: symbol, selectedSymbol: selectedSymbol, accessibilityLabel: label)
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
-        let glass = GlassEffectView()
         glass.cornerRadius = diameter / 2
         glass.translatesAutoresizingMaskIntoConstraints = false
         addSubview(glass)
@@ -36,6 +36,14 @@ final class GlassCircleButton: UIView {
             button.topAnchor.constraint(equalTo: topAnchor), button.bottomAnchor.constraint(equalTo: bottomAnchor),
             button.leadingAnchor.constraint(equalTo: leadingAnchor), button.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
+    }
+
+    func apply(_ palette: BotanicalPalette) {
+        overrideUserInterfaceStyle = palette.interfaceStyle
+        glass.botanicalSurface = palette.glass.uiColor
+        button.iconColor = palette.icon.uiColor
+        // Filled heart communicates selection without unchecked red on colored glass.
+        button.selectedIconColor = palette.icon.uiColor
     }
 
     @available(*, unavailable)
@@ -98,10 +106,10 @@ final class HomeTopBar: UIView {
     }
 
     /// ink：当前色块上文字的颜色
-    func apply(ink: UIColor, style: UIUserInterfaceStyle) {
-        settings.button.iconColor = ink
-        search.button.iconColor = ink
-        overrideUserInterfaceStyle = style
+    func apply(_ palette: BotanicalPalette) {
+        settings.apply(palette)
+        search.apply(palette)
+        overrideUserInterfaceStyle = palette.interfaceStyle
     }
 
     @objc private func modeChanged() {
@@ -185,20 +193,23 @@ final class HomeActionBar: UIView {
 
     /// 图标和文字颜色跟随当前色块
     private func refresh() {
-        let ink = item?.textUIColor ?? .label
-        favorite.button.iconColor = ink
-        favorite.button.selectedIconColor = .systemRed
-        share.button.iconColor = ink
+        if let palette = item?.palette { apply(palette) }
         let collected = item?.isCollect ?? false
         favorite.button.isSelected = collected
         favorite.button.accessibilityLabel = NSLocalizedString(collected ? "color_remove_favorite" : "color_add_favorite", comment: "")
 
         nameLabel.text = item?.displayName
-        nameLabel.textColor = ink
         summaryLabel.text = item?.homeSummary
-        summaryLabel.textColor = ink.withAlphaComponent(0.75)
         infoButton.accessibilityLabel = [item?.displayName, item?.homeSummary].compactMap { $0 }.joined(separator: "，")
 
+    }
+
+    func apply(_ palette: BotanicalPalette) {
+        favorite.apply(palette)
+        share.apply(palette)
+        nameLabel.textColor = palette.name.uiColor
+        summaryLabel.textColor = palette.summary.uiColor
+        overrideUserInterfaceStyle = palette.interfaceStyle
     }
 
     private func observeFavorite() {

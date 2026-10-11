@@ -38,6 +38,10 @@ class ColorDetailPageViewController: ViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        item.palette.usesDarkInk ? .darkContent : .lightContent
+    }
+
     override func makeUI() {
         super.makeUI()
         navigationItem.title = nil
@@ -106,7 +110,7 @@ class ColorDetailPageViewController: ViewController {
         sub.textAlignment = .center
         sub.font = .preferredFont(forTextStyle: .subheadline)
         sub.adjustsFontForContentSizeCategory = true
-        sub.textColor = item.textUIColor.withAlphaComponent(0.72)
+        sub.textColor = item.textUIColor
 
         let stack = UIStackView()
         stack.axis = .vertical
@@ -116,7 +120,8 @@ class ColorDetailPageViewController: ViewController {
         card.addSubview(stack)
 
         if hasArt {
-            let art = UIImageView(image: UIImage(named: item.imageName))
+            let art = UIImageView(image: UIImage(named: item.imageName)?.withRenderingMode(.alwaysTemplate))
+            art.tintColor = item.palette.artwork.uiColor
             art.contentMode = .scaleAspectFit
             art.isAccessibilityElement = false
             art.heightAnchor.constraint(equalToConstant: 210).isActive = true
@@ -167,7 +172,7 @@ struct ColorDetailBlockView {
 
     private func card(containing content: UIView) -> UIView {
         let card = UIView()
-        card.backgroundColor = ink.withAlphaComponent(0.055)
+        card.backgroundColor = .clear
         card.layer.cornerRadius = DS.cardRadius
         card.layer.cornerCurve = .continuous
         content.translatesAutoresizingMaskIntoConstraints = false
@@ -189,7 +194,7 @@ struct ColorDetailBlockView {
         style.lineSpacing = poetry ? 8 : 5
         label.attributedText = NSAttributedString(string: text, attributes: [
             .font: UIFontMetrics(forTextStyle: .callout).scaledFont(for: .wenKai(size: 17)),
-            .foregroundColor: ink.withAlphaComponent(poetry ? 0.8 : 1),
+            .foregroundColor: ink,
             .paragraphStyle: style,
         ])
         return label
@@ -204,7 +209,7 @@ struct ColorDetailBlockView {
             title.text = row.title
             title.font = .wenKai(size: 14)
             title.adjustsFontForContentSizeCategory = true
-            title.textColor = ink.withAlphaComponent(0.7)
+            title.textColor = ink
             let value = UILabel()
             value.text = row.value
             value.numberOfLines = 0

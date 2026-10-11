@@ -433,7 +433,7 @@ final class ColorTileCell: UICollectionViewCell {
         nameLabel.text = item.displayName
         nameLabel.textColor = item.textUIColor
         hexLabel.text = item.colorHEX
-        hexLabel.textColor = item.textUIColor.withAlphaComponent(0.75)
+        hexLabel.textColor = item.textUIColor
         artView.image = item.imageName.isEmpty ? nil : UIImage(named: "\(item.imageName)_mini")
         accessibilityLabel = item.displayName + ", " + item.colorHEX
         accessibilityValue = item.isCollect ? NSLocalizedString("setting_my_collection", comment: "") : nil

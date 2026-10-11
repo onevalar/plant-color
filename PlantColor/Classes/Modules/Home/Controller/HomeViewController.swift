@@ -65,10 +65,21 @@ class HomeViewController: CollectionViewController {
     private func refreshCurrentItem() {
         guard let item = currentItem else { return }
         actionBar.item = item
-        // 玻璃的明暗跟着色块走：浅色块上用浅色玻璃，深色块上用深色玻璃
-        let isLightColor = (RGBColor(hex: item.colorHEX)?.lab.l ?? 60) > 60
-        topBar.apply(ink: item.textUIColor, style: isLightColor ? .light : .dark)
-        actionBar.overrideUserInterfaceStyle = isLightColor ? .light : .dark
+        applyPalette(item.palette)
+    }
+
+    private var usesDarkInk = true
+    override var preferredStatusBarStyle: UIStatusBarStyle { usesDarkInk ? .darkContent : .lightContent }
+
+    private func applyPalette(_ palette: BotanicalPalette) {
+        topBar.apply(palette)
+        actionBar.apply(palette)
+        if usesDarkInk != palette.usesDarkInk {
+            usesDarkInk = palette.usesDarkInk
+            setNeedsStatusBarAppearanceUpdate()
+            navigationController?.setNeedsStatusBarAppearanceUpdate()
+        }
+        for case let cell as HomeColorCell in collectionView.visibleCells { cell.apply(palette) }
     }
 
     private func showInfo() {
@@ -318,7 +329,9 @@ class HomeViewController: CollectionViewController {
         let lower = Int(floor(position))
         let upper = min(lower + 1, displayItems.count - 1)
         let fraction = position - CGFloat(lower)
-        backgroundColorView.backgroundColor = Self.blend(displayItems[lower].color, displayItems[upper].color, fraction)
+        let from = displayItems[lower].palette.background, to = displayItems[upper].palette.background
+        let background = from.mixed(with: to, fraction: Double(fraction))
+        backgroundColorView.backgroundColor = background.uiColor
 
         for cell in collectionView.visibleCells {
             guard let colorCell = cell as? HomeColorCell else { continue }
@@ -331,13 +344,8 @@ class HomeViewController: CollectionViewController {
             lastStyleRow = row
             refreshCurrentItem()
         }
-    }
-
-    private static func blend(_ from: UIColor, _ to: UIColor, _ t: CGFloat) -> UIColor {
-        var a: (CGFloat, CGFloat, CGFloat, CGFloat) = (0, 0, 0, 0), b = a
-        from.getRed(&a.0, green: &a.1, blue: &a.2, alpha: &a.3)
-        to.getRed(&b.0, green: &b.1, blue: &b.2, alpha: &b.3)
-        return UIColor(red: a.0 + (b.0 - a.0) * t, green: a.1 + (b.1 - a.1) * t, blue: a.2 + (b.2 - a.2) * t, alpha: 1)
+        // Solve against the actual transition color instead of blending inks through low contrast.
+        applyPalette(.cached(background: background))
     }
 
     private func rememberBrowsingPosition() {

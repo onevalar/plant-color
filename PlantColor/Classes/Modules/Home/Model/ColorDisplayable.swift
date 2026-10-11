@@ -142,3 +142,33 @@ extension ColorDisplayable {
         return String(displayAbstract.string.split(whereSeparator: { "。！？\n".contains($0) }).first ?? "")
     }
 }
+
+extension RGBColor {
+    var uiColor: UIColor { UIColor(red: CGFloat(r)/255, green: CGFloat(g)/255, blue: CGFloat(b)/255, alpha: 1) }
+}
+
+/// Bounded, thread-safe cache: scrolling can visit many intermediate background colors.
+private final class PaletteBox: NSObject {
+    let value: BotanicalPalette
+    init(_ value: BotanicalPalette) { self.value = value }
+}
+private let botanicalPaletteCache: NSCache<NSString, PaletteBox> = {
+    let cache = NSCache<NSString, PaletteBox>()
+    cache.countLimit = 512
+    return cache
+}()
+extension BotanicalPalette {
+    static func cached(background: RGBColor) -> BotanicalPalette {
+        let key = background.hexString as NSString
+        if let box = botanicalPaletteCache.object(forKey: key) { return box.value }
+        let value = make(background: background)
+        botanicalPaletteCache.setObject(PaletteBox(value), forKey: key)
+        return value
+    }
+    var interfaceStyle: UIUserInterfaceStyle { usesDarkInk ? .light : .dark }
+}
+extension ColorDisplayable {
+    var palette: BotanicalPalette {
+        .cached(background: RGBColor(hex: colorHEX) ?? RGBColor(r: 255, g: 255, b: 255))
+    }
+}

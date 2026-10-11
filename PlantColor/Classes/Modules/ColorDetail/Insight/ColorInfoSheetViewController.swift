@@ -56,7 +56,7 @@ final class ColorInfoSheetViewController: UIViewController, UISheetPresentationC
         let title = UILabel()
         title.text = item.displayName
         title.font = .wenKai(size: 32)
-        title.textColor = ink
+        title.textColor = item.palette.name.uiColor
         title.accessibilityTraits = .header
         let header = UIStackView(arrangedSubviews: [swatch, title, UIView()])
         header.spacing = 12
@@ -66,7 +66,7 @@ final class ColorInfoSheetViewController: UIViewController, UISheetPresentationC
         paragraph.lineSpacing = 5
         abstract.attributedText = NSAttributedString(string: item.displayAbstract.string, attributes: [
             .font: UIFontMetrics(forTextStyle: .body).scaledFont(for: .wenKai(size: 16)),
-            .foregroundColor: ink.withAlphaComponent(0.82),
+            .foregroundColor: ink,
             .paragraphStyle: paragraph,
         ])
         abstract.adjustsFontForContentSizeCategory = true
@@ -132,7 +132,7 @@ final class ColorInfoSheetViewController: UIViewController, UISheetPresentationC
         config.imagePlacement = .trailing
         config.imagePadding = 8
         config.baseForegroundColor = item.textUIColor
-        config.background.backgroundColor = item.textUIColor.withAlphaComponent(0.08)
+        config.background.backgroundColor = item.palette.glass.uiColor
         config.background.cornerRadius = 24
         config.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 18, bottom: 12, trailing: 18)
         config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { attributes in

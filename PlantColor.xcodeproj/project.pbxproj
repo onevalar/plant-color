@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A1211F000000000000000007 /* ColorMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1902EBB92E95578B90B28805; };
 		A1211F000000000000000003 /* PlantColorWenKai-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A1211F000000000000000004; };
 		A1211F000000000000000005 /* PlantColorWenKai-OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = A1211F000000000000000006; };
 		0312A7B4892E42259E9970F0 /* PlantModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B81E3EE427B2406A00424ABC /* PlantModel.swift */; };
@@ -1769,6 +1770,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A1211F000000000000000007 /* ColorMath.swift in Sources */,
 				B8B69299282A150F009BA908 /* ColorProvider.swift in Sources */,
 				B8B6929A282A151B009BA908 /* ColorModel.swift in Sources */,
 				B81E3EEE27B2406B00424ABC /* PlantMainWidget.swift in Sources */,
@@ -1990,7 +1992,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = PlantWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = H4982D35ZR;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "i386 x86_64";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2023,7 +2025,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = PlantWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = H4982D35ZR;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "i386 x86_64";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2172,7 +2174,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = "";
 				CODE_SIGN_ENTITLEMENTS = PlantColor/PlantColor.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = H4982D35ZR;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "i386 x86_64";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -2210,7 +2212,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = "";
 				CODE_SIGN_ENTITLEMENTS = PlantColor/PlantColor.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = H4982D35ZR;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "i386 x86_64";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";

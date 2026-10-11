@@ -75,7 +75,7 @@ final class PlantShareCardView: UIView {
         pronunciation = ((item as? TraditionalColorModel)?.pinyin
             ?? item.displayName.applyingTransform(.toLatin, reverse: false)
             ?? item.displayName).uppercased()
-        artwork = item.imageName.isEmpty ? nil : UIImage(named: item.imageName)
+        artwork = item.imageName.isEmpty ? nil : UIImage(named: item.imageName)?.withTintColor(item.palette.artwork.uiColor, renderingMode: .alwaysOriginal)
         color = item.color
         ink = item.textUIColor
         super.init(frame: .zero)
@@ -133,7 +133,7 @@ final class PlantShareCardView: UIView {
             drawText(name, rect: CGRect(x: margin, y: margin * 1.2, width: textWidth, height: 58 * s),
                      font: .wenKai(size: 40 * s), color: ink)
             drawText(pronunciation, rect: CGRect(x: margin + 2 * s, y: margin * 1.2 + 68 * s, width: textWidth, height: 20 * s),
-                     font: .systemFont(ofSize: 10 * s, weight: .medium), color: ink.withAlphaComponent(0.78), tracking: 1)
+                     font: .systemFont(ofSize: 10 * s, weight: .medium), color: ink, tracking: 1)
 
             let footer = h - margin - 20 * s              // 底部信息行的顶部
             let titleBottom = margin * 1.2 + 96 * s       // 标题块的底部
@@ -168,7 +168,7 @@ final class PlantShareCardView: UIView {
         if style != .pureColor {
             drawText(NSLocalizedString("app_name", comment: ""),
                      rect: CGRect(x: w - margin - w * 0.4, y: footerY, width: w * 0.4, height: 20 * s),
-                     font: .systemFont(ofSize: 11 * s), color: ink.withAlphaComponent(0.78), alignment: .right)
+                     font: .systemFont(ofSize: 11 * s), color: ink, alignment: .right)
         }
     }
 

@@ -19,8 +19,12 @@ struct PlantWidgetView: SwiftUI.View {
     var previewMode: PreviewMode? = nil
     var imageBundle: Bundle = .main
 
+    private var palette: BotanicalPalette {
+        .make(background: RGBColor(hex: plant.colorHEX) ?? RGBColor(r: 255, g: 255, b: 255))
+    }
+
     private var textColor: Color {
-        previewMode == .tinted ? Color(UIColor.settingsPreviewAccent) : Color(hex: plant.textColor)
+        previewMode == .tinted ? Color(UIColor.settingsPreviewAccent) : Color(hex: palette.summary.hexString)
     }
 
     @ViewBuilder var body: some SwiftUI.View {
@@ -120,9 +124,10 @@ struct PlantWidgetView: SwiftUI.View {
     /// 配图：设置里打开"显示图案"，且这个颜色有图时才显示；等比缩放、居中、完整显示
     private var figure: some SwiftUI.View {
         Image(plant.imageName, bundle: imageBundle)
-            .renderingMode(previewMode == .tinted ? .template : .original)
+            .renderingMode(.template)
             .resizable()
             .scaledToFit()
+            .foregroundColor(previewMode == .tinted ? textColor : Color(hex: palette.artwork.hexString))
     }
 
     /// 小尺寸只放一行：自定义文字，或 HEX
@@ -135,7 +140,6 @@ struct PlantWidgetView: SwiftUI.View {
         } else if plant.showTone {
             Text(plant.colorHEX)
                 .font(.system(size: fontSize, weight: .medium))
-                .opacity(0.8)
         }
     }
 
@@ -160,7 +164,6 @@ struct PlantWidgetView: SwiftUI.View {
         HStack(spacing: 6) {
             Text(title)
                 .font(.system(size: fontSize, weight: .medium))
-                .opacity(0.6)
                 .frame(width: fontSize * 3.4, alignment: .leading)
             Text(value)
                 .font(.system(size: fontSize))

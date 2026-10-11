@@ -1,0 +1,450 @@
+{
+  "zhizi": [
+    {
+      "name": "zhizi_harmony_original",
+      "width": 1464,
+      "height": 1103,
+      "footprint": 0.5244933554817276
+    },
+    {
+      "name": "zhizi_harmony_stack",
+      "width": 1002,
+      "height": 1380,
+      "footprint": 0.5971379310344828
+    },
+    {
+      "name": "zhizi_harmony_mainplus",
+      "width": 1002,
+      "height": 1118,
+      "footprint": 0.5720600558659218
+    }
+  ],
+  "qindan": [
+    {
+      "name": "qindan_harmony_original",
+      "width": 1834,
+      "height": 1125,
+      "footprint": 0.6178877551020409
+    }
+  ],
+  "shunsheng": [
+    {
+      "name": "shunsheng_harmony_original",
+      "width": 2142,
+      "height": 1194,
+      "footprint": 0.6045403587443946
+    }
+  ],
+  "oubi": [
+    {
+      "name": "oubi_harmony_original",
+      "width": 1419,
+      "height": 1210,
+      "footprint": 0.6407697947214076
+    }
+  ],
+  "weihong": [
+    {
+      "name": "weihong_harmony_original",
+      "width": 1419,
+      "height": 1210,
+      "footprint": 0.6407697947214076
+    }
+  ],
+  "danji": [
+    {
+      "name": "danji_harmony_original",
+      "width": 1596,
+      "height": 1295,
+      "footprint": 0.5703307692307692
+    }
+  ],
+  "juyi": [
+    {
+      "name": "juyi_harmony_original",
+      "width": 2142,
+      "height": 1194,
+      "footprint": 0.6045403587443946
+    }
+  ],
+  "songlan": [
+    {
+      "name": "songlan_harmony_original",
+      "width": 1821,
+      "height": 1330,
+      "footprint": 0.45535102739726024
+    },
+    {
+      "name": "songlan_harmony_stack",
+      "width": 815,
+      "height": 2128,
+      "footprint": 0.6572385620915033
+    },
+    {
+      "name": "songlan_harmony_mainplus",
+      "width": 815,
+      "height": 1718,
+      "footprint": 0.6063815789473684
+    }
+  ],
+  "yujinqun": [
+    {
+      "name": "yujinqun_harmony_original",
+      "width": 1283,
+      "height": 1535,
+      "footprint": 0.5062724550898203
+    }
+  ],
+  "xiangye": [
+    {
+      "name": "xiangye_harmony_original",
+      "width": 644,
+      "height": 391,
+      "footprint": 0.6470884773662552
+    },
+    {
+      "name": "xiangye_harmony_stack",
+      "width": 529,
+      "height": 575,
+      "footprint": 0.510883152173913
+    },
+    {
+      "name": "xiangye_harmony_mainplus",
+      "width": 529,
+      "height": 452,
+      "footprint": 0.5518932748538011
+    }
+  ],
+  "yaohuang": [
+    {
+      "name": "yaohuang_harmony_original",
+      "width": 1419,
+      "height": 1210,
+      "footprint": 0.6407697947214076
+    }
+  ],
+  "tinghong": [
+    {
+      "name": "tinghong_harmony_original",
+      "width": 1419,
+      "height": 1210,
+      "footprint": 0.6407697947214076
+    }
+  ],
+  "yinhong": [
+    {
+      "name": "yinhong_harmony_original",
+      "width": 1419,
+      "height": 1210,
+      "footprint": 0.6407697947214076
+    }
+  ],
+  "weizi": [
+    {
+      "name": "weizi_harmony_original",
+      "width": 1419,
+      "height": 1210,
+      "footprint": 0.6407697947214076
+    }
+  ],
+  "songhua": [
+    {
+      "name": "songhua_harmony_original",
+      "width": 909,
+      "height": 614,
+      "footprint": 0.6383425925925926
+    }
+  ],
+  "yunhuang": [
+    {
+      "name": "yunhuang_harmony_original",
+      "width": 758,
+      "height": 340,
+      "footprint": 0.654036312849162
+    },
+    {
+      "name": "yunhuang_harmony_stack",
+      "width": 426,
+      "height": 584,
+      "footprint": 0.6087756849315068
+    },
+    {
+      "name": "yunhuang_harmony_mainplus",
+      "width": 426,
+      "height": 384,
+      "footprint": 0.6397783933518005
+    }
+  ],
+  "quchen": [
+    {
+      "name": "quchen_harmony_original",
+      "width": 772,
+      "height": 625,
+      "footprint": 0.40033950617283953
+    },
+    {
+      "name": "quchen_harmony_stack",
+      "width": 467,
+      "height": 742,
+      "footprint": 0.5256349206349207
+    },
+    {
+      "name": "quchen_harmony_mainplus",
+      "width": 293,
+      "height": 682,
+      "footprint": 0.7064970930232558
+    }
+  ],
+  "zhehuang": [
+    {
+      "name": "zhehuang_harmony_original",
+      "width": 770,
+      "height": 377,
+      "footprint": 0.576670918367347
+    }
+  ],
+  "yingying": [
+    {
+      "name": "yingying_harmony_original",
+      "width": 2051,
+      "height": 916,
+      "footprint": 0.48331005586592174
+    },
+    {
+      "name": "yingying_harmony_stack",
+      "width": 1221,
+      "height": 1211,
+      "footprint": 0.5031549118387909
+    },
+    {
+      "name": "yingying_harmony_mainplus",
+      "width": 1221,
+      "height": 1042,
+      "footprint": 0.4955351906158358
+    }
+  ],
+  "lvshen": [
+    {
+      "name": "lvshen_harmony_original",
+      "width": 911,
+      "height": 625,
+      "footprint": 0.5691240875912409
+    },
+    {
+      "name": "lvshen_harmony_stack",
+      "width": 906,
+      "height": 555,
+      "footprint": 0.6381428571428571
+    },
+    {
+      "name": "lvshen_harmony_mainplus",
+      "width": 906,
+      "height": 545,
+      "footprint": 0.5728838174273859
+    }
+  ],
+  "mujin": [
+    {
+      "name": "mujin_harmony_original",
+      "width": 807,
+      "height": 429,
+      "footprint": 0.7034624413145539
+    }
+  ],
+  "yinghua": [
+    {
+      "name": "yinghua_harmony_original",
+      "width": 948,
+      "height": 718,
+      "footprint": 0.5045709570957095
+    },
+    {
+      "name": "yinghua_harmony_stack",
+      "width": 584,
+      "height": 946,
+      "footprint": 0.60668016194332
+    },
+    {
+      "name": "yinghua_harmony_mainplus",
+      "width": 584,
+      "height": 994,
+      "footprint": 0.5036170212765958
+    }
+  ],
+  "juanwan": [
+    {
+      "name": "juanwan_harmony_original",
+      "width": 755,
+      "height": 625,
+      "footprint": 0.3756646525679758
+    },
+    {
+      "name": "juanwan_harmony_stack",
+      "width": 406,
+      "height": 681,
+      "footprint": 0.6018067226890756
+    },
+    {
+      "name": "juanwan_harmony_mainplus",
+      "width": 406,
+      "height": 625,
+      "footprint": 0.5636826923076923
+    }
+  ],
+  "ziwan": [
+    {
+      "name": "ziwan_harmony_original",
+      "width": 593,
+      "height": 443,
+      "footprint": 0.7309531772575251
+    }
+  ],
+  "zaohe": [
+    {
+      "name": "zaohe_harmony_original",
+      "width": 656,
+      "height": 549,
+      "footprint": 0.5922761194029851
+    }
+  ],
+  "zidi": [
+    {
+      "name": "zidi_harmony_original",
+      "width": 707,
+      "height": 432,
+      "footprint": 0.4586168032786885
+    },
+    {
+      "name": "zidi_harmony_stack",
+      "width": 302,
+      "height": 584,
+      "footprint": 0.7234903381642512
+    },
+    {
+      "name": "zidi_harmony_mainplus",
+      "width": 302,
+      "height": 522,
+      "footprint": 0.6853138528138528
+    }
+  ],
+  "lianhong": [
+    {
+      "name": "lianhong_harmony_original",
+      "width": 707,
+      "height": 432,
+      "footprint": 0.4586168032786885
+    },
+    {
+      "name": "lianhong_harmony_stack",
+      "width": 302,
+      "height": 584,
+      "footprint": 0.7234903381642512
+    },
+    {
+      "name": "lianhong_harmony_mainplus",
+      "width": 302,
+      "height": 522,
+      "footprint": 0.6853138528138528
+    }
+  ],
+  "xingzi": [
+    {
+      "name": "xingzi_harmony_original",
+      "width": 836,
+      "height": 268,
+      "footprint": 0.5423046875
+    },
+    {
+      "name": "xingzi_harmony_stack",
+      "width": 457,
+      "height": 364,
+      "footprint": 0.5752037617554859
+    },
+    {
+      "name": "xingzi_harmony_mainplus",
+      "width": 457,
+      "height": 305,
+      "footprint": 0.5283895131086144
+    }
+  ],
+  "tangli": [
+    {
+      "name": "tangli_harmony_original",
+      "width": 786,
+      "height": 356,
+      "footprint": 0.5016574585635359
+    },
+    {
+      "name": "tangli_harmony_stack",
+      "width": 399,
+      "height": 491,
+      "footprint": 0.6053
+    },
+    {
+      "name": "tangli_harmony_mainplus",
+      "width": 399,
+      "height": 431,
+      "footprint": 0.55225
+    }
+  ],
+  "zimei": [
+    {
+      "name": "zimei_harmony_original",
+      "width": 730,
+      "height": 363,
+      "footprint": 0.48989949748743716
+    },
+    {
+      "name": "zimei_harmony_stack",
+      "width": 464,
+      "height": 529,
+      "footprint": 0.4653133903133903
+    },
+    {
+      "name": "zimei_harmony_mainplus",
+      "width": 464,
+      "height": 459,
+      "footprint": 0.4504356060606061
+    }
+  ],
+  "dingxiang": [
+    {
+      "name": "dingxiang_harmony_original",
+      "width": 736,
+      "height": 355,
+      "footprint": 0.6129274611398965
+    },
+    {
+      "name": "dingxiang_harmony_stack",
+      "width": 460,
+      "height": 514,
+      "footprint": 0.6024301675977652
+    },
+    {
+      "name": "dingxiang_harmony_mainplus",
+      "width": 460,
+      "height": 366,
+      "footprint": 0.720935534591195
+    }
+  ],
+  "canglang": [
+    {
+      "name": "canglang_harmony_original",
+      "width": 730,
+      "height": 451,
+      "footprint": 0.5143927125506073
+    },
+    {
+      "name": "canglang_harmony_stack",
+      "width": 347,
+      "height": 699,
+      "footprint": 0.6680276381909548
+    },
+    {
+      "name": "canglang_harmony_mainplus",
+      "width": 347,
+      "height": 548,
+      "footprint": 0.6775098814229249
+    }
+  ]
+}

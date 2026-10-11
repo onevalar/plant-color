@@ -10,10 +10,12 @@ import UIKit
 final class ColorValueView: UIView {
 
     private let ink: UIColor
+    private let surface: UIColor
     private let rows: [(title: String, value: String)]
 
     init(item: any ColorDisplayable) {
         ink = item.textUIColor
+        surface = item.palette.glass.uiColor
         let cmyk = item.colorCMYK.replacingOccurrences(of: ",", with: ", ")
         rows = [("HEX", item.colorHEX),
                 ("RGB", item.colorRGB.replacingOccurrences(of: " ", with: "")
@@ -52,7 +54,7 @@ final class ColorValueView: UIView {
                 stack.addArrangedSubview(line)
             }
         }
-        backgroundColor = ink.withAlphaComponent(0.06)
+        backgroundColor = surface
         layer.cornerRadius = 12
         clipsToBounds = true
     }
@@ -70,7 +72,7 @@ private final class ValueRow: UIControl {
         let titleLabel = UILabel()
         titleLabel.text = title
         titleLabel.font = .systemFont(ofSize: 13, weight: .medium)
-        titleLabel.textColor = ink.withAlphaComponent(0.7)
+        titleLabel.textColor = ink
         titleLabel.setContentHuggingPriority(.required, for: .horizontal)
         titleLabel.widthAnchor.constraint(equalToConstant: 48).isActive = true
 
@@ -80,7 +82,7 @@ private final class ValueRow: UIControl {
         valueLabel.textColor = ink
 
         let icon = UIImageView(image: UIImage(systemName: "doc.on.doc"))
-        icon.tintColor = ink.withAlphaComponent(0.5)
+        icon.tintColor = ink
         icon.contentMode = .scaleAspectFit
         icon.setContentHuggingPriority(.required, for: .horizontal)
         icon.widthAnchor.constraint(equalToConstant: 18).isActive = true
