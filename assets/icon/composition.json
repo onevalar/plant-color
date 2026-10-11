@@ -1,0 +1,12 @@
+{
+  "tool": "built-in image_gen edit",
+  "source_revision": "620bf23",
+  "master_dimensions": [
+    1254,
+    1254
+  ],
+  "prompts": {
+    "light": "Edit target: the attached approved Plant Color app icon LIGHT appearance. Precise composition adjustment only: uniformly scale the entire existing ginkgo leaf including its stem and contact shadow down to 86% of its current linear size about the canvas center. Its new bounding box should occupy approximately 74% of the square canvas width, with calm generous balanced empty space on all four sides. Keep EXACTLY the same leaf silhouette, diagonal orientation, curled edges, translucent glass-like leaf material, detailed veins, yellow/gold/green/coral colors and delicate illumination. Do not redesign or simplify or add anything. Seamlessly extend the same warm ivory background gradient to fill the entire canvas. Deliver a SINGLE square high-resolution production icon image, full-bleed opaque background to all corners. No rounded-square mask, no outer frame, no text, no comparison layout. Preserve sharp fine texture. The only intended visual change is a slightly smaller leaf with more breathing room.",
+    "dark": "Edit target: the attached approved Plant Color app icon DARK appearance. Precise composition adjustment only: uniformly scale the entire existing ginkgo leaf including its stem and contact shadow down to 84% of its current linear size about the canvas center. Its new bounding box should occupy approximately 74% of the square canvas width, with calm generous balanced empty space on all four sides. Keep EXACTLY the same leaf silhouette, diagonal orientation, curled edges, translucent glass-like leaf material, detailed veins, yellow/gold/green/coral colors and delicate illumination. Do not redesign or simplify or add anything. Seamlessly extend the same dark forest-green background gradient to fill the entire canvas. Deliver a SINGLE square high-resolution production icon image, full-bleed opaque background to all corners. No rounded-square mask, no outer frame, no text, no comparison layout. Preserve sharp fine texture. The only intended visual change is a slightly smaller leaf with more breathing room."
+  }
+}
