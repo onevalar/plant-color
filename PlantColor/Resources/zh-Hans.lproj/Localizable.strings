@@ -271,3 +271,5 @@
 "library_show_list" = "切换为列表";
 "library_show_grid" = "切换为网格";
 "library_no_results" = "没有找到相关颜色";
+
+"home_collapse_detail" = "收起详情";

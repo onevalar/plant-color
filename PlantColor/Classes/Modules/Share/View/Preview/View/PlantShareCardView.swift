@@ -131,7 +131,7 @@ final class PlantShareCardView: UIView {
         if style != .pureColor {
             let textWidth = style == .introduction ? (landscape ? w * 0.5 : w * 0.6) : w - margin * 2
             drawText(name, rect: CGRect(x: margin, y: margin * 1.2, width: textWidth, height: 58 * s),
-                     font: .fzktjwgb10(size: 40 * s), color: ink)
+                     font: .wenKai(size: 40 * s), color: ink)
             drawText(pronunciation, rect: CGRect(x: margin + 2 * s, y: margin * 1.2 + 68 * s, width: textWidth, height: 20 * s),
                      font: .systemFont(ofSize: 10 * s, weight: .medium), color: ink.withAlphaComponent(0.78), tracking: 1)
 

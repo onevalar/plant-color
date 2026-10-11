@@ -271,3 +271,5 @@
 "library_show_list" = "リスト表示";
 "library_show_grid" = "グリッド表示";
 "library_no_results" = "該当する色がありません";
+
+"home_collapse_detail" = "詳細を折りたたむ";

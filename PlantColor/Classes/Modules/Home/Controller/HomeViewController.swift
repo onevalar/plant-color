@@ -72,10 +72,8 @@ class HomeViewController: CollectionViewController {
     }
 
     private func showInfo() {
-        guard let item = currentItem else { return }
-        let sheet = ColorInfoSheetViewController(item: item) { [weak self] in
-            self?.navigationController?.pushViewController(item.makeDetailViewController(), animated: true)
-        }
+        guard presentedViewController == nil, let item = currentItem else { return }
+        let sheet = ColorInfoSheetViewController(item: item)
         present(sheet, animated: !UIAccessibility.isReduceMotionEnabled)
     }
 
@@ -193,14 +191,15 @@ class HomeViewController: CollectionViewController {
          collectionView.reloadData()
          observeSettingChanges()
 
-         // 悬浮控件：顶部（设置 · 切换 · 搜索）、底部（收藏 · 简介 · 分享）
+         // 四角控件与底部固定的名称、简述，不受植物图案尺寸影响
          view.addSubview(topBar)
          view.addSubview(actionBar)
          NSLayoutConstraint.activate([
              topBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 6),
              topBar.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
              topBar.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
-             actionBar.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+             actionBar.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+             actionBar.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
              actionBar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -DS.barBottomGap),
          ])
     }
@@ -350,7 +349,7 @@ class HomeViewController: CollectionViewController {
 
     private func autoScroll() {
 
-        guard let settingConfig = settingConfig else { return }
+        guard presentedViewController == nil, let settingConfig = settingConfig else { return }
 
         if !settingConfig.automaticSwitching {
             return

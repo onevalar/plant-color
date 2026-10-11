@@ -19,8 +19,8 @@ extension UIFont {
         UIFont(font: .pingFangSCSemibold, size: size)!
     }
 
-    static func fzktjwgb10(size: CGFloat) -> UIFont {
-        UIFont(name: "FZKTJW--GB1-0", size: size) ?? .systemFont(ofSize: size)
+    static func wenKai(size: CGFloat) -> UIFont {
+        UIFont(name: "PlantColorWenKai-Regular", size: size) ?? .systemFont(ofSize: size)
     }
 
 }

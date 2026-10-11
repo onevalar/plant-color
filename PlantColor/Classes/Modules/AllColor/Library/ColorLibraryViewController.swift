@@ -210,7 +210,7 @@ final class ColorLibraryViewController: ViewController, UICollectionViewDelegate
             guard let self, let item = self.item(for: key) else { return }
             var content = UIListContentConfiguration.subtitleCell()
             content.text = item.displayName
-            content.textProperties.font = UIFontMetrics(forTextStyle: .headline).scaledFont(for: UIFont.fzktjwgb10(size: 20))
+            content.textProperties.font = UIFontMetrics(forTextStyle: .headline).scaledFont(for: UIFont.wenKai(size: 20))
             content.secondaryText = FeatureFlags.traditionalColorsEnabled ? "\(item.colorHEX) · \(item.colorKind.title)" : item.colorHEX
             content.secondaryTextProperties.color = .secondaryLabel
             content.secondaryTextProperties.font = .preferredFont(forTextStyle: .footnote)
@@ -397,7 +397,7 @@ final class ColorTileCell: UICollectionViewCell {
         contentView.layer.borderWidth = 0.5
         contentView.layer.borderColor = UIColor.separator.cgColor
 
-        nameLabel.font = UIFont.fzktjwgb10(size: 20)
+        nameLabel.font = UIFont.wenKai(size: 20)
         nameLabel.adjustsFontSizeToFitWidth = true
         nameLabel.minimumScaleFactor = 0.6
         hexLabel.font = .monospacedSystemFont(ofSize: 11, weight: .regular)

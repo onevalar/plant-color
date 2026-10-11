@@ -9,9 +9,11 @@ import UIKit
 
 final class ColorValueView: UIView {
 
+    private let ink: UIColor
     private let rows: [(title: String, value: String)]
 
     init(item: any ColorDisplayable) {
+        ink = item.textUIColor
         let cmyk = item.colorCMYK.replacingOccurrences(of: ",", with: ", ")
         rows = [("HEX", item.colorHEX),
                 ("RGB", item.colorRGB.replacingOccurrences(of: " ", with: "")
@@ -39,18 +41,18 @@ final class ColorValueView: UIView {
         ])
 
         for (index, row) in rows.enumerated() {
-            let control = ValueRow(title: row.title, value: row.value)
+            let control = ValueRow(title: row.title, value: row.value, ink: ink)
             control.addTarget(self, action: #selector(rowTapped(_:)), for: .touchUpInside)
             control.tag = index
             stack.addArrangedSubview(control)
             if index < rows.count - 1 {
                 let line = UIView()
-                line.backgroundColor = .separator
+                line.backgroundColor = ink.withAlphaComponent(0.12)
                 line.heightAnchor.constraint(equalToConstant: 0.5).isActive = true
                 stack.addArrangedSubview(line)
             }
         }
-        backgroundColor = .secondarySystemGroupedBackground
+        backgroundColor = ink.withAlphaComponent(0.06)
         layer.cornerRadius = 12
         clipsToBounds = true
     }
@@ -62,23 +64,23 @@ final class ColorValueView: UIView {
 
 private final class ValueRow: UIControl {
 
-    init(title: String, value: String) {
+    init(title: String, value: String, ink: UIColor) {
         super.init(frame: .zero)
 
         let titleLabel = UILabel()
         titleLabel.text = title
         titleLabel.font = .systemFont(ofSize: 13, weight: .medium)
-        titleLabel.textColor = .secondaryLabel
+        titleLabel.textColor = ink.withAlphaComponent(0.7)
         titleLabel.setContentHuggingPriority(.required, for: .horizontal)
         titleLabel.widthAnchor.constraint(equalToConstant: 48).isActive = true
 
         let valueLabel = UILabel()
         valueLabel.text = value
         valueLabel.font = .monospacedDigitSystemFont(ofSize: 15, weight: .regular)
-        valueLabel.textColor = .label
+        valueLabel.textColor = ink
 
         let icon = UIImageView(image: UIImage(systemName: "doc.on.doc"))
-        icon.tintColor = .tertiaryLabel
+        icon.tintColor = ink.withAlphaComponent(0.5)
         icon.contentMode = .scaleAspectFit
         icon.setContentHuggingPriority(.required, for: .horizontal)
         icon.widthAnchor.constraint(equalToConstant: 18).isActive = true

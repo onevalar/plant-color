@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A1211F000000000000000003 /* PlantColorWenKai-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A1211F000000000000000004; };
+		A1211F000000000000000005 /* PlantColorWenKai-OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = A1211F000000000000000006; };
 		0312A7B4892E42259E9970F0 /* PlantModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B81E3EE427B2406A00424ABC /* PlantModel.swift */; };
 		146B53C24C976B9ECBC1A4DA /* TraditionalColorDetailCellType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D4A408C66BE5B92E200126 /* TraditionalColorDetailCellType.swift */; };
 		194F5FD7DDBBEA81F5F0D812 /* ColorCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44744EDA3726C019D9309523 /* ColorCatalog.swift */; };
@@ -199,6 +201,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A1211F000000000000000004 = {isa = PBXFileReference; lastKnownFileType = file; path = "PlantColorWenKai-Regular.ttf"; sourceTree = "<group>"; };
+		A1211F000000000000000006 = {isa = PBXFileReference; lastKnownFileType = text; path = "PlantColorWenKai-OFL.txt"; sourceTree = "<group>"; };
 		0D3A4767FDF0F294F4A99635 /* ColorDetailActions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorDetailActions.swift; sourceTree = "<group>"; };
 		10DB2A49B2AA9FC6BBBE9FCE /* zh-Hant */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		1902EBB92E95578B90B28805 /* ColorMath.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorMath.swift; sourceTree = "<group>"; };
@@ -1140,6 +1144,8 @@
 				E53D94DB28258302000713D7 /* OPPOSans-M.ttf */,
 				E53D94D9282582E6000713D7 /* OPPOSans-R.ttf */,
 				E53D94D7282582BD000713D7 /* FZKTJW.TTF */,
+				A1211F000000000000000004,
+				A1211F000000000000000006,
 			);
 			path = Fonts;
 			sourceTree = "<group>";
@@ -1664,7 +1670,8 @@
 				9CCC7CF62820C12E00626C58 /* RateCell.xib in Resources */,
 				B8F7A6DE27B3BA2600EB5AE6 /* SettingCell.xib in Resources */,
 				B8FD5206275F442D00F94200 /* LaunchScreen.storyboard in Resources */,
-				E53D94D8282582BD000713D7 /* FZKTJW.TTF in Resources */,
+				A1211F000000000000000003 /* PlantColorWenKai-Regular.ttf in Resources */,
+				A1211F000000000000000005 /* PlantColorWenKai-OFL.txt in Resources */,
 				B8F7A6E427B4AA0400EB5AE6 /* TableViewHeadView.xib in Resources */,
 				9944893AF180B7D694963934 /* chinese_traditional_colors.json in Resources */,
 				697FF26B489F25A1B21B3F35 /* Localizable.strings in Resources */,
@@ -1983,7 +1990,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = PlantWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = H4982D35ZR;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "i386 x86_64";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2016,7 +2023,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = PlantWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = H4982D35ZR;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "i386 x86_64";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2165,7 +2172,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = "";
 				CODE_SIGN_ENTITLEMENTS = PlantColor/PlantColor.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = H4982D35ZR;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "i386 x86_64";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -2203,7 +2210,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = "";
 				CODE_SIGN_ENTITLEMENTS = PlantColor/PlantColor.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = H4982D35ZR;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "i386 x86_64";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";

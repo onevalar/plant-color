@@ -271,3 +271,5 @@
 "library_show_list" = "Show as list";
 "library_show_grid" = "Show as grid";
 "library_no_results" = "No matching colors";
+
+"home_collapse_detail" = "Collapse details";

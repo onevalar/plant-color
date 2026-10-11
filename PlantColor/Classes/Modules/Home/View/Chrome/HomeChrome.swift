@@ -2,8 +2,8 @@
 //  HomeChrome.swift
 //  PlantColor
 //
-//  首页悬浮在色块之上的"玻璃层"：顶部（设置 · 植物/传统 · 搜索）和底部（收藏 · 简介 · 分享）。
-//  分工的依据：设置、搜索属于整个 App，放顶部两侧；收藏、简介、分享只针对当前这个颜色，放底部。
+//  首页四角的玻璃按钮与底部固定文字：设置、搜索在顶部，收藏、分享在底部。
+//  中央名称及简述可点击打开可展开的详情面板。
 //
 
 import UIKit
@@ -113,17 +113,19 @@ final class HomeTopBar: UIView {
     @objc private func searchTapped() { Feedback.lightPrepare(); onSearch?() }
 }
 
-/// 底部：收藏 · 简介（主操作）· 分享
+/// 底部两角放置收藏、分享，中央固定显示色名与简述。
 final class HomeActionBar: UIView {
 
     var onInfo: (() -> Void)?
     var onShare: (() -> Void)?
 
     private let favorite = GlassCircleButton(symbol: "heart", selectedSymbol: "heart.fill",
-                                             label: NSLocalizedString("color_add_favorite", comment: ""), diameter: 56)
+                                             label: NSLocalizedString("color_add_favorite", comment: ""), diameter: 48)
     private let share = GlassCircleButton(symbol: "square.and.arrow.up",
-                                          label: NSLocalizedString("common_share", comment: ""), diameter: 56)
+                                          label: NSLocalizedString("common_share", comment: ""), diameter: 48)
     private let infoButton = UIButton(type: .system)
+    private let nameLabel = UILabel()
+    private let summaryLabel = UILabel()
     private var favoriteToken: NotificationToken?
 
     var item: (any ColorDisplayable)? {
@@ -136,33 +138,36 @@ final class HomeActionBar: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        let infoGlass = GlassEffectView()
-        infoGlass.cornerRadius = 28
-        infoGlass.translatesAutoresizingMaskIntoConstraints = false
-        let infoHolder = UIView()
-        infoHolder.translatesAutoresizingMaskIntoConstraints = false
-        infoHolder.addSubview(infoGlass)
-        infoButton.translatesAutoresizingMaskIntoConstraints = false
-        infoHolder.addSubview(infoButton)
-        NSLayoutConstraint.activate([
-            infoGlass.topAnchor.constraint(equalTo: infoHolder.topAnchor), infoGlass.bottomAnchor.constraint(equalTo: infoHolder.bottomAnchor),
-            infoGlass.leadingAnchor.constraint(equalTo: infoHolder.leadingAnchor), infoGlass.trailingAnchor.constraint(equalTo: infoHolder.trailingAnchor),
-            infoButton.topAnchor.constraint(equalTo: infoHolder.topAnchor), infoButton.bottomAnchor.constraint(equalTo: infoHolder.bottomAnchor),
-            infoButton.leadingAnchor.constraint(equalTo: infoHolder.leadingAnchor), infoButton.trailingAnchor.constraint(equalTo: infoHolder.trailingAnchor),
-            infoHolder.heightAnchor.constraint(equalToConstant: 56),
-        ])
+        nameLabel.font = .wenKai(size: 32)
+        nameLabel.textAlignment = .center
+        nameLabel.adjustsFontSizeToFitWidth = true
+        nameLabel.minimumScaleFactor = 0.65
+        summaryLabel.font = .wenKai(size: 12)
+        summaryLabel.textAlignment = .center
+        summaryLabel.numberOfLines = 2
+        summaryLabel.adjustsFontSizeToFitWidth = true
+        summaryLabel.minimumScaleFactor = 0.85
+        let words = UIStackView(arrangedSubviews: [nameLabel, summaryLabel])
+        words.axis = .vertical
+        words.spacing = 3
+        words.isUserInteractionEnabled = false
+        words.translatesAutoresizingMaskIntoConstraints = false
+        infoButton.addSubview(words)
         infoButton.accessibilityHint = NSLocalizedString("home_info_hint", comment: "")
-
-        let stack = UIStackView(arrangedSubviews: [favorite, infoHolder, share])
+        let stack = UIStackView(arrangedSubviews: [favorite, infoButton, share])
         stack.axis = .horizontal
         stack.spacing = 12
         stack.alignment = .center
         stack.translatesAutoresizingMaskIntoConstraints = false
         addSubview(stack)
         NSLayoutConstraint.activate([
+            heightAnchor.constraint(equalToConstant: 82),
             stack.topAnchor.constraint(equalTo: topAnchor), stack.bottomAnchor.constraint(equalTo: bottomAnchor),
             stack.leadingAnchor.constraint(equalTo: leadingAnchor), stack.trailingAnchor.constraint(equalTo: trailingAnchor),
-            infoHolder.widthAnchor.constraint(greaterThanOrEqualToConstant: 150),
+            infoButton.heightAnchor.constraint(equalTo: heightAnchor),
+            words.centerYAnchor.constraint(equalTo: infoButton.centerYAnchor),
+            words.leadingAnchor.constraint(equalTo: infoButton.leadingAnchor),
+            words.trailingAnchor.constraint(equalTo: infoButton.trailingAnchor),
         ])
 
         favorite.button.addTarget(self, action: #selector(favoriteTapped), for: .touchUpInside)
@@ -188,18 +193,12 @@ final class HomeActionBar: UIView {
         favorite.button.isSelected = collected
         favorite.button.accessibilityLabel = NSLocalizedString(collected ? "color_remove_favorite" : "color_add_favorite", comment: "")
 
-        var config = UIButton.Configuration.plain()
-        config.title = NSLocalizedString("home_show_info", comment: "")
-        config.image = UIImage(systemName: "chevron.up")
-        config.imagePlacement = .trailing
-        config.imagePadding = 8
-        config.baseForegroundColor = ink
-        config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { attributes in
-            var result = attributes
-            result.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
-            return result
-        }
-        infoButton.configuration = config
+        nameLabel.text = item?.displayName
+        nameLabel.textColor = ink
+        summaryLabel.text = item?.homeSummary
+        summaryLabel.textColor = ink.withAlphaComponent(0.75)
+        infoButton.accessibilityLabel = [item?.displayName, item?.homeSummary].compactMap { $0 }.joined(separator: "，")
+
     }
 
     private func observeFavorite() {

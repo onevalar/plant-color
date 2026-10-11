@@ -43,7 +43,7 @@ class ColorDetailPageViewController: ViewController {
         navigationItem.title = nil
         navigationItem.largeTitleDisplayMode = .never
         navigationItem.rightBarButtonItems = ColorDetailActions.barItems(for: item, from: self)
-        view.backgroundColor = .systemGroupedBackground
+        view.backgroundColor = item.color
 
         let scroll = UIScrollView()
         scroll.alwaysBounceVertical = true
@@ -72,7 +72,7 @@ class ColorDetailPageViewController: ViewController {
 
         content.addArrangedSubview(makeHero())
         for block in blocks {
-            content.addArrangedSubview(makeView(for: block))
+            content.addArrangedSubview(ColorDetailBlockView(ink: item.textUIColor).makeView(for: block))
         }
 
         let footer = ColorInsightFooterView(item: item, horizontalMargin: 0)
@@ -93,7 +93,7 @@ class ColorDetailPageViewController: ViewController {
 
         let name = UILabel()
         name.text = item.displayName
-        name.font = UIFont.fzktjwgb10(size: hasArt ? 40 : 64)
+        name.font = UIFont.wenKai(size: hasArt ? 40 : 64)
         name.textColor = item.textUIColor
         name.textAlignment = .center
         name.adjustsFontSizeToFitWidth = true
@@ -135,9 +135,15 @@ class ColorDetailPageViewController: ViewController {
         return card
     }
 
+}
+
+/// 简介面板和资料库详情共用内容排版与植物色上的文字配色。
+struct ColorDetailBlockView {
+    let ink: UIColor
+
     // MARK: - 内容卡片
 
-    private func makeView(for block: DetailBlock) -> UIView {
+    func makeView(for block: DetailBlock) -> UIView {
         switch block {
         case let .summary(text):
             return card(containing: bodyLabel(text, poetry: false))
@@ -146,9 +152,9 @@ class ColorDetailPageViewController: ViewController {
         case let .text(title, body, isPoetry):
             let heading = UILabel()
             heading.text = title
-            heading.font = .preferredFont(forTextStyle: .headline)
+            heading.font = UIFontMetrics(forTextStyle: .headline).scaledFont(for: .wenKai(size: 22))
             heading.adjustsFontForContentSizeCategory = true
-            heading.textColor = .label
+            heading.textColor = ink
             heading.accessibilityTraits = .header
             let stack = UIStackView(arrangedSubviews: [heading, bodyLabel(body, poetry: isPoetry)])
             stack.axis = .vertical
@@ -161,7 +167,7 @@ class ColorDetailPageViewController: ViewController {
 
     private func card(containing content: UIView) -> UIView {
         let card = UIView()
-        card.backgroundColor = .secondarySystemGroupedBackground
+        card.backgroundColor = ink.withAlphaComponent(0.055)
         card.layer.cornerRadius = DS.cardRadius
         card.layer.cornerCurve = .continuous
         content.translatesAutoresizingMaskIntoConstraints = false
@@ -182,8 +188,8 @@ class ColorDetailPageViewController: ViewController {
         let style = NSMutableParagraphStyle()
         style.lineSpacing = poetry ? 8 : 5
         label.attributedText = NSAttributedString(string: text, attributes: [
-            .font: UIFont.preferredFont(forTextStyle: .callout),
-            .foregroundColor: poetry ? UIColor.secondaryLabel : UIColor.label,
+            .font: UIFontMetrics(forTextStyle: .callout).scaledFont(for: .wenKai(size: 17)),
+            .foregroundColor: ink.withAlphaComponent(poetry ? 0.8 : 1),
             .paragraphStyle: style,
         ])
         return label
@@ -196,15 +202,15 @@ class ColorDetailPageViewController: ViewController {
         for row in rows {
             let title = UILabel()
             title.text = row.title
-            title.font = .preferredFont(forTextStyle: .footnote)
+            title.font = .wenKai(size: 14)
             title.adjustsFontForContentSizeCategory = true
-            title.textColor = .secondaryLabel
+            title.textColor = ink.withAlphaComponent(0.7)
             let value = UILabel()
             value.text = row.value
             value.numberOfLines = 0
-            value.font = .preferredFont(forTextStyle: .callout)
+            value.font = .wenKai(size: 17)
             value.adjustsFontForContentSizeCategory = true
-            value.textColor = .label
+            value.textColor = ink
             let pair = UIStackView(arrangedSubviews: [title, value])
             pair.axis = .vertical
             pair.spacing = 2
@@ -218,7 +224,7 @@ class ColorDetailPageViewController: ViewController {
         holder.layer.cornerRadius = DS.cardRadius
         holder.layer.cornerCurve = .continuous
         holder.clipsToBounds = true
-        holder.backgroundColor = .secondarySystemGroupedBackground
+        holder.backgroundColor = .clear
         guard let image = UIImage(named: name) else {
             holder.isHidden = true
             return holder

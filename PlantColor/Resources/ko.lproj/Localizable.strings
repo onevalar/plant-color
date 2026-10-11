@@ -271,3 +271,5 @@
 "library_show_list" = "목록으로 보기";
 "library_show_grid" = "그리드로 보기";
 "library_no_results" = "일치하는 색이 없습니다";
+
+"home_collapse_detail" = "상세 내용 접기";
